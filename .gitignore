@@ -41,3 +41,4 @@ build/
 application-dev.yml
 /migration-diff/logs/
 /.idea/
+/logs/
