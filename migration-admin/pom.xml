@@ -16,6 +16,5 @@
 
     <modules>
         <module>migration-admin-api</module>
-        <module>migration-admin-ui</module>
     </modules>
 </project>

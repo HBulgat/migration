@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/migration-sdk-go"
-	"github.com/migration-sdk-go/strategy"
 )
 
 // ========= 模拟业务侧代码 =========
