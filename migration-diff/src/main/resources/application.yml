@@ -1,0 +1,16 @@
+server:
+  port: 8081
+
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: migration-diff
+  profiles:
+    active: dev
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true

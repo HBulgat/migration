@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: migration-admin-api
+  profiles:
+    active: dev
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true

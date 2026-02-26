@@ -1,0 +1,75 @@
+package top.bulgat.migration.admin.domain.model;
+
+import java.time.LocalDateTime;
+import lombok.Getter;
+
+/**
+ * Grayscale rule entity module.
+ */
+@Getter
+public class GrayscaleRule {
+
+    private final String ruleId;
+    private final String migrationKey;
+    private GrayscaleRuleType ruleType;
+    private String ruleValue;
+    private boolean enable;
+    private final LocalDateTime createTime;
+    private LocalDateTime updateTime;
+
+    /**
+     * Create rule with current timestamps module.
+     */
+    public GrayscaleRule(
+            String ruleId,
+            String migrationKey,
+            GrayscaleRuleType ruleType,
+            String ruleValue,
+            boolean enable) {
+        this(ruleId, migrationKey, ruleType, ruleValue, enable, LocalDateTime.now(), LocalDateTime.now());
+    }
+
+    /**
+     * Create rule with explicit timestamps module.
+     */
+    public GrayscaleRule(
+            String ruleId,
+            String migrationKey,
+            GrayscaleRuleType ruleType,
+            String ruleValue,
+            boolean enable,
+            LocalDateTime createTime,
+            LocalDateTime updateTime) {
+        this.ruleId = ruleId;
+        this.migrationKey = migrationKey;
+        this.ruleType = ruleType;
+        this.ruleValue = ruleValue;
+        this.enable = enable;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
+
+    /**
+     * Partially update rule fields module.
+     */
+    public void update(GrayscaleRuleType targetType, String targetValue, Boolean targetEnable) {
+        if (targetType != null) {
+            this.ruleType = targetType;
+        }
+        if (targetValue != null) {
+            this.ruleValue = targetValue;
+        }
+        if (targetEnable != null) {
+            this.enable = targetEnable;
+        }
+        this.updateTime = LocalDateTime.now();
+    }
+
+    /**
+     * Toggle rule enable status module.
+     */
+    public void updateEnable(boolean targetEnable) {
+        this.enable = targetEnable;
+        this.updateTime = LocalDateTime.now();
+    }
+}

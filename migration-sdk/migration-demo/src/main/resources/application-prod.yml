@@ -1,0 +1,18 @@
+server:
+  port: 8082
+
+migration:
+  nacos:
+    server-addr: localhost:8848
+    namespace: dfbd3ca3-c0d1-4475-a8ea-f2d1eeb2e3de
+    username: nacos
+    password: nacos
+
+# Diff 服务配置（SDK内部自动装配用）
+diff:
+  service:
+    url: http://localhost:8081
+
+logging:
+  level:
+    top.bulgat: DEBUG
