@@ -26,9 +26,9 @@ public class DemoService {
         log.info("Executing getUserOld for userId: {}", userId);
         return User.builder()
                 .id(userId)
-                .name("OldUser-" + userId)
+                .name("User-" + userId)
                 .age(20)
-                .source("OLD_API")
+                .source("API")
                 .build();
     }
 
@@ -36,9 +36,9 @@ public class DemoService {
         log.info("Executing getUserNew for userId: {}", userId);
         return User.builder()
                 .id(userId)
-                .name("NewUser-" + userId) 
+                .name("User-" + userId)
                 .age(20)
-                .source("NEW_API") 
+                .source("API")
                 .build();
     }
 

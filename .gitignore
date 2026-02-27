@@ -39,8 +39,10 @@ build/
 
 ### Custom ###
 application-dev.yml
+application-local.yml
 /migration-diff/logs/
 /.idea/
 /logs/
 .env.local
 .env.server
+/migration-admin/migration-admin-ui/node_modules/

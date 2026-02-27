@@ -1,6 +1,8 @@
 package top.bulgat.migration.diff.application.service;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.bulgat.common.exception.BizException;
 import top.bulgat.common.exception.ErrorCode;
@@ -19,6 +21,7 @@ import top.bulgat.migration.diff.domain.service.DiffDomainService;
 @Service
 public class DiffApplicationService {
 
+    private static final Logger log = LoggerFactory.getLogger(DiffApplicationService.class);
     private final DiffDomainService domainService;
     private final DiffRecordRepository diffRecordRepository;
     private final DiffRuleRepository diffRuleRepository;
@@ -40,6 +43,10 @@ public class DiffApplicationService {
      */
     public DiffResult executeDiff(ExecuteDiffCommand command) {
         validateCommand(command);
+        log.info("diff.execute start migrationKey={}, traceId={}, oldJsonLength={}, newJsonLength={}",
+                command.migrationKey(), command.traceId(),
+                command.oldJson() == null ? null : command.oldJson().length(),
+                command.newJson() == null ? null : command.newJson().length());
         DiffRequest request = new DiffRequest(
                 command.migrationKey(),
                 command.traceId(),
@@ -49,8 +56,11 @@ public class DiffApplicationService {
                 command.newCostTimeMs(),
                 command.grayscaleParam());
         List<DiffRule> rules = diffRuleRepository.findEnabledRules(command.migrationKey());
+        log.info("diff.execute rulesLoaded migrationKey={}, ruleCount={}", command.migrationKey(), rules.size());
         DiffResult result = domainService.execute(request, rules);
         diffRecordRepository.save(request, result);
+        log.info("diff.execute done migrationKey={}, hasDiff={}, diffItemCount={}, costTimeMs={}",
+                command.migrationKey(), result.hasDiff(), result.getDiffItems().size(), result.getCostTimeMs());
         return result;
     }
 

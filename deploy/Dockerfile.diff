@@ -1,9 +1,0 @@
-FROM openjdk:17-jdk-alpine
-
-WORKDIR /app
-
-COPY ../migration-diff/target/migration-diff.jar .
-
-EXPOSE 8081
-
-ENTRYPOINT ["java", "-jar", "migration-diff.jar"]

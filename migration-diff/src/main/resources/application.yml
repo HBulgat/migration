@@ -9,7 +9,7 @@ spring:
   application:
     name: migration-diff
   profiles:
-    active: dev
+    active: local
 
 mybatis-plus:
   configuration:

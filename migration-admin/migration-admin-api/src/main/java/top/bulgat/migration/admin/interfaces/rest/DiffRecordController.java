@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,7 @@ import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
 @RequestMapping("/api/v1/diff_record")
 public class DiffRecordController {
 
+    private static final Logger log = LoggerFactory.getLogger(DiffRecordController.class);
     private final DiffRecordQueryApplicationService queryApplicationService;
     private final DiffRecordAssembler assembler;
 
@@ -49,20 +52,29 @@ public class DiffRecordController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page,
             @RequestParam(value = "page_size", defaultValue = "10") @Min(1) @Max(200) int pageSize) {
+        log.info("diff_record.list request migrationKey={}, hasDiff={}, startDate={}, endDate={}, page={}, pageSize={}",
+                migrationKey, hasDiff, startDate, endDate, page, pageSize);
         var listCommand = assembler.toListCommand(migrationKey, hasDiff, startDate, endDate, page, pageSize);
         var countCommand = assembler.toCountCommand(migrationKey, hasDiff, startDate, endDate);
         var diffRecordResponses = assembler.toResponseList(queryApplicationService.list(listCommand));
+        long total = queryApplicationService.count(countCommand);
+        log.info("diff_record.list response migrationKey={}, page={}, pageSize={}, total={}, listSize={}",
+                migrationKey, page, pageSize, total, diffRecordResponses.size());
         return Result.success(PageResult.of(
                 page,
                 pageSize,
-                queryApplicationService.count(countCommand),
+                total,
                 diffRecordResponses));
     }
 
     @Operation(summary = "Get diff record detail")
     @GetMapping("/detail")
     public Result<DiffRecordResponse> detail(@RequestParam("id") long id) {
-        return Result.success(assembler.toResponse(queryApplicationService.detail(assembler.toDetailCommand(id))));
+        log.info("diff_record.detail request id={}", id);
+        DiffRecordResponse response = assembler.toResponse(queryApplicationService.detail(assembler.toDetailCommand(id)));
+        log.info("diff_record.detail response id={}, migrationKey={}, hasDiff={}", response.id(), response.migrationKey(),
+                response.hasDiff());
+        return Result.success(response);
     }
 
     @Operation(summary = "Get diff statistics")
@@ -73,7 +85,11 @@ public class DiffRecordController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(value = "end_date", required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        return Result.success(assembler.toStatisticsResponse(
-                queryApplicationService.statistics(assembler.toStatisticsCommand(migrationKey, startDate, endDate))));
+        log.info("diff_record.statistics request migrationKey={}, startDate={}, endDate={}", migrationKey, startDate, endDate);
+        DiffStatisticsResponse response = assembler.toStatisticsResponse(
+                queryApplicationService.statistics(assembler.toStatisticsCommand(migrationKey, startDate, endDate)));
+        log.info("diff_record.statistics response migrationKey={}, totalCount={}, diffCount={}, diffRate={}",
+                migrationKey, response.totalCount(), response.diffCount(), response.diffRate());
+        return Result.success(response);
     }
 }

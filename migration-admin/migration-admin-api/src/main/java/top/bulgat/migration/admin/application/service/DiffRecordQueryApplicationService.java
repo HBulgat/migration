@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.bulgat.common.exception.BizException;
 import top.bulgat.common.exception.ErrorCode;
@@ -22,6 +24,7 @@ import top.bulgat.migration.admin.domain.service.MigrationTaskDomainService;
 @Service
 public class DiffRecordQueryApplicationService {
 
+    private static final Logger log = LoggerFactory.getLogger(DiffRecordQueryApplicationService.class);
     private final DiffRecordRepository repository;
     private final MigrationTaskDomainService migrationTaskDomainService;
 
@@ -42,6 +45,9 @@ public class DiffRecordQueryApplicationService {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "list command is required");
         }
+        log.info("diff_record.list start migrationKey={}, hasDiff={}, startDate={}, endDate={}, page={}, pageSize={}",
+                command.migrationKey(), command.hasDiff(), command.startDate(), command.endDate(), command.page(),
+                command.pageSize());
         return doList(
                 command.migrationKey(),
                 command.hasDiff(),
@@ -61,6 +67,8 @@ public class DiffRecordQueryApplicationService {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "count command is required");
         }
+        log.info("diff_record.count start migrationKey={}, hasDiff={}, startDate={}, endDate={}",
+                command.migrationKey(), command.hasDiff(), command.startDate(), command.endDate());
         return doCount(command.migrationKey(), command.hasDiff(), command.startDate(), command.endDate());
     }
 
@@ -74,6 +82,7 @@ public class DiffRecordQueryApplicationService {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "detail command is required");
         }
+        log.info("diff_record.detail start id={}", command.id());
         return doDetail(command.id());
     }
 
@@ -87,6 +96,8 @@ public class DiffRecordQueryApplicationService {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "statistics command is required");
         }
+        log.info("diff_record.statistics start migrationKey={}, startDate={}, endDate={}",
+                command.migrationKey(), command.startDate(), command.endDate());
         return doStatistics(command.migrationKey(), command.startDate(), command.endDate());
     }
 
@@ -101,7 +112,7 @@ public class DiffRecordQueryApplicationService {
         validatePagination(page, pageSize);
         validateHasDiffFilter(hasDiff);
         validateDateRange(startDate, endDate);
-        return repository.findByCondition(
+        List<DiffRecord> records = repository.findByCondition(
                         migrationKey,
                         hasDiff,
                         startDate == null ? null : startDate.atStartOfDay(),
@@ -110,25 +121,33 @@ public class DiffRecordQueryApplicationService {
                 .skip((long) (page - 1) * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
+        log.info("diff_record.list done migrationKey={}, page={}, pageSize={}, resultSize={}",
+                migrationKey, page, pageSize, records.size());
+        return records;
     }
 
     private long doCount(String migrationKey, Integer hasDiff, LocalDate startDate, LocalDate endDate) {
         validateMigrationKey(migrationKey);
         validateHasDiffFilter(hasDiff);
         validateDateRange(startDate, endDate);
-        return repository.findByCondition(
+        long total = repository.findByCondition(
                         migrationKey,
                         hasDiff,
                         startDate == null ? null : startDate.atStartOfDay(),
                         endDate == null ? null : endDate.atTime(LocalTime.MAX))
                 .size();
+        log.info("diff_record.count done migrationKey={}, total={}", migrationKey, total);
+        return total;
     }
 
     private DiffRecord doDetail(long id) {
-        return repository.findById(id)
+        DiffRecord record = repository.findById(id)
                 .orElseThrow(() -> new BizException(
                         ErrorCode.NOT_FOUND,
                         "diff record not found: " + id));
+        log.info("diff_record.detail done id={}, migrationKey={}, hasDiff={}",
+                record.getId(), record.getMigrationKey(), record.isHasDiff());
+        return record;
     }
 
     private DiffStatistics doStatistics(String migrationKey, LocalDate startDate, LocalDate endDate) {
@@ -144,6 +163,8 @@ public class DiffRecordQueryApplicationService {
         double diffRate = total == 0 ? 0D : (double) diffCount / total;
         int avgOld = average(records.stream().map(DiffRecord::getOldCostTimeMs).collect(Collectors.toList()));
         int avgNew = average(records.stream().map(DiffRecord::getNewCostTimeMs).collect(Collectors.toList()));
+        log.info("diff_record.statistics done migrationKey={}, totalCount={}, diffCount={}, diffRate={}",
+                migrationKey, total, diffCount, diffRate);
         return new DiffStatistics(total, diffCount, diffRate, avgOld, avgNew);
     }
 
