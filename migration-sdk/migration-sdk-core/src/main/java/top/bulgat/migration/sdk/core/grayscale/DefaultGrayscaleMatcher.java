@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.Expression;
@@ -21,6 +22,8 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultGrayscaleMatcher.class);
     private static final ExpressionParser PARSER = new SpelExpressionParser();
+    private static final Map<String, Expression> EXPRESSION_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, JSONArray> JSON_ARRAY_CACHE = new ConcurrentHashMap<>();
 
     /**
      * Evaluates grayscale rules in order and returns on first decision.
@@ -101,12 +104,10 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     private boolean matchCollection(String ruleValue, Map<String, Object> params) {
         String subject = extractSubject(params);
         try {
-            JSONArray values = JSONArray.parseArray(ruleValue);
-            for (Object item : values) {
-                if (subject.equals(String.valueOf(item))) {
-                    return true;
-                }
-            }
+            // 从缓存中获取JSONArray，避免重复解析
+            JSONArray values = JSON_ARRAY_CACHE.computeIfAbsent(ruleValue, JSONArray::parseArray);
+            // 直接使用JSONArray的contains方法，避免手动遍历
+            return values.contains(subject);
         } catch (Exception ex) {
             log.warn("invalid list rule value, value={}", ruleValue);
         }
@@ -122,10 +123,13 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
      */
     private boolean matchExpression(String expressionText, Map<String, Object> params) {
         try {
+            // 从缓存中获取表达式，避免重复解析
+            Expression expression = EXPRESSION_CACHE.computeIfAbsent(expressionText, PARSER::parseExpression);
+            
             StandardEvaluationContext context = new StandardEvaluationContext();
             params.forEach(context::setVariable);
             context.setVariable("param", params);
-            Expression expression = PARSER.parseExpression(expressionText);
+            
             Boolean matched = expression.getValue(context, Boolean.class);
             return Boolean.TRUE.equals(matched);
         } catch (Exception ex) {
@@ -141,19 +145,12 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
      * @return subject text
      */
     private String extractSubject(Map<String, Object> params) {
+        // 按优先级顺序查找主题ID
         Object subject = params.get("userId");
-        if (subject == null) {
-            subject = params.get("user_id");
-        }
-        if (subject == null) {
-            subject = params.get("uid");
-        }
-        if (subject == null) {
-            subject = params.get("id");
-        }
-        if (subject == null) {
-            return params.toString();
-        }
-        return String.valueOf(subject);
+        if (subject == null) subject = params.get("user_id");
+        if (subject == null) subject = params.get("uid");
+        if (subject == null) subject = params.get("id");
+        
+        return subject != null ? String.valueOf(subject) : params.toString();
     }
 }
