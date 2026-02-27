@@ -42,3 +42,5 @@ application-dev.yml
 /migration-diff/logs/
 /.idea/
 /logs/
+.env.local
+.env.server

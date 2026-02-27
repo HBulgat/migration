@@ -7,8 +7,15 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
+# 设置部署模式
+if [ $# -eq 1 ]; then
+  export DEPLOY_MODE=$1
+else
+  export DEPLOY_MODE=local
+fi
+
 # 加载环境变量
-export $(cat .env | grep -v '^#' | xargs)
+source .env
 
 # 停止所有服务
 echo "Stopping all services..."
