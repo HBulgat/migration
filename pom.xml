@@ -15,7 +15,7 @@
     <modules>
         <module>migration-sdk</module>
         <module>migration-admin</module>
-        <module>migration-diff</module>
+        <module>migration-diff-service</module>
     </modules>
 
     <properties>
