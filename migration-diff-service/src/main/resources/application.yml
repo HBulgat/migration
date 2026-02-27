@@ -7,7 +7,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: migration-diff
+    name: migration.diff.service
   profiles:
     active: local
 

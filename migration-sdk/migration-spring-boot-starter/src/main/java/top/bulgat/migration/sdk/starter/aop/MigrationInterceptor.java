@@ -50,7 +50,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     private ApplicationContext applicationContext;
 
     /**
-     * Creates a migration interceptor.
+     * 创建迁移拦截器。
      */
     public MigrationInterceptor(
             ConfigClient configClient,
@@ -66,7 +66,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Intercepts method invocation and delegates execution to {@link MigrationClient}.
+     * 拦截方法调用，并将执行委托给 {@link MigrationClient}。
      */
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
@@ -120,22 +120,22 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Wraps reflected method into a callable function.
+     * 将反射方法包装成可调用的函数。
      *
-     * @param target target bean
-     * @param method reflected method
-     * @return invocation function
+     * @param target 目标Bean
+     * @param method 反射的方法
+     * @return 调用函数
      */
     private Function<Object[], Object> invokeFunction(Object target, Method method) {
         return invocationArgs -> invoke(target, method, invocationArgs);
     }
 
     /**
-     * Wraps fallback method into a callable function with appended exception argument.
+     * 将降级方法包装成可调用的函数，并在参数末尾追加异常对象。
      *
-     * @param target target bean
-     * @param method fallback method
-     * @return fallback invocation function
+     * @param target 目标Bean
+     * @param method 降级方法
+     * @return 降级调用函数
      */
     private BiFunction<Object[], Exception, Object> invokeFallbackFunction(Object target, Method method) {
         return (invocationArgs, ex) -> {
@@ -147,12 +147,12 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Invokes target method via reflection.
+     * 通过反射调用目标方法。
      *
-     * @param target target bean
-     * @param method method to invoke
-     * @param args method arguments
-     * @return invocation result
+     * @param target 目标Bean
+     * @param method 待调用的方法
+     * @param args   方法入参
+     * @return 调用结果
      */
     private Object invoke(Object target, Method method, Object[] args) {
         try {
@@ -170,7 +170,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Resolves descriptor in methodName / beanName#methodName / beanName.methodName format.
+     * 解析方法描述符，支持格式：methodName / beanName#methodName / beanName.methodName。
      */
     private ResolvedMethod resolveTargetMethod(
             Object defaultTarget,
@@ -217,7 +217,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Resolves method by signature and fallback constraints.
+     * 根据方法签名和是否为降级方法的约束条件来解析具体的方法。
      */
     private Method resolveMethod(
             Class<?> targetClass,
@@ -255,7 +255,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Checks whether candidate leading parameters are compatible with entry parameters.
+     * 检查候选方法的参数类型是否与入口方法的参数兼容。
      */
     private boolean matchEntryParams(Class<?>[] candidateTypes, Class<?>[] entryTypes) {
         if (entryTypes.length > candidateTypes.length) {
@@ -270,10 +270,10 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Resolves param handler instance from Spring context or reflection.
+     * 从Spring上下文中解析参数处理器实例，或者通过反射创建实例。
      *
-     * @param handlerClass handler class from annotation
-     * @return param handler instance
+     * @param handlerClass 注解中指定的参数处理器类
+     * @return 参数处理器实例
      */
     private ParamHandler resolveParamHandler(Class<? extends ParamHandler> handlerClass) {
         if (handlerClass == null || handlerClass == ParamHandler.class) {
@@ -294,11 +294,11 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Resolves per-method executor and caches it by method signature.
+     * 为每个方法解析所需的线程池，并根据方法签名进行缓存。
      *
-     * @param method entry method
-     * @param migration migration annotation
-     * @return executor service
+     * @param method    入口方法
+     * @param migration 迁移注解
+     * @return 线程池服务
      */
     private ExecutorService resolveExecutor(Method method, Migration migration) {
         String key = method.toGenericString();
@@ -327,9 +327,9 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Injects Spring application context.
+     * 注入Spring应用上下文。
      *
-     * @param applicationContext spring context
+     * @param applicationContext Spring上下文
      */
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
@@ -337,7 +337,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * Shuts down all internally created executors.
+     * 关闭内部创建的所有线程池。
      */
     @Override
     public void destroy() {

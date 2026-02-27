@@ -3,14 +3,14 @@ package top.bulgat.migration.sdk.core.strategy;
 import top.bulgat.migration.sdk.core.model.MigrationStatus;
 
 /**
- * Stage 7 (DECOMMISSIONING_ALL): only call new method.
+ * 第7阶段（停用-全开）：仅调用新接口方法。
  */
 public class DecommissioningAllStrategy extends AbstractMigrationStrategy {
 
     /**
-     * Returns the migration status handled by this strategy.
+     * 返回当前策略处理的迁移状态。
      *
-     * @return target migration status
+     * @return 目标迁移状态
      */
     @Override
     public MigrationStatus getStatus() {
@@ -18,11 +18,11 @@ public class DecommissioningAllStrategy extends AbstractMigrationStrategy {
     }
 
     /**
-     * Executes routing logic for the current migration stage.
+     * 执行当前迁移阶段的路由逻辑。
      *
-     * @param context execution context
-     * @param <T> return type
-     * @return routed execution result
+     * @param context 执行上下文
+     * @param <T>     返回值类型
+     * @return 路由执行结果
      */
     @Override
     public <T> T execute(MigrationExecutionContext<T> context) {

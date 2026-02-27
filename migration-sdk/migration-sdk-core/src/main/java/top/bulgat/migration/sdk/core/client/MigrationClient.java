@@ -42,9 +42,9 @@ public class MigrationClient implements AutoCloseable {
     private final boolean manageResources;
 
     /**
-     * Creates client with default HTTP implementations.
+     * 创建迁移客户端，使用默认的HTTP实现。
      *
-     * @param config base migration config
+     * @param config 基础迁移配置
      */
     public MigrationClient(MigrationConfig config) {
         this(config,
@@ -53,11 +53,11 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Creates client with default SPI implementations and external executor.
+     * 创建迁移客户端，使用默认的SPI实现，并提供外部线程池用于并发调用。
      *
-     * @param config base migration config
-     * @param properties sdk properties
-     * @param executorService executor for async branch invocation
+     * @param config          基础迁移配置
+     * @param properties      SDK配置属性
+     * @param executorService 用于异步分支调用的线程池
      */
     public MigrationClient(MigrationConfig config, MigrationSdkProperties properties, ExecutorService executorService) {
         this(
@@ -71,14 +71,14 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Creates client with custom dependencies.
+     * 创建迁移客户端，允许自定义所有核心依赖。
      *
-     * @param config base migration config
-     * @param configClient config client
-     * @param diffServiceCaller diff caller
-     * @param grayscaleMatcher grayscale matcher
-     * @param strategyRegistry strategy registry
-     * @param executorService executor for async branch invocation
+     * @param config            基础迁移配置
+     * @param configClient      配置中心客户端
+     * @param diffServiceCaller Diff服务调用器
+     * @param grayscaleMatcher  灰度规则匹配器
+     * @param strategyRegistry  策略注册表
+     * @param executorService   异步调用线程池
      */
     public MigrationClient(
             MigrationConfig config,
@@ -91,15 +91,15 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Internal constructor.
+     * 内部构造函数。
      *
-     * @param config base migration config
-     * @param configClient config client
-     * @param diffServiceCaller diff caller
-     * @param grayscaleMatcher grayscale matcher
-     * @param strategyRegistry strategy registry
-     * @param executorService executor service
-     * @param manageResources whether this instance owns resources lifecycle
+     * @param config            基础迁移配置
+     * @param configClient      配置中心客户端
+     * @param diffServiceCaller Diff调用器
+     * @param grayscaleMatcher  灰度匹配器
+     * @param strategyRegistry  迁移策略注册表
+     * @param executorService   线程池
+     * @param manageResources   是否由当前实例管理资源的生命周期（关闭时释放）
      */
     private MigrationClient(
             MigrationConfig config,
@@ -122,13 +122,13 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Wraps old/new methods and defaults fallback to old method.
+     * 包装新旧接口方法，如果没有提供降级方法，则默认降级逻辑是抛异常时调用旧接口。
      *
-     * @param oldMethod old branch
-     * @param newMethod new branch
-     * @param paramHandler grayscale param handler
-     * @param <T> return type
-     * @return executable migration function
+     * @param oldMethod    旧接口方法引用
+     * @param newMethod    新接口方法引用
+     * @param paramHandler 灰度参数处理器，用于将方法参数转换为灰度匹配字典
+     * @param <T>          方法返回值类型
+     * @return 封装后的可执行函数
      */
     public <T> ExecuteFunction<T> wrap(
             Function<Object[], T> oldMethod,
@@ -138,14 +138,14 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Wraps old/new methods with explicit fallback.
+     * 包装新旧接口方法，并显示指定降级逻辑方法。
      *
-     * @param oldMethod old branch
-     * @param newMethod new branch
-     * @param fallbackMethod fallback branch
-     * @param paramHandler grayscale param handler
-     * @param <T> return type
-     * @return executable migration function
+     * @param oldMethod      旧接口方法引用
+     * @param newMethod      新接口方法引用
+     * @param fallbackMethod 降级方法引用，入参包含原参数和异常对象
+     * @param paramHandler   灰度参数处理器
+     * @param <T>            返回值类型
+     * @return 封装后的可执行函数
      */
     public <T> ExecuteFunction<T> wrap(
             Function<Object[], T> oldMethod,
@@ -163,15 +163,15 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Executes one routed invocation.
+     * 根据当前迁移配置和策略执行一次路由调用。
      *
-     * @param oldMethod old branch
-     * @param newMethod new branch
-     * @param fallbackMethod fallback branch
-     * @param paramHandler grayscale parameter handler
-     * @param args invocation arguments
-     * @param <T> return type
-     * @return routed invocation result
+     * @param oldMethod      旧接口分支
+     * @param newMethod      新接口分支
+     * @param fallbackMethod 降级分支
+     * @param paramHandler   灰度参数处理器
+     * @param args           原始调用参数
+     * @param <T>            返回值类型
+     * @return 实际执行分支的返回结果
      */
     private <T> T execute(
             Function<Object[], T> oldMethod,
@@ -180,18 +180,21 @@ public class MigrationClient implements AutoCloseable {
             ParamHandler paramHandler,
             Object[] args) {
         try {
+            // 从配置中心拉取最新配置和灰度规则
             MigrationConfig latestConfig = loadLatestConfig();
             MigrationStatus status = resolveStatus(latestConfig.getStatus());
             List<GrayscaleConfig> grayscaleRules = loadGrayscaleRules();
 
+            // 根据状态获取对应的策略
             MigrationStrategy strategy = strategyRegistry.getStrategy(status);
             if (strategy == null) {
-                log.warn("strategy not found, fallback to OLD, migrationKey={}, status={}",
+                log.warn("无法找到对应的迁移策略, 降级为 OLD, migrationKey={}, status={}",
                         config.getMigrationKey(),
                         status);
                 strategy = strategyRegistry.getStrategy(MigrationStatus.OLD);
             }
 
+            // 构建执行上下文
             MigrationExecutionContext<T> context = MigrationExecutionContext.<T>builder()
                     .migrationKey(config.getMigrationKey())
                     .grayscaleRules(grayscaleRules)
@@ -204,16 +207,19 @@ public class MigrationClient implements AutoCloseable {
                     .grayscaleMatcher(grayscaleMatcher)
                     .executorService(executorService)
                     .build();
+
+            // 执行迁移策略
             return strategy.execute(context);
         } catch (Exception ex) {
+            // 发生异常时，均走降级方法
             return fallbackMethod.apply(args, ex);
         }
     }
 
     /**
-     * Loads latest migration config and falls back to OLD when unavailable.
+     * 拉取最新的迁移任务配置信息，如果获取失败则默认降级为 OLD 状态。
      *
-     * @return latest migration config
+     * @return 最新的迁移配置
      */
     private MigrationConfig loadLatestConfig() {
         try {
@@ -241,9 +247,9 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Loads grayscale rules and returns empty list when unavailable.
+     * 拉取灰度规则，如果获取失败或没有规则，则返回空列表。
      *
-     * @return grayscale rules
+     * @return 灰度规则列表
      */
     private List<GrayscaleConfig> loadGrayscaleRules() {
         try {
@@ -256,10 +262,10 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Resolves status code to {@link MigrationStatus}.
+     * 将配置的状态码解析为迁移状态枚举，解析失败时降级为 OLD。
      *
-     * @param statusCode status code
-     * @return resolved status, or OLD for invalid input
+     * @param statusCode 状态码
+     * @return 解析后的迁移状态
      */
     private MigrationStatus resolveStatus(Integer statusCode) {
         if (statusCode == null) {
@@ -276,7 +282,7 @@ public class MigrationClient implements AutoCloseable {
     }
 
     /**
-     * Closes resources owned by this client.
+     * 关闭客户端，释放内部占用的连接和线程池资源。
      */
     @Override
     public void close() {

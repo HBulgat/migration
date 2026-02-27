@@ -15,9 +15,9 @@ import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
 import top.bulgat.migration.sdk.core.support.DefaultOldFallback;
 
 /**
- * Execution context for migration strategies.
+ * 迁移策略的执行上下文。
  *
- * @param <T> return type
+ * @param <T> 返回值类型
  */
 @Getter
 @Builder
@@ -35,9 +35,9 @@ public class MigrationExecutionContext<T> {
     private final ExecutorService executorService;
 
     /**
-     * Builds grayscale params through ParamHandler.
+     * 通过 ParamHandler 构建灰度匹配参数。
      *
-     * @return grayscale params
+     * @return 灰度参数映射表
      */
     public Map<String, Object> buildParam() {
         if (paramHandler == null) {
@@ -51,9 +51,9 @@ public class MigrationExecutionContext<T> {
     }
 
     /**
-     * Indicates whether fallback uses SDK default old-method fallback.
+     * 判断当前的降级逻辑是否为SDK默认的“调用旧接口”降级。
      *
-     * @return true when fallback is default old-method fallback
+     * @return 如果为默认降级，返回 true
      */
     public boolean isDefaultOldFallback() {
         return fallbackMethod instanceof DefaultOldFallback<?>;

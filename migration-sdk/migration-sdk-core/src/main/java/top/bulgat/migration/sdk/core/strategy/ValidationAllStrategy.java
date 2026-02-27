@@ -4,14 +4,14 @@ import java.util.Map;
 import top.bulgat.migration.sdk.core.model.MigrationStatus;
 
 /**
- * Stage 3 (VALIDATION_ALL): call old/new concurrently and return old result.
+ * 第3阶段（验证-全开）：并发调用新旧接口比对，但始终返回旧接口结果。
  */
 public class ValidationAllStrategy extends AbstractMigrationStrategy {
 
     /**
-     * Returns the migration status handled by this strategy.
+     * 返回当前策略处理的迁移状态。
      *
-     * @return target migration status
+     * @return 目标迁移状态
      */
     @Override
     public MigrationStatus getStatus() {
@@ -19,20 +19,28 @@ public class ValidationAllStrategy extends AbstractMigrationStrategy {
     }
 
     /**
-     * Executes routing logic for the current migration stage.
+     * 执行当前迁移阶段的路由逻辑。
      *
-     * @param context execution context
-     * @param <T> return type
-     * @return routed execution result
+     * @param context 执行上下文
+     * @param <T>     返回值类型
+     * @return 路由执行结果
      */
     @Override
     public <T> T execute(MigrationExecutionContext<T> context) {
         Map<String, Object> grayscaleParam = context.buildParam();
+
+        // 并发执行旧接口和新接口
         ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context);
+
+        // 发送Diff结果
         sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam);
+
+        // 返回旧接口结果
         if (result.oldResult().isSuccess()) {
             return result.oldResult().value();
         }
+
+        // 旧接口失败时，执行降级逻辑
         return executeFallbackAfterOldFailed(context, result.oldResult().error());
     }
 }

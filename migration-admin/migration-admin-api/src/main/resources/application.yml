@@ -7,7 +7,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: migration-admin-api
+    name: migration.admin.api
   profiles:
     active: local
 

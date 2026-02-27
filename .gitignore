@@ -46,3 +46,6 @@ application-local.yml
 .env.local
 .env.server
 /migration-admin/migration-admin-ui/node_modules/
+
+# Docker config
+.env

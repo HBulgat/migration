@@ -11,8 +11,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>migration-diff</artifactId>
-    <name>migration-diff</name>
+    <artifactId>migration-diff-service</artifactId>
+    <name>migration-diff-service</name>
 
     <dependencies>
         <dependency>

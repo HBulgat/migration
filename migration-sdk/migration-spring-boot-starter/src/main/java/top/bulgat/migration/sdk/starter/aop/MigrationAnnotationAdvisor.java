@@ -7,7 +7,7 @@ import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import top.bulgat.migration.sdk.starter.annotation.Migration;
 
 /**
- * Binds methods annotated with {@link Migration} to {@link MigrationInterceptor}.
+ * 将打上 {@link Migration} 注解的方法绑定到 {@link MigrationInterceptor} 拦截器上。
  */
 public class MigrationAnnotationAdvisor extends AbstractPointcutAdvisor {
 
@@ -15,9 +15,9 @@ public class MigrationAnnotationAdvisor extends AbstractPointcutAdvisor {
     private final Pointcut pointcut;
 
     /**
-     * Creates an annotation advisor.
+     * 创建基于注解的Advisor。
      *
-     * @param interceptor migration interceptor
+     * @param interceptor 迁移拦截器
      */
     public MigrationAnnotationAdvisor(MigrationInterceptor interceptor) {
         this.advice = interceptor;
@@ -25,9 +25,9 @@ public class MigrationAnnotationAdvisor extends AbstractPointcutAdvisor {
     }
 
     /**
-     * Returns the interceptor advice.
+     * 返回拦截器Advice。
      *
-     * @return AOP advice
+     * @return AOP Advice
      */
     @Override
     public Advice getAdvice() {
@@ -35,9 +35,9 @@ public class MigrationAnnotationAdvisor extends AbstractPointcutAdvisor {
     }
 
     /**
-     * Returns the pointcut matching {@link Migration} methods.
+     * 返回匹配 {@link Migration} 注解方法的Pointcut。
      *
-     * @return AOP pointcut
+     * @return AOP Pointcut
      */
     @Override
     public Pointcut getPointcut() {
