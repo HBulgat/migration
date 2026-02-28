@@ -19,8 +19,8 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
 
     /**
      * Persist data.
-     * @param task task entity.
-     * @return result value.
+     * @param task 任务实体。
+     * @return 返回结果。
      */
     @Override
     public MigrationTask save(MigrationTask task) {
@@ -29,9 +29,9 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
     }
 
     /**
-     * Execute existsByMigrationKey business logic.
+     * 执行 existsByMigrationKey 业务逻辑。
      * @param migrationKey migration key.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public boolean existsByMigrationKey(String migrationKey) {
@@ -39,9 +39,9 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
     }
 
     /**
-     * Execute findByMigrationKey business logic.
+     * 执行 findByMigrationKey 业务逻辑。
      * @param migrationKey migration key.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public Optional<MigrationTask> findByMigrationKey(String migrationKey) {
@@ -49,8 +49,8 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
     }
 
     /**
-     * Execute findAll business logic.
-     * @return result value.
+     * 执行 findAll 业务逻辑。
+     * @return 返回结果。
      */
     @Override
     public List<MigrationTask> findAll() {
@@ -58,7 +58,7 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
     }
 
     /**
-     * Execute deleteByMigrationKey business logic.
+     * 执行 deleteByMigrationKey 业务逻辑。
      * @param migrationKey migration key.
      */
     @Override

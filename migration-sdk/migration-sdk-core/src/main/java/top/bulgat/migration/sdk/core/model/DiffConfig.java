@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DiffConfig {
 
-    /** Migration task key. */
+    /** 迁移任务唯一标识. */
     private String migrationKey;
     /** Rule type: IGNORE/TOLERANCE/SCRIPT/SORT. */
     private String ruleType;

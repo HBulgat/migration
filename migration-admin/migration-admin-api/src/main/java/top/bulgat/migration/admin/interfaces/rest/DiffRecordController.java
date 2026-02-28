@@ -41,7 +41,7 @@ public class DiffRecordController {
         this.assembler = assembler;
     }
 
-    @Operation(summary = "List diff records")
+    @Operation(summary = "获取Diff记录列表")
     @GetMapping("/list")
     public Result<PageResult<DiffRecordResponse>> list(
             @RequestParam("migration_key") @NotBlank String migrationKey,
@@ -77,7 +77,7 @@ public class DiffRecordController {
         return Result.success(response);
     }
 
-    @Operation(summary = "Get diff statistics")
+    @Operation(summary = "获取Diff统计信息")
     @GetMapping("/statistics")
     public Result<DiffStatisticsResponse> statistics(
             @RequestParam("migration_key") @NotBlank String migrationKey,

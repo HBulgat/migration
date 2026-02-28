@@ -24,7 +24,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateDiffRuleEnableRequest;
 import top.bulgat.migration.admin.interfaces.dto.UpdateDiffRuleRequest;
 
 /**
- * Diff rule management API.
+ * Diff规则管理接口.
  */
 @Tag(name = "Diff Rule API", description = "Manage migration diff rules")
 @Validated
@@ -42,20 +42,20 @@ public class DiffRuleController {
         this.assembler = assembler;
     }
 
-    @Operation(summary = "Create diff rule")
+    @Operation(summary = "创建Diff规则")
     @PostMapping("/create")
     public Result<DiffRuleResponse> create(@Valid @RequestBody CreateDiffRuleRequest request) {
         return Result.success(assembler.toResponse(applicationService.create(assembler.toCreateCommand(request))));
     }
 
-    @Operation(summary = "Update diff rule")
+    @Operation(summary = "更新Diff规则")
     @PostMapping("/update")
     public Result<Void> update(@Valid @RequestBody UpdateDiffRuleRequest request) {
         applicationService.update(assembler.toUpdateCommand(request));
         return Result.success(null);
     }
 
-    @Operation(summary = "Delete diff rule")
+    @Operation(summary = "删除Diff规则")
     @PostMapping("/delete")
     public Result<Void> delete(@Valid @RequestBody DeleteDiffRuleRequest request) {
         applicationService.delete(assembler.toDeleteCommand(request));
@@ -69,7 +69,7 @@ public class DiffRuleController {
         return Result.success(null);
     }
 
-    @Operation(summary = "List diff rules")
+    @Operation(summary = "获取Diff规则列表")
     @GetMapping("/list")
     public Result<PageResult<DiffRuleResponse>> list(
             @RequestParam("migration_key") @NotBlank String migrationKey,

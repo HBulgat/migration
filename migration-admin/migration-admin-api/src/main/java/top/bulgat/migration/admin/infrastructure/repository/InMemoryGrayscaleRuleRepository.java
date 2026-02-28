@@ -20,7 +20,7 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
     /**
      * Persist data.
      * @param rule rule entity.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public GrayscaleRule save(GrayscaleRule rule) {
@@ -30,10 +30,10 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
     }
 
     /**
-     * Execute findByMigrationKeyAndRuleId business logic.
+     * 执行 findByMigrationKeyAndRuleId 业务逻辑。
      * @param migrationKey migration key.
      * @param ruleId record id.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public Optional<GrayscaleRule> findByMigrationKeyAndRuleId(String migrationKey, String ruleId) {
@@ -45,9 +45,9 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
     }
 
     /**
-     * Execute findByMigrationKey business logic.
+     * 执行 findByMigrationKey 业务逻辑。
      * @param migrationKey migration key.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public List<GrayscaleRule> findByMigrationKey(String migrationKey) {
@@ -59,7 +59,7 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
     }
 
     /**
-     * Execute deleteByMigrationKeyAndRuleId business logic.
+     * 执行 deleteByMigrationKeyAndRuleId 业务逻辑。
      * @param migrationKey migration key.
      * @param ruleId record id.
      */
@@ -73,7 +73,7 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
     }
 
     /**
-     * Execute deleteByMigrationKey business logic.
+     * 执行 deleteByMigrationKey 业务逻辑。
      * @param migrationKey migration key.
      */
     @Override

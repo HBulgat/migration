@@ -9,15 +9,15 @@ import top.bulgat.migration.diff.interfaces.dto.DiffExecuteRequest;
 import top.bulgat.migration.diff.interfaces.dto.DiffExecuteResponse;
 
 /**
- * DiffCommandAssembler converts DTOs and domain models.
+ * DiffCommandAssembler 用于转换DTO和领域模型。
  */
 @Component
 public class DiffCommandAssembler {
 
     /**
-     * Execute toCommand business logic.
-     * @param request request payload.
-     * @return result value.
+     * 执行 toCommand 业务逻辑。
+     * @param request 请求参数。
+     * @return 返回结果。
      */
     public ExecuteDiffCommand toCommand(DiffExecuteRequest request) {
         return new ExecuteDiffCommand(
@@ -31,9 +31,9 @@ public class DiffCommandAssembler {
     }
 
     /**
-     * Execute toResponse business logic.
+     * 执行 toResponse 业务逻辑。
      * @param result result object.
-     * @return result value.
+     * @return 返回结果。
      */
     public DiffExecuteResponse toResponse(DiffResult result) {
         List<DiffExecuteResponse.DiffItemResponse> items = result.getDiffItems().stream()

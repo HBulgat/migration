@@ -23,9 +23,9 @@ public class NoopDiffRecordRepository implements DiffRecordRepository {
 
     /**
      * Persist data.
-     * @param request request payload.
+     * @param request 请求参数。
      * @param result result object.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public DiffRecord save(DiffRequest request, DiffResult result) {

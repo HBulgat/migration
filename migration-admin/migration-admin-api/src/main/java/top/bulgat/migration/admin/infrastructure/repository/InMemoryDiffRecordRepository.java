@@ -23,7 +23,7 @@ public class InMemoryDiffRecordRepository implements DiffRecordRepository {
     /**
      * Persist data.
      * @param record record entity.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public DiffRecord save(DiffRecord record) {
@@ -49,9 +49,9 @@ public class InMemoryDiffRecordRepository implements DiffRecordRepository {
     }
 
     /**
-     * Execute findById business logic.
+     * 执行 findById 业务逻辑。
      * @param id record id.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public Optional<DiffRecord> findById(long id) {

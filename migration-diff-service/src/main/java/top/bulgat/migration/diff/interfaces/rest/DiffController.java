@@ -32,7 +32,7 @@ public class DiffController {
     /**
      * Execute one diff request.
      *
-     * @param request diff request payload
+     * @param request diff 请求参数。
      * @return diff execution result
      */
     @Operation(summary = "Execute diff", description = "Compare old_json and new_json with diff rules")

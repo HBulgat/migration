@@ -61,9 +61,9 @@ public class NacosDiffRuleRepository implements DiffRuleRepository {
     }
 
     /**
-     * Execute findEnabledRules business logic.
+     * 执行 findEnabledRules 业务逻辑。
      * @param migrationKey migration key.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public List<DiffRule> findEnabledRules(String migrationKey) {

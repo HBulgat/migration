@@ -24,7 +24,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleEnableReques
 import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleRequest;
 
 /**
- * Grayscale rule management API.
+ * 灰度规则管理接口.
  */
 @Tag(name = "Grayscale Rule API", description = "Manage migration grayscale rules")
 @Validated
@@ -42,20 +42,20 @@ public class GrayscaleRuleController {
         this.assembler = assembler;
     }
 
-    @Operation(summary = "Create grayscale rule")
+    @Operation(summary = "创建灰度规则")
     @PostMapping("/create")
     public Result<GrayscaleRuleResponse> create(@Valid @RequestBody CreateGrayscaleRuleRequest request) {
         return Result.success(assembler.toResponse(applicationService.create(assembler.toCreateCommand(request))));
     }
 
-    @Operation(summary = "Update grayscale rule")
+    @Operation(summary = "更新灰度规则")
     @PostMapping("/update")
     public Result<Void> update(@Valid @RequestBody UpdateGrayscaleRuleRequest request) {
         applicationService.update(assembler.toUpdateCommand(request));
         return Result.success(null);
     }
 
-    @Operation(summary = "Delete grayscale rule")
+    @Operation(summary = "删除灰度规则")
     @PostMapping("/delete")
     public Result<Void> delete(@Valid @RequestBody DeleteGrayscaleRuleRequest request) {
         applicationService.delete(assembler.toDeleteCommand(request));
@@ -69,7 +69,7 @@ public class GrayscaleRuleController {
         return Result.success(null);
     }
 
-    @Operation(summary = "List grayscale rules")
+    @Operation(summary = "获取灰度规则列表")
     @GetMapping("/list")
     public Result<PageResult<GrayscaleRuleResponse>> list(
             @RequestParam("migration_key") @NotBlank String migrationKey,

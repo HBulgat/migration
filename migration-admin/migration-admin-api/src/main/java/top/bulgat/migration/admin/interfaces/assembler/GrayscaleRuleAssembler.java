@@ -16,7 +16,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleEnableReques
 import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleRequest;
 
 /**
- * GrayscaleRuleAssembler converts DTOs and domain models.
+ * GrayscaleRuleAssembler 用于转换DTO和领域模型。
  */
 @Component
 public class GrayscaleRuleAssembler {
@@ -24,9 +24,9 @@ public class GrayscaleRuleAssembler {
 
 
     /**
-     * Execute toCreateCommand business logic.
-     * @param request request payload.
-     * @return result value.
+     * 执行 toCreateCommand 业务逻辑。
+     * @param request 请求参数。
+     * @return 返回结果。
      */
     public CreateGrayscaleRuleCommand toCreateCommand(CreateGrayscaleRuleRequest request) {
         return new CreateGrayscaleRuleCommand(
@@ -37,9 +37,9 @@ public class GrayscaleRuleAssembler {
     }
 
     /**
-     * Execute toUpdateCommand business logic.
-     * @param request request payload.
-     * @return result value.
+     * 执行 toUpdateCommand 业务逻辑。
+     * @param request 请求参数。
+     * @return 返回结果。
      */
     public UpdateGrayscaleRuleCommand toUpdateCommand(UpdateGrayscaleRuleRequest request) {
         return new UpdateGrayscaleRuleCommand(
@@ -51,38 +51,38 @@ public class GrayscaleRuleAssembler {
     }
 
     /**
-     * Execute toDeleteCommand business logic.
-     * @param request request payload.
-     * @return result value.
+     * 执行 toDeleteCommand 业务逻辑。
+     * @param request 请求参数。
+     * @return 返回结果。
      */
     public DeleteGrayscaleRuleCommand toDeleteCommand(DeleteGrayscaleRuleRequest request) {
         return new DeleteGrayscaleRuleCommand(request.migrationKey(), request.ruleId());
     }
 
     /**
-     * Execute toUpdateEnableCommand business logic.
-     * @param request request payload.
-     * @return result value.
+     * 执行 toUpdateEnableCommand 业务逻辑。
+     * @param request 请求参数。
+     * @return 返回结果。
      */
     public UpdateGrayscaleRuleEnableCommand toUpdateEnableCommand(UpdateGrayscaleRuleEnableRequest request) {
         return new UpdateGrayscaleRuleEnableCommand(request.migrationKey(), request.ruleId(), request.enable());
     }
 
     /**
-     * Execute toListCommand business logic.
+     * 执行 toListCommand 业务逻辑。
      * @param migrationKey migration key.
-     * @param page page index.
-     * @param pageSize page size.
-     * @return result value.
+     * @param page 页码。
+     * @param pageSize 每页大小。
+     * @return 返回结果。
      */
     public ListGrayscaleRuleCommand toListCommand(String migrationKey, int page, int pageSize) {
         return new ListGrayscaleRuleCommand(migrationKey, page, pageSize);
     }
 
     /**
-     * Execute toResponse business logic.
+     * 执行 toResponse 业务逻辑。
      * @param rule rule entity.
-     * @return result value.
+     * @return 返回结果。
      */
     public GrayscaleRuleResponse toResponse(GrayscaleRule rule) {
         return new GrayscaleRuleResponse(
@@ -96,9 +96,9 @@ public class GrayscaleRuleAssembler {
     }
 
     /**
-     * Execute toResponseList business logic.
+     * 执行 toResponseList 业务逻辑。
      * @param rules rule collection.
-     * @return result value.
+     * @return 返回结果。
      */
     public List<GrayscaleRuleResponse> toResponseList(List<GrayscaleRule> rules) {
         return rules.stream().map(this::toResponse).collect(Collectors.toList());

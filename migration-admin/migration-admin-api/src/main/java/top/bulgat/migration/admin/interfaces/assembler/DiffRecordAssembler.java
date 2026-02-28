@@ -16,7 +16,7 @@ import top.bulgat.migration.admin.interfaces.dto.DiffRecordResponse;
 import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
 
 /**
- * DiffRecordAssembler converts DTOs and domain models.
+ * DiffRecordAssembler 用于转换DTO和领域模型。
  */
 @Component
 public class DiffRecordAssembler {
@@ -24,14 +24,14 @@ public class DiffRecordAssembler {
 
 
     /**
-     * Execute toListCommand business logic.
+     * 执行 toListCommand 业务逻辑。
      * @param migrationKey migration key.
      * @param hasDiff has-diff filter.
      * @param startDate start date.
      * @param endDate end date.
-     * @param page page index.
-     * @param pageSize page size.
-     * @return result value.
+     * @param page 页码。
+     * @param pageSize 每页大小。
+     * @return 返回结果。
      */
     public ListDiffRecordCommand toListCommand(
             String migrationKey,
@@ -44,12 +44,12 @@ public class DiffRecordAssembler {
     }
 
     /**
-     * Execute toCountCommand business logic.
+     * 执行 toCountCommand 业务逻辑。
      * @param migrationKey migration key.
      * @param hasDiff has-diff filter.
      * @param startDate start date.
      * @param endDate end date.
-     * @return result value.
+     * @return 返回结果。
      */
     public CountDiffRecordCommand toCountCommand(
             String migrationKey,
@@ -60,20 +60,20 @@ public class DiffRecordAssembler {
     }
 
     /**
-     * Execute toDetailCommand business logic.
+     * 执行 toDetailCommand 业务逻辑。
      * @param id record id.
-     * @return result value.
+     * @return 返回结果。
      */
     public DetailDiffRecordCommand toDetailCommand(long id) {
         return new DetailDiffRecordCommand(id);
     }
 
     /**
-     * Execute toStatisticsCommand business logic.
+     * 执行 toStatisticsCommand 业务逻辑。
      * @param migrationKey migration key.
      * @param startDate start date.
      * @param endDate end date.
-     * @return result value.
+     * @return 返回结果。
      */
     public StatisticsDiffRecordCommand toStatisticsCommand(
             String migrationKey,
@@ -83,9 +83,9 @@ public class DiffRecordAssembler {
     }
 
     /**
-     * Execute toResponse business logic.
+     * 执行 toResponse 业务逻辑。
      * @param record record entity.
-     * @return result value.
+     * @return 返回结果。
      */
     public DiffRecordResponse toResponse(DiffRecord record) {
         return new DiffRecordResponse(
@@ -105,18 +105,18 @@ public class DiffRecordAssembler {
     }
 
     /**
-     * Execute toResponseList business logic.
-     * @param records method parameter.
-     * @return result value.
+     * 执行 toResponseList 业务逻辑。
+     * @param records 方法参数。
+     * @return 返回结果。
      */
     public List<DiffRecordResponse> toResponseList(List<DiffRecord> records) {
         return records.stream().map(this::toResponse).collect(Collectors.toList());
     }
 
     /**
-     * Execute toStatisticsResponse business logic.
-     * @param statistics method parameter.
-     * @return result value.
+     * 执行 toStatisticsResponse 业务逻辑。
+     * @param statistics 方法参数。
+     * @return 返回结果。
      */
     public DiffStatisticsResponse toStatisticsResponse(DiffRecordQueryApplicationService.DiffStatistics statistics) {
         return new DiffStatisticsResponse(

@@ -30,7 +30,7 @@ public class InMemoryConfigCenterGateway implements ConfigCenterGateway {
      *
      * @param dataId config data id.
      * @param group config group.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public Optional<String> getConfig(String dataId, String group) {

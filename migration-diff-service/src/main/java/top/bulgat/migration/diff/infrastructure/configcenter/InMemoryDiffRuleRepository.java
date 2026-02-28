@@ -19,9 +19,9 @@ public class InMemoryDiffRuleRepository implements DiffRuleRepository {
     private final Map<String, List<DiffRule>> rulesByMigrationKey = new ConcurrentHashMap<>();
 
     /**
-     * Execute findEnabledRules business logic.
+     * 执行 findEnabledRules 业务逻辑。
      * @param migrationKey migration key.
-     * @return result value.
+     * @return 返回结果。
      */
     @Override
     public List<DiffRule> findEnabledRules(String migrationKey) {
