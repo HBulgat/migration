@@ -24,9 +24,9 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateMigrationTaskRequest;
 import top.bulgat.migration.admin.interfaces.dto.UpdateMigrationTaskStatusRequest;
 
 /**
- * Migration task management API.
+ * 迁移任务管理接口。
  */
-@Tag(name = "Migration Task API", description = "Create, query, update and delete migration tasks")
+@Tag(name = "Migration Task API", description = "创建、查询、更新和删除迁移任务")
 @Validated
 @RestController
 @RequestMapping("/api/v1/migration_task")
@@ -42,33 +42,35 @@ public class MigrationTaskController {
         this.assembler = assembler;
     }
 
-    @Operation(summary = "Create migration task")
+    @Operation(summary = "创建迁移任务")
     @PostMapping("/create")
     public Result<MigrationTaskResponse> create(@Valid @RequestBody CreateMigrationTaskRequest request) {
-        return Result.success(assembler.toResponse(applicationService.createMigrationTask(assembler.toCommand(request))));
+        return Result
+                .success(assembler.toResponse(applicationService.createMigrationTask(assembler.toCommand(request))));
     }
 
-    @Operation(summary = "Update migration task")
+    @Operation(summary = "更新迁移任务")
     @PostMapping("/update")
     public Result<Void> update(@Valid @RequestBody UpdateMigrationTaskRequest request) {
         applicationService.updateTask(assembler.toUpdateCommand(request));
         return Result.success(null);
     }
 
-    @Operation(summary = "Query migration task by key")
+    @Operation(summary = "根据键查询迁移任务")
     @PostMapping("/query")
     public Result<MigrationTaskResponse> query(@Valid @RequestBody QueryMigrationTaskRequest request) {
-        return Result.success(assembler.toResponse(applicationService.getByMigrationKey(assembler.toQueryCommand(request))));
+        return Result
+                .success(assembler.toResponse(applicationService.getByMigrationKey(assembler.toQueryCommand(request))));
     }
 
-    @Operation(summary = "Delete migration task by key")
+    @Operation(summary = "根据键删除迁移任务")
     @PostMapping("/delete")
     public Result<Void> delete(@Valid @RequestBody DeleteMigrationTaskRequest request) {
         applicationService.deleteByMigrationKey(assembler.toDeleteCommand(request));
         return Result.success(null);
     }
 
-    @Operation(summary = "List migration tasks")
+    @Operation(summary = "获取迁移任务列表")
     @GetMapping("/list")
     public Result<PageResult<MigrationTaskResponse>> list(
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page,
@@ -85,7 +87,7 @@ public class MigrationTaskController {
         return Result.success(pageResult);
     }
 
-    @Operation(summary = "Update migration task status")
+    @Operation(summary = "更新迁移任务状态")
     @PostMapping("/update_status")
     public Result<Void> updateStatus(@Valid @RequestBody UpdateMigrationTaskStatusRequest request) {
         applicationService.updateStatus(assembler.toUpdateStatusCommand(request));

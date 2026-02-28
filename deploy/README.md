@@ -12,7 +12,10 @@
 
 你需要修改 `docker-compose.yml` 文件中 `migration.admin.api` 和 `migration.diff.service` 服务的以下环境变量，确切指向您已部署的 Nacos 和 MySQL 实例：
 
-- `NACOS_SERVER_ADDR`: 例如 `192.168.1.100:8848`（请勿使用 `localhost` 或 `127.0.0.1`）
+- `MIGRATION_NACOS_SERVER_ADDR`: 例如 `192.168.1.100:8848`（请勿使用 `localhost` 或 `127.0.0.1`）
+- `MIGRATION_NACOS_NAMESPACE`: 例如 `migration`
+- `MIGRATION_NACOS_USERNAME`: 例如 `nacos`
+- `MIGRATION_NACOS_PASSWORD`: 例如 `nacos` 
 - `SPRING_DATASOURCE_URL`: MySQL 的 JDBC URL 连接串
 - `SPRING_DATASOURCE_USERNAME`: MySQL 用户名
 - `SPRING_DATASOURCE_PASSWORD`: MySQL 密码
@@ -37,7 +40,7 @@
 
 - **Admin UI 管理后台前端**: http://localhost
 - **Admin API 接口文档**: http://localhost:8080/doc.html (Knife4j)
-- **Diff API 接口文档**: http://localhost:8081/swagger-ui/index.html
+- **Diff API 接口文档**:  http://localhost:8081/doc.html (Knife4j)
 
 ## 环境变量配置
 
