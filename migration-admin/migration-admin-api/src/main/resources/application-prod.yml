@@ -5,9 +5,9 @@ spring:
   main:
       allow-bean-definition-overriding: true
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${MIGRATION_DB_URL}
+    username: ${MIGRATION_DB_USERNAME}
+    password: ${MIGRATION_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 migration:

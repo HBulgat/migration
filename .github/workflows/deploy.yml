@@ -54,8 +54,8 @@ jobs:
             echo "MIGRATION_NACOS_USERNAME=${{ secrets.MIGRATION_NACOS_USERNAME }}" >> .env
             echo "MIGRATION_NACOS_PASSWORD=${{ secrets.MIGRATION_NACOS_PASSWORD }}" >> .env
             echo "SPRING_DATASOURCE_URL=${{ secrets.MIGRATION_DB_URL }}" >> .env
-            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.MIGRATION_DB_USER }}" >> .env
-            echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.MIGRATION_DB_PASS }}" >> .env
+            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.MIGRATION_DB_USERNAME }}" >> .env
+            echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.MIGRATION_DB_PASSWORD }}" >> .env
             echo "SPRING_PROFILES_ACTIVE=prod" >> .env
             
             # 这里的 deploy.sh 已经包含了 docker-compose down 和 docker-compose up -d --build

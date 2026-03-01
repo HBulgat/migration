@@ -5,17 +5,17 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/migration?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8}
-    username: ${DB_USERNAME:}
-    password: ${DB_PASSWORD:}
+    url: ${MIGRATION_DB_URL:jdbc:mysql://localhost:3306/migration?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8}
+    username: ${MIGRATION_DB_USERNAME:}
+    password: ${MIGRATION_DB_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 migration:
   nacos:
-    server-addr: ${NACOS_SERVER_ADDR:}
-    namespace: ${NACOS_NAMESPACE:}
-    username: ${NACOS_USERNAME:}
-    password: ${NACOS_PASSWORD:}
+    server-addr: ${MIGRATION_NACOS_SERVER_ADDR:}
+    namespace: ${MIGRATION_NACOS_NAMESPACE:}
+    username: ${MIGRATION_NACOS_USERNAME:}
+    password: ${MIGRATION_NACOS_PASSWORD:}
 
 logging:
   level:
