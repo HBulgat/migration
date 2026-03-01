@@ -20,10 +20,13 @@ public class MigrationSdkProperties {
     public static final String ENV_DIFF_SERVICE_URL = "MIGRATION_DIFF_SERVICE_URL";
     /** Environment variable for default timeout. */
     public static final String ENV_DEFAULT_TIMEOUT = "MIGRATION_DEFAULT_TIMEOUT";
+    /** Environment variable for internal token. */
+    public static final String ENV_INTERNAL_TOKEN = "MIGRATION_INTERNAL_TOKEN";
 
     private String configCenterUrl;
     private String diffServiceUrl;
     private int defaultTimeout;
+    private String internalToken;
 
     /**
      * Builds properties from environment variables.
@@ -43,6 +46,7 @@ public class MigrationSdkProperties {
         return MigrationSdkProperties.builder()
                 .configCenterUrl(resolve(ENV_CONFIG_CENTER_URL, "http://localhost:8080"))
                 .diffServiceUrl(resolve(ENV_DIFF_SERVICE_URL, "http://localhost:8081"))
+                .internalToken(resolve(ENV_INTERNAL_TOKEN, "MIGRATION_DEFAULT_SDK_TOKEN"))
                 .defaultTimeout(timeout)
                 .build();
     }
@@ -50,7 +54,7 @@ public class MigrationSdkProperties {
     /**
      * Resolves environment variable with default fallback.
      *
-     * @param key env key
+     * @param key          env key
      * @param defaultValue fallback value
      * @return resolved value
      */

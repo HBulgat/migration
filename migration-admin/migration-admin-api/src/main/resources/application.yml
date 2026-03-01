@@ -11,6 +11,10 @@ spring:
   profiles:
     active: local
 
+migration:
+  admin:
+    internal-token: "MIGRATION_DEFAULT_SDK_TOKEN"
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true

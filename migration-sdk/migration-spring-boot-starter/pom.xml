@@ -20,14 +20,9 @@
             <artifactId>migration-sdk-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>top.bulgat</groupId>
-            <artifactId>common-base</artifactId>
-            <version>1.0.0</version>
-        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>top.bulgat</groupId>-->
-<!--            <artifactId>common-springboot-middleware</artifactId>-->
+<!--            <artifactId>common-base</artifactId>-->
 <!--            <version>1.0.0</version>-->
 <!--        </dependency>-->
         <dependency>

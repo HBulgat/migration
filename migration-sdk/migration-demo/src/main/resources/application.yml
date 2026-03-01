@@ -1,8 +1,16 @@
 server:
-  port: 8082
+  port: 8088
 
 spring:
   application:
-    name: migration-demo
+    name: migration.test.demo
   profiles:
-    active: local
+    active: default
+migration:
+  config-center-url: ""
+  diff-service-url: ""
+  default-timeout: 5000
+
+logging:
+  level:
+    top.bulgat: DEBUG

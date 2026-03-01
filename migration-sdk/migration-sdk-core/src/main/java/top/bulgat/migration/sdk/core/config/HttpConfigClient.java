@@ -23,7 +23,8 @@ import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 
 /**
- * HTTP-based config client for reading migration settings from migration-admin-api.
+ * HTTP-based config client for reading migration settings from
+ * migration-admin-api.
  */
 public class HttpConfigClient implements ConfigClient {
 
@@ -32,6 +33,7 @@ public class HttpConfigClient implements ConfigClient {
 
     private final String baseUrl;
     private final CloseableHttpClient httpClient;
+    private final String internalToken;
 
     /**
      * Creates client from SDK properties.
@@ -41,18 +43,21 @@ public class HttpConfigClient implements ConfigClient {
     public HttpConfigClient(MigrationSdkProperties properties) {
         this(
                 trimTrailingSlash(properties.getConfigCenterUrl()),
-                createHttpClient(properties.getDefaultTimeout()));
+                createHttpClient(properties.getDefaultTimeout()),
+                properties.getInternalToken());
     }
 
     /**
      * Constructor for tests and custom injection.
      *
-     * @param baseUrl admin-api base url
-     * @param httpClient http client
+     * @param baseUrl       admin-api base url
+     * @param httpClient    http client
+     * @param internalToken token for M2M authentication
      */
-    HttpConfigClient(String baseUrl, CloseableHttpClient httpClient) {
+    HttpConfigClient(String baseUrl, CloseableHttpClient httpClient, String internalToken) {
         this.baseUrl = trimTrailingSlash(baseUrl);
         this.httpClient = httpClient;
+        this.internalToken = internalToken;
     }
 
     /**
@@ -143,6 +148,9 @@ public class HttpConfigClient implements ConfigClient {
      */
     private String executeGet(String path) {
         HttpGet request = new HttpGet(baseUrl + path);
+        if (internalToken != null && !internalToken.isEmpty()) {
+            request.setHeader("X-Internal-Token", internalToken);
+        }
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             return readBody(response, "http get failed");
         } catch (IOException ex) {
@@ -153,12 +161,15 @@ public class HttpConfigClient implements ConfigClient {
     /**
      * Executes HTTP POST request.
      *
-     * @param path request path
+     * @param path     request path
      * @param jsonBody json request body
      * @return response body
      */
     private String executePost(String path, String jsonBody) {
         HttpPost request = new HttpPost(baseUrl + path);
+        if (internalToken != null && !internalToken.isEmpty()) {
+            request.setHeader("X-Internal-Token", internalToken);
+        }
         request.setEntity(new StringEntity(jsonBody, ContentType.APPLICATION_JSON));
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             return readBody(response, "http post failed");
@@ -171,7 +182,7 @@ public class HttpConfigClient implements ConfigClient {
      * Reads response body and validates status code.
      *
      * @param response http response
-     * @param action action label used in exception message
+     * @param action   action label used in exception message
      * @return response text
      */
     private String readBody(CloseableHttpResponse response, String action) {
@@ -192,7 +203,7 @@ public class HttpConfigClient implements ConfigClient {
     /**
      * Validates admin-api standard response code.
      *
-     * @param root parsed response json
+     * @param root   parsed response json
      * @param action action label used in exception message
      */
     private void ensureSuccess(JSONObject root, String action) {

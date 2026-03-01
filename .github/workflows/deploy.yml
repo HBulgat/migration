@@ -1,0 +1,66 @@
+name: Deploy to Cloud Server
+
+on:
+  push:
+    branches:
+      - master # 触发部署的分支，如果是 main 请修改为 main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build Backend Jar
+        run: mvn clean package -DskipTests
+
+      - name: Transfer code and jars to cloud server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          # 如果不想用秘钥，可以使用密码登录，替换成： password: ${{ secrets.SERVER_PASSWORD }}
+          source: "."
+          # 将项目传输到服务器上的哪个目录
+          target: "/dev-ops/migration" 
+          # 排除不需要的文件，减少传输体积
+          rm: false
+
+      - name: SSH to server and Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /dev-ops/migration/deploy
+            chmod +x deploy.sh
+            
+            # 【重要提示】
+            # 从 GitHub Secrets 中动态生成 .env 配置文件
+            
+            echo "MIGRATION_NACOS_SERVER_ADDR=${{ secrets.MIGRATION_NACOS_SERVER_ADDR }}" > .env
+            echo "MIGRATION_NACOS_NAMESPACE=${{ secrets.MIGRATION_NACOS_NAMESPACE }}" >> .env
+            echo "MIGRATION_NACOS_USERNAME=${{ secrets.MIGRATION_NACOS_USERNAME }}" >> .env
+            echo "MIGRATION_NACOS_PASSWORD=${{ secrets.MIGRATION_NACOS_PASSWORD }}" >> .env
+            echo "SPRING_DATASOURCE_URL=${{ secrets.MIGRATION_DB_URL }}" >> .env
+            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.MIGRATION_DB_USER }}" >> .env
+            echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.MIGRATION_DB_PASS }}" >> .env
+            echo "SPRING_PROFILES_ACTIVE=prod" >> .env
+            
+            # 这里的 deploy.sh 已经包含了 docker-compose down 和 docker-compose up -d --build
+            # 如果不想用 deploy.sh 里面的打包动作（因为已经在 actions 里用 maven 打包过了），我们直接执行 docker-compose 命令即可
+            
+            echo "Restarting docker containers..."
+            docker-compose down
+            docker-compose up -d --build
