@@ -13,12 +13,25 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Checkout Common Project
+        uses: actions/checkout@v4
+        with:
+          repository: HBulgat/common
+          path: common-repo
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
+
+      - name: Install Common Dependencies
+        run: |
+          cd common-repo
+          mvn clean install -DskipTests
+          cd ..
+          rm -rf common-repo
 
       - name: Build Backend Jar
         run: mvn clean package -DskipTests
