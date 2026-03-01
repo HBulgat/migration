@@ -10,9 +10,9 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import top.bulgat.common.exception.BizException;
-import top.bulgat.common.exception.ErrorCode;
-import top.bulgat.common.model.Result;
+import top.bulgat.common.base.exception.BizException;
+import top.bulgat.common.base.exception.ErrorCode;
+import top.bulgat.common.base.model.Result;
 import top.bulgat.common.springboot.middleware.exception.GlobalExceptionHandler;
 
 class GlobalExceptionHandlerTest {

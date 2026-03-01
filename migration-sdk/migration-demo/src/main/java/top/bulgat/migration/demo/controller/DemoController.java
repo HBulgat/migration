@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.bulgat.common.model.Result;
+import top.bulgat.common.base.model.Result;
 import top.bulgat.migration.demo.dto.User;
 import top.bulgat.migration.demo.service.DemoService;
 

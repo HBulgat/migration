@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS migration_dev;
-CREATE DATABASE IF NOT EXISTS migration_dev DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE migration_dev;
+DROP DATABASE IF EXISTS migration;
+CREATE DATABASE IF NOT EXISTS migration DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE migration;
 CREATE TABLE IF NOT EXISTS diff_record (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     migration_key VARCHAR(64) NOT NULL COMMENT '迁移任务key',

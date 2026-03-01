@@ -6,9 +6,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import top.bulgat.common.exception.ErrorCode;
-import top.bulgat.common.model.Result;
-import top.bulgat.common.util.JsonUtils;
+import top.bulgat.common.base.exception.ErrorCode;
+import top.bulgat.common.base.model.Result;
+import top.bulgat.common.base.util.JsonUtils;
 
 import java.io.IOException;
 

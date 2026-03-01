@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.bulgat.common.thread.ThreadContext;
+import top.bulgat.common.base.thread.ThreadContext;
 import top.bulgat.migration.sdk.core.model.DiffRequest;
 import top.bulgat.migration.sdk.core.support.InvocationResult;
 import top.bulgat.migration.sdk.core.support.OldInvocationFailedException;

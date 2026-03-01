@@ -2,8 +2,6 @@ package top.bulgat.migration.admin.domain.model;
 
 import lombok.Getter;
 import java.time.LocalDateTime;
-import top.bulgat.common.exception.BizException;
-import top.bulgat.common.exception.ErrorCode;
 
 /**
  * 迁移差分规则领域模型。

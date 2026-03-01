@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.bulgat.common.model.Result;
+import top.bulgat.common.base.model.Result;
 import top.bulgat.migration.diff.application.service.DiffApplicationService;
 import top.bulgat.migration.diff.interfaces.assembler.DiffCommandAssembler;
 import top.bulgat.migration.diff.interfaces.dto.DiffExecuteRequest;

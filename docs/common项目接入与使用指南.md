@@ -32,8 +32,8 @@
 
 ### 3.1 统一响应
 
-- 使用：`top.bulgat.common.model.Result`
-- 分页使用：`top.bulgat.common.model.PageResult`
+- 使用：`top.bulgat.common.base.model.Result`
+- 分页使用：`top.bulgat.common.base.model.PageResult`
 
 示例：
 
@@ -49,8 +49,8 @@ return Result.success(pageResult);
 
 ### 3.2 业务异常
 
-- 异常类型：`top.bulgat.common.exception.BizException`
-- 错误码：`top.bulgat.common.exception.ErrorCode`
+- 异常类型：`top.bulgat.common.base.exception.BizException`
+- 错误码：`top.bulgat.common.base.exception.ErrorCode`
 
 示例：
 
@@ -62,9 +62,9 @@ if (task == null) {
 
 ### 3.3 线程上下文与工具类
 
-- Trace 上下文：`top.bulgat.common.thread.ThreadContext`
-- JSON 工具：`top.bulgat.common.util.JsonUtils`
-- 字符串工具：`top.bulgat.common.util.StringUtils`
+- Trace 上下文：`top.bulgat.common.base.thread.ThreadContext`
+- JSON 工具：`top.bulgat.common.base.util.JsonUtils`
+- 字符串工具：`top.bulgat.common.base.util.StringUtils`
 
 ---
 
@@ -90,8 +90,8 @@ common:
 
 ## 5. migration 项目落地约束
 
-1. Controller 返回值统一使用 `top.bulgat.common.model.Result`
-2. 列表分页统一使用 `top.bulgat.common.model.PageResult`
+1. Controller 返回值统一使用 `top.bulgat.common.base.model.Result`
+2. 列表分页统一使用 `top.bulgat.common.base.model.PageResult`
 3. 不再在业务模块重复定义：
    - `Result`
    - `PageResult`
