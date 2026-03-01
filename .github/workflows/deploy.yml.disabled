@@ -3,7 +3,7 @@ name: Deploy to Cloud Server
 on:
   push:
     branches:
-      - master # 触发部署的分支，如果是 main 请修改为 main
+      - master
 
 jobs:
   build-and-deploy:
