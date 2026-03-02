@@ -2,10 +2,8 @@
 
 ## 1. 依赖来源
 
-本项目统一依赖外部公共库工程（本机路径）：
-
-- `e:/data/Java/common/common-base`
-- `e:/data/Java/common/common-springboot-middleware`
+本项目统一依赖外部公共库工程：
+https://github.com/HBulgat/migration
 
 禁止在 `migration` 仓库内自行复制/创建同名模块。
 
