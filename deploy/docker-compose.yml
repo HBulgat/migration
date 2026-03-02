@@ -18,6 +18,9 @@ services:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - LOGGING_FILE_PATH=/app/logs/migration.admin.api
+    volumes:
+      - /var/log/myapp/migration.admin.api:/app/logs/migration.admin.api
     restart: always
 
   migration.diff.service:
@@ -39,6 +42,9 @@ services:
       - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - LOGGING_FILE_PATH=/app/logs/migration.diff.service
+    volumes:
+      - /var/log/myapp/migration.diff.service:/app/logs/migration.diff.service
     restart: always
 
   migration.admin.ui:
