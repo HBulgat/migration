@@ -4,28 +4,23 @@
 set -e
 
 # Change to the root directory of the project (assuming the script is run from the 'deploy' directory)
-cd "$(dirname "$0")/.."
-
-echo "=========================================="
-echo "    Building Backend Services (Maven)     "
-echo "=========================================="
-mvn clean package -DskipTests
-echo "✅ Backend build SUCCESS"
-echo ""
+cd "$(dirname "$0")"
 
 echo "=========================================="
 echo "       Deploying Services (Docker)        "
 echo "=========================================="
-# Change back to deploy directory
-cd deploy
 
 # Stop existing containers if running
-echo "Stopping existing containers..."
+echo "-> Stopping existing containers..."
 docker-compose down
 
-# Build and start new containers
-echo "Building Docker images and starting containers..."
-docker-compose up -d --build
+# Pull latest images
+echo "-> Pulling latest multi-arch images..."
+docker-compose pull
+
+# Start new containers
+echo "-> Starting containers..."
+docker-compose up -d
 
 echo "=========================================="
 echo "          Deployment Complete!            "
