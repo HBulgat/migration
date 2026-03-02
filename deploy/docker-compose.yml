@@ -55,8 +55,6 @@ services:
     container_name: migration.admin.ui
     ports:
       - "8088:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     restart: always
     depends_on:
       - migration.admin.api
