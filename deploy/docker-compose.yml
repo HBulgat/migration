@@ -3,7 +3,7 @@ services:
     build:
       context: ../migration-admin/migration-admin-api
       dockerfile: Dockerfile
-    image: migration.admin.api:latest
+    image: hbulgat/migration.admin.api:latest
     container_name: migration.admin.api
     env_file:
       - .env
@@ -24,7 +24,7 @@ services:
     build:
       context: ../migration-diff-service
       dockerfile: Dockerfile
-    image: migration.diff.service:latest
+    image: hbulgat/migration.diff.service:latest
     container_name: migration.diff.service
     env_file:
       - .env
@@ -45,7 +45,7 @@ services:
     build:
       context: ../migration-admin/migration-admin-ui
       dockerfile: Dockerfile
-    image: migration.admin.ui:latest
+    image: hbulgat/migration.admin.ui:latest
     container_name: migration.admin.ui
     ports:
       - "8088:80"
