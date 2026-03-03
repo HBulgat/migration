@@ -213,7 +213,7 @@ public Result login(@RequestBody LoginReq req) { return null; }</code></pre>
                 <strong>引入 Go Modules 依赖</strong>
                 <p>在你的 Go 项目中获取 SDK 包：</p>
                 <div class="code-block">
-<pre><code>go get github.com/HBulgat/migration/migration-sdk/migration-sdk-go</code></pre>
+<pre><code>go get github.com/HBulgat/migration-sdk-go</code></pre>
                 </div>
               </div>
             </div>
