@@ -24,6 +24,10 @@ function isRowDisabled(row: DiffRule): boolean {
   return !row.enable
 }
 
+function tableRowClassName({ row }: { row: DiffRule }) {
+  return isRowDisabled(row) ? 'disabled-row' : ''
+}
+
 async function loadTasks() {
   try {
     const res = await getMigrationTaskList({ page: 1, pageSize: 100 })
@@ -154,7 +158,7 @@ onMounted(async () => {
       :data="tableData"
       border
       row-key="rule_id"
-      :row-class-name="({ row }: { row: DiffRule }) => (isRowDisabled(row) ? 'disabled-row' : '')"
+      :row-class-name="tableRowClassName"
     >
       <el-table-column prop="rule_type" label="规则类型" width="120">
         <template #default="{ row }">

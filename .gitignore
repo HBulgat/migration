@@ -49,3 +49,4 @@ application-local.yml
 
 # Docker config
 .env
+/migration-admin/migration-admin-ui/dist/
