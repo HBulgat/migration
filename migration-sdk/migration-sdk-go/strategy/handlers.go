@@ -3,7 +3,7 @@ package strategy
 import (
 	"log"
 
-	"github.com/migration-sdk-go/grayscale"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/grayscale"
 )
 
 // invokeWithFallback 执行并携带降级处理逻辑

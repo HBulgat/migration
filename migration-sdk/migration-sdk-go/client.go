@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"log"
 
-	"github.com/migration-sdk-go/diff"
-	"github.com/migration-sdk-go/enums"
-	"github.com/migration-sdk-go/grayscale"
-	"github.com/migration-sdk-go/provider"
-	"github.com/migration-sdk-go/strategy"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/diff"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/enums"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/grayscale"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/provider"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/strategy"
 )
 
 // Config 迁移配置结构体

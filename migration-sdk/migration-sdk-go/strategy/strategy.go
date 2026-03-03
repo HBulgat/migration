@@ -3,8 +3,8 @@ package strategy
 import (
 	"errors"
 
-	"github.com/migration-sdk-go/enums"
-	"github.com/migration-sdk-go/grayscale"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/enums"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/grayscale"
 )
 
 // Strategy 定义阶段流转协议

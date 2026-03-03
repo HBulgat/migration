@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/migration-sdk-go"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go"
 )
 
 // ========= 模拟业务侧代码 =========

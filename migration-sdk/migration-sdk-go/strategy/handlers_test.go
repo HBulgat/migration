@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/migration-sdk-go/enums"
+	"github.com/HBulgat/migration/migration-sdk/migration-sdk-go/enums"
 )
 
 // MockTargetFunc Helper target function for testing
