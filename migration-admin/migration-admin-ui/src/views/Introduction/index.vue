@@ -163,15 +163,13 @@
               <div class="step-body">
                 <strong>构建参数提取器 (ParamHandler)</strong>
                 <p>由于注解拦截在不同方法的参数结构各异，实现该接口可以告诉平台该取哪些参数做“灰度路由匹配”：</p>
-                <div class="code-block">
-<pre><code>@Component
-public class UserParamHandler implements ParamHandler {
-    @Override
-    public Map&lt;String, Object&gt; build(Object... args) {
-        return Map.of("userId", args[0]); 
-    }
-}</code></pre>
-                </div>
+<vue-monaco-editor
+                  v-model:value="codeParamHandler"
+                  theme="vs-dark"
+                  language="java"
+                  :options="editorOptions"
+                  class="monaco-container"
+                />
               </div>
             </div>
 
@@ -180,16 +178,13 @@ public class UserParamHandler implements ParamHandler {
               <div class="step-body">
                 <strong>标注业务方法使用 <code>@Migration</code></strong>
                 <p>只需一个注解完成流量劫持。原先的方法体留空，将请求转交给实际的旧逻辑与新逻辑函数。</p>
-                <div class="code-block">
-<pre><code>@Migration(
-    key = "user-login-api",          // 在控制台填写的任务ID
-    oldMethod = "doLoginOld",        // 遗留逻辑
-    newMethod = "doLoginNew",        // 重构的新逻辑
-    paramHandler = UserParamHandler.class
-)
-@PostMapping("/login")
-public Result login(@RequestBody LoginReq req) { return null; }</code></pre>
-                </div>
+<vue-monaco-editor
+                  v-model:value="codeMigration"
+                  theme="vs-dark"
+                  language="java"
+                  :options="editorOptions"
+                  class="monaco-container"
+                />
               </div>
             </div>
 
@@ -212,9 +207,14 @@ public Result login(@RequestBody LoginReq req) { return null; }</code></pre>
               <div class="step-body">
                 <strong>引入 Go Modules 依赖</strong>
                 <p>在你的 Go 项目中获取 SDK 包：</p>
-                <div class="code-block">
-<pre><code>go get github.com/HBulgat/migration-sdk-go</code></pre>
-                </div>
+                <vue-monaco-editor
+                  v-model:value="codeGoClient"
+                  theme="vs-dark"
+                  language="shell"
+                  :options="editorOptions"
+                  class="monaco-container"
+                  style="height: 60px"
+                />
               </div>
             </div>
 
@@ -223,19 +223,14 @@ public Result login(@RequestBody LoginReq req) { return null; }</code></pre>
               <div class="step-body">
                 <strong>初始化并使用 Wrapper 封装接管</strong>
                 <p>配置 Nacos 地址并初始化客户端，随后即可使用 <code>migration.Wrap</code> 封装你的新旧函数及提取规则。</p>
-                <div class="code-block">
-<pre><code>client := migration.NewClient(config)
-
-// 通过统一 Wrap 接管调用分发和 Diff 提交
-result := client.Wrap("user-login-api",
-    // 旧函数闭包
-    func() (interface{}, error) { return doLoginOld(req) },
-    // 新函数闭包
-    func() (interface{}, error) { return doLoginNew(req) },
-    // 灰度参数因子提取
-    map[string]interface{}{"userId": req.UserId},
-)</code></pre>
-                </div>
+<vue-monaco-editor
+                  v-model:value="codeGoWrap"
+                  theme="vs-dark"
+                  language="go"
+                  :options="editorOptions"
+                  class="monaco-container"
+                  style="height: 250px"
+                />
               </div>
             </div>
           </div>
@@ -247,6 +242,54 @@ result := client.Wrap("user-login-api",
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import VueMonacoEditor from '@guolao/vue-monaco-editor'
+
+const codeParamHandler = ref(`@Component
+public class UserParamHandler implements ParamHandler {
+    @Override
+    public Map<String, Object> build(Object... args) {
+        return Map.of("userId", args[0]); 
+    }
+}`)
+
+const codeMigration = ref(`@Migration(
+    key = "user-login-api",          // 在控制台填写的任务ID
+    oldMethod = "doLoginOld",        // 遗留逻辑
+    newMethod = "doLoginNew",        // 重构的新逻辑
+    paramHandler = UserParamHandler.class
+)
+@PostMapping("/login")
+public Result login(@RequestBody LoginReq req) { return null; }`)
+
+const codeGoClient = ref(`go get github.com/HBulgat/migration-sdk-go`)
+
+const codeGoWrap = ref(`client := migration.NewClient(config)
+
+// 通过统一 Wrap 接管调用分发和 Diff 提交
+result := client.Wrap("user-login-api",
+    // 旧函数闭包
+    func() (interface{}, error) { return doLoginOld(req) },
+    // 新函数闭包
+    func() (interface{}, error) { return doLoginNew(req) },
+    // 灰度参数因子提取
+    map[string]interface{}{"userId": req.UserId},
+)`)
+
+const editorOptions: any = {
+  readOnly: true,
+  minimap: { enabled: false },
+  scrollBeyondLastLine: false,
+  wordWrap: 'on',
+  fontSize: 14,
+  fontFamily: "'Fira Code', Consolas, Monaco, monospace",
+  lineNumbers: 'off',
+  renderLineHighlight: 'none',
+  scrollbar: {
+    vertical: 'hidden',
+    horizontal: 'hidden'
+  }
+}
+
 import {
   CircleCheckFilled,
   HelpFilled,
@@ -451,27 +494,16 @@ const activeTab = ref('value')
   line-height: 36px; /* align with number */
 }
 
+.monaco-container {
+  height: 180px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+}
+
 .step-body p {
   color: #606266;
   line-height: 1.6;
   margin: 0 0 16px 0;
-}
-
-.code-block {
-  background: #282c34;
-  border-radius: 6px;
-  padding: 16px;
-  overflow-x: auto;
-}
-
-.code-block pre {
-  margin: 0;
-  font-family: 'Fira Code', Consolas, Monaco, monospace;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.code-block code {
-  color: #abb2bf;
 }
 </style>
