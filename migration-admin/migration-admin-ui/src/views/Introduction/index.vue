@@ -148,13 +148,14 @@
               <div class="step-body">
                 <strong>引入依赖并全局开启</strong>
                 <p>在项目中引入 <code>migration-spring-boot-starter</code> 的 Maven 坐标，并在启动类增加 <code>@EnableMigration</code> 注解开启扫描：</p>
-                <div class="code-block">
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;top.bulgat.migration&lt;/groupId&gt;
-    &lt;artifactId&gt;migration-spring-boot-starter&lt;/artifactId&gt;
-    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
-                </div>
+                <vue-monaco-editor
+                  v-model:value="codeSpringBoot"
+                  theme="vs-dark"
+                  language="xml"
+                  :options="editorOptions"
+                  class="monaco-container"
+                  style="height: 100px;"
+                />
               </div>
             </div>
 
@@ -169,6 +170,7 @@
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
+                  style="height: 120px;"
                 />
               </div>
             </div>
@@ -184,6 +186,7 @@
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
+                  style="height: 150px;"
                 />
               </div>
             </div>
@@ -213,7 +216,7 @@
                   language="shell"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 60px"
+                  style="height: 30px;"
                 />
               </div>
             </div>
@@ -229,7 +232,7 @@
                   language="go"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 250px"
+                  style="height: 180px;"
                 />
               </div>
             </div>
@@ -243,6 +246,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import VueMonacoEditor from '@guolao/vue-monaco-editor'
+
+const codeSpringBoot = ref(`<dependency>
+    <groupId>top.bulgat.migration</groupId>
+    <artifactId>migration-spring-boot-starter</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>`)
 
 const codeParamHandler = ref(`@Component
 public class UserParamHandler implements ParamHandler {
@@ -495,7 +504,6 @@ const activeTab = ref('value')
 }
 
 .monaco-container {
-  height: 180px;
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
