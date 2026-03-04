@@ -154,7 +154,7 @@
                   language="xml"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 100px;"
+                  style="height: 140px;"
                 />
               </div>
             </div>
@@ -170,7 +170,7 @@
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 120px;"
+                  style="height: 140px;"
                 />
               </div>
             </div>
@@ -186,7 +186,7 @@
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 150px;"
+                  style="height: 180px;"
                 />
               </div>
             </div>
@@ -216,7 +216,7 @@
                   language="shell"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 30px;"
+                  style="height: 38px; width: 100%; max-width: 500px;"
                 />
               </div>
             </div>
@@ -232,7 +232,7 @@
                   language="go"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 180px;"
+                  style="height: 250px;"
                 />
               </div>
             </div>
