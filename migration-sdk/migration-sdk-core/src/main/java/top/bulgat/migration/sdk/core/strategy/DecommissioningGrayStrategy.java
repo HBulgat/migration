@@ -42,7 +42,7 @@ public class DecommissioningGrayStrategy extends AbstractMigrationStrategy {
 
         // 未命中灰度，并发调用，主线程执行新接口，异步线程执行旧接口
         ConcurrentInvocationResult<T> result = invokeNewMainOldAsync(context);
-        sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam);
+        sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam, false, false);
 
         if (result.newResult().isSuccess()) {
             return result.newResult().value();

@@ -16,6 +16,7 @@ public class DiffCommandAssembler {
 
     /**
      * 执行 toCommand 业务逻辑。
+     * 
      * @param request 请求参数。
      * @return 返回结果。
      */
@@ -27,11 +28,22 @@ public class DiffCommandAssembler {
                 request.newJson(),
                 request.oldCostTimeMs(),
                 request.newCostTimeMs(),
-                request.grayscaleParam());
+                request.grayscaleParam(),
+                request.oldSuccess(),
+                request.newSuccess(),
+                request.oldErrorMessage(),
+                request.newErrorMessage(),
+                request.oldRequestParams(),
+                request.newRequestParams(),
+                request.migrationStatus(),
+                request.grayscaleRules(),
+                request.grayscaleHit(),
+                request.fallbackTriggered());
     }
 
     /**
      * 执行 toResponse 业务逻辑。
+     * 
      * @param result result object.
      * @return 返回结果。
      */

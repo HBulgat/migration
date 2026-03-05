@@ -55,9 +55,13 @@ public class MigrationTaskApplicationService {
         try {
             domainService.validateMigrationKey(command.migrationKey());
             domainService.validateDescription(command.description());
+            if (command.status() != MigrationStatus.OLD.getCode()) {
+                throw new BizException(ErrorCode.PARAM_ERROR,
+                        "初始状态必须为单旧(OLD)，不允许创建时指定其他状态");
+            }
             MigrationTask task = new MigrationTask(
                     command.migrationKey(),
-                    MigrationStatus.fromCode(command.status()),
+                    MigrationStatus.OLD,
                     command.description());
             domainService.validateForCreation(task, repository);
             return repository.save(task);

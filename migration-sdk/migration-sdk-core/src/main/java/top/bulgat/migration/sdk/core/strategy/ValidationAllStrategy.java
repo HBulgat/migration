@@ -33,7 +33,7 @@ public class ValidationAllStrategy extends AbstractMigrationStrategy {
         ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context);
 
         // 发送Diff结果
-        sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam);
+        sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam, true, false);
 
         // 返回旧接口结果
         if (result.oldResult().isSuccess()) {

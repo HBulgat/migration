@@ -119,7 +119,13 @@ async function handleSubmit(): Promise<void> {
       </el-form-item>
 
       <el-form-item label="状态" prop="status">
-        <el-select v-model="formModel.status" placeholder="请选择状态" style="width: 100%">
+        <el-select
+          v-model="formModel.status"
+          :disabled="mode === 'create'"
+          placeholder="请选择状态"
+          filterable
+          style="width: 100%"
+        >
           <el-option
             v-for="item in MIGRATION_STATUS_OPTIONS"
             :key="item.value"
@@ -127,6 +133,9 @@ async function handleSubmit(): Promise<void> {
             :value="item.value"
           />
         </el-select>
+        <div v-if="mode === 'create'" class="el-form-item__tip" style="color: var(--el-text-color-secondary); font-size: 12px; line-height: 1.4; margin-top: 4px;">
+          新建任务初始状态固定为「单旧(OLD)」
+        </div>
       </el-form-item>
 
       <el-form-item label="描述" prop="description">

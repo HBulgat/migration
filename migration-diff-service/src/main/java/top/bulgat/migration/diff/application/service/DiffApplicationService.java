@@ -54,7 +54,17 @@ public class DiffApplicationService {
                 command.newJson(),
                 command.oldCostTimeMs(),
                 command.newCostTimeMs(),
-                command.grayscaleParam());
+                command.grayscaleParam(),
+                command.oldSuccess(),
+                command.newSuccess(),
+                command.oldErrorMessage(),
+                command.newErrorMessage(),
+                command.oldRequestParams(),
+                command.newRequestParams(),
+                command.migrationStatus(),
+                command.grayscaleRules(),
+                command.grayscaleHit(),
+                command.fallbackTriggered());
         List<DiffRule> rules = diffRuleRepository.findEnabledRules(command.migrationKey());
         log.info("diff.execute rulesLoaded migrationKey={}, ruleCount={}", command.migrationKey(), rules.size());
         DiffResult result = domainService.execute(request, rules);
@@ -76,12 +86,6 @@ public class DiffApplicationService {
         }
         if (command.migrationKey().chars().anyMatch(Character::isWhitespace)) {
             throw new BizException(ErrorCode.PARAM_ERROR, "migration_key must not contain space");
-        }
-        if (command.oldJson() == null || command.oldJson().isBlank()) {
-            throw new BizException(ErrorCode.PARAM_ERROR, "old_json is required");
-        }
-        if (command.newJson() == null || command.newJson().isBlank()) {
-            throw new BizException(ErrorCode.PARAM_ERROR, "new_json is required");
         }
         if (command.oldCostTimeMs() != null && command.oldCostTimeMs() < 0) {
             throw new BizException(ErrorCode.PARAM_ERROR, "old_cost_time_ms must be greater than or equal to 0");

@@ -32,7 +32,7 @@ public class GoLiveAllStrategy extends AbstractMigrationStrategy {
 
         // 并发调用，主线程执行新接口
         ConcurrentInvocationResult<T> result = invokeNewMainOldAsync(context);
-        sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam);
+        sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam, true, false);
 
         // 返回新接口结果
         if (result.newResult().isSuccess()) {

@@ -23,7 +23,7 @@
                     <span>零风险平滑演进</span>
                   </div>
                 </template>
-                <p>将高危的“一次性切换”拆解为7个标准化渐进阶段。在验证阶段，所有线上用户的真实请求均锚定“旧接口”响应，新接口的调用仅用于离线旁路验证。即便新接口出现严重故障，也对线上业务<strong>0影响</strong>。</p>
+                <p>将高危的“一次性切换”拆解为7个标准化渐进阶段。在验证阶段，所有线上调用的真实请求均锚定“旧接口”响应，新接口的调用仅用于离线旁路验证。即便新接口出现严重故障，也对线上业务<strong>0影响</strong>。</p>
               </el-card>
             </el-col>
             <el-col :span="8">
@@ -77,11 +77,10 @@
                   <p>去除灰度限制，全量线上真实流量并发双写双读。验证系统在新版全量流量下的性能表现及边缘数据的处理正确性。（同样只返回旧接口响应）。</p>
                 </el-card>
               </el-timeline-item>
-
               <el-timeline-item center timestamp="阶段 4" placement="top" type="warning" size="large">
                 <el-card shadow="never" class="highlight-card">
                   <h4><el-icon><WarnTriangleFilled /></el-icon> 上线-灰度 (Go-Live-Gray)</h4>
-                  <p><strong>关键变点：首次将新接口结果返回给用户。</strong>命中的请求只调新接口并返回；未命中的请求并发调用新旧接口，不仅做Diff比对，并确保返回老接口结果。此阶段开始逐步切量真实业务。</p>
+                  <p><strong>关键变点：首次将新接口结果返回给调用方。</strong>命中的请求只调新接口并返回；未命中的请求并发调用新旧接口，不仅做Diff比对，并确保返回老接口结果。此阶段开始逐步切量真实业务。</p>
                 </el-card>
               </el-timeline-item>
 
@@ -154,7 +153,7 @@
                   language="xml"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 140px;"
+                  style="height: 105px;"
                 />
               </div>
             </div>
@@ -170,7 +169,7 @@
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 140px;"
+                  style="height: 148px;"
                 />
               </div>
             </div>
@@ -186,7 +185,7 @@
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 180px;"
+                  style="height: 170px;"
                 />
               </div>
             </div>
@@ -216,7 +215,7 @@
                   language="shell"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 38px; width: 100%; max-width: 500px;"
+                  style="height: 22px;"
                 />
               </div>
             </div>
@@ -232,7 +231,7 @@
                   language="go"
                   :options="editorOptions"
                   class="monaco-container"
-                  style="height: 250px;"
+                  style="height: 170px;"
                 />
               </div>
             </div>
@@ -272,17 +271,14 @@ public Result login(@RequestBody LoginReq req) { return null; }`)
 
 const codeGoClient = ref(`go get github.com/HBulgat/migration-sdk-go`)
 
-const codeGoWrap = ref(`client := migration.NewClient(config)
-
-// 通过统一 Wrap 接管调用分发和 Diff 提交
-result := client.Wrap("user-login-api",
-    // 旧函数闭包
-    func() (interface{}, error) { return doLoginOld(req) },
-    // 新函数闭包
-    func() (interface{}, error) { return doLoginNew(req) },
-    // 灰度参数因子提取
-    map[string]interface{}{"userId": req.UserId},
-)`)
+const codeGoWrap = ref(`config := &migration.Config{
+  MigrationKey:   "user-getUser-api",
+  AdminUrl:       "https://migration.bulgat.top",
+  DiffServiceUrl: "https://diff-migration.bulgat.top",
+}
+client := migration.NewClient(config)
+executeFn := client.Wrap(targetOld, targetNew, targetFallback, userParamHandler)
+res, err := executeFn.Execute("1001", 5)`)
 
 const editorOptions: any = {
   readOnly: true,
@@ -493,6 +489,11 @@ const activeTab = ref('value')
   flex-shrink: 0;
   margin-right: 20px;
   box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+}
+
+.step-body {
+  flex: 1;
+  min-width: 0;
 }
 
 .step-body strong {

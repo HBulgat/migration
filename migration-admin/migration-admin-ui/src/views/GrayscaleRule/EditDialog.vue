@@ -172,7 +172,7 @@ async function handleSubmit(): Promise<void> {
       </el-form-item>
 
       <el-form-item label="规则类型" prop="rule_type">
-        <el-select v-model="formModel.rule_type" style="width: 100%">
+        <el-select v-model="formModel.rule_type" filterable style="width: 100%">
           <el-option
             v-for="item in GRAYSCALE_RULE_TYPE_OPTIONS"
             :key="item.value"

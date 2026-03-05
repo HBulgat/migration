@@ -48,7 +48,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
      * Constructor for tests and custom injection.
      *
      * @param diffServiceUrl diff service url
-     * @param httpClient http client
+     * @param httpClient     http client
      */
     DisruptorDiffServiceCaller(String diffServiceUrl, CloseableHttpClient httpClient) {
         this.diffServiceUrl = trimTrailingSlash(diffServiceUrl);
@@ -120,6 +120,16 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
         payload.put("old_cost_time_ms", request.getOldCostTimeMs());
         payload.put("new_cost_time_ms", request.getNewCostTimeMs());
         payload.put("grayscale_param", request.getGrayscaleParam());
+        payload.put("old_success", request.getOldSuccess());
+        payload.put("new_success", request.getNewSuccess());
+        payload.put("old_error_message", request.getOldErrorMessage());
+        payload.put("new_error_message", request.getNewErrorMessage());
+        payload.put("old_request_params", request.getOldRequestParams());
+        payload.put("new_request_params", request.getNewRequestParams());
+        payload.put("migration_status", request.getMigrationStatus());
+        payload.put("grayscale_rules", request.getGrayscaleRules());
+        payload.put("grayscale_hit", request.getGrayscaleHit());
+        payload.put("fallback_triggered", request.getFallbackTriggered());
 
         HttpPost post = new HttpPost(diffServiceUrl + "/api/v1/diff");
         post.setEntity(new StringEntity(payload.toJSONString(), StandardCharsets.UTF_8));

@@ -123,7 +123,7 @@ onMounted(async () => {
         />
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="searchForm.status" placeholder="全部" clearable style="width: 160px">
+        <el-select v-model="searchForm.status" placeholder="全部" clearable filterable style="width: 160px">
           <el-option
             v-for="item in MIGRATION_STATUS_OPTIONS"
             :key="item.value"

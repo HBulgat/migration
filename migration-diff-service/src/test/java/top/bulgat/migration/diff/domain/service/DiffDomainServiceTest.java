@@ -37,7 +37,8 @@ class DiffDomainServiceTest {
                 "{\"items\":[{\"id\":1,\"name\":\"a\"},{\"id\":2,\"name\":\"b\"}]}",
                 12,
                 10,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule sortRule = new DiffRule("order-sync", DiffRuleType.SORT, "$.items", "id", true);
 
         DiffResult result = service.execute(request, List.of(sortRule));
@@ -55,7 +56,8 @@ class DiffDomainServiceTest {
                 "{\"amount\":105}",
                 11,
                 9,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         String script = "T(java.lang.Math).abs("
                 + "T(java.lang.Double).parseDouble(#newValue) - "
                 + "T(java.lang.Double).parseDouble(#oldValue)"
@@ -77,7 +79,8 @@ class DiffDomainServiceTest {
                 "{\"amount\":130}",
                 8,
                 7,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule invalidRule = new DiffRule("price-sync", DiffRuleType.SCRIPT, "$.amount", "#{", true);
 
         DiffResult result = service.execute(request, List.of(invalidRule));
@@ -95,7 +98,8 @@ class DiffDomainServiceTest {
                 "{\"a\":{\"name\":\"new\"},\"ab\":{\"name\":\"new\"}}",
                 6,
                 5,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule ignoreSubPathRule = new DiffRule("profile-sync", DiffRuleType.IGNORE, "$.a.*", "", true);
 
         DiffResult result = service.execute(request, List.of(ignoreSubPathRule));
@@ -114,7 +118,8 @@ class DiffDomainServiceTest {
                 "{\"a\":1}",
                 10,
                 8,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
 
         BizException exception = assertThrows(BizException.class, () -> service.execute(request, List.of()));
 
@@ -131,7 +136,8 @@ class DiffDomainServiceTest {
                 "{\"items\":[{\"id\":1,\"name\":\"x\"},{\"id\":2,\"name\":\"y\"}]}",
                 9,
                 8,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule ignoreRule = new DiffRule("order-sync", DiffRuleType.IGNORE, "$.items[*].*", "", true);
 
         DiffResult result = service.execute(request, List.of(ignoreRule));
@@ -150,7 +156,8 @@ class DiffDomainServiceTest {
                 "{\"items\":[{\"name\":\"b\",\"nickname\":\"new\"}]}",
                 10,
                 9,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule ignoreRule = new DiffRule("order-sync", DiffRuleType.IGNORE, "$.items[*].name", "", true);
 
         DiffResult result = service.execute(request, List.of(ignoreRule));
@@ -169,7 +176,8 @@ class DiffDomainServiceTest {
                 "{\"items\":[{\"id\":2}]}",
                 10,
                 9,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule ignoreRule = new DiffRule("order-sync", DiffRuleType.IGNORE, "$.items[*].id", "", true);
 
         DiffResult result = service.execute(request, List.of(ignoreRule));
@@ -188,7 +196,8 @@ class DiffDomainServiceTest {
                 "{\"items\":[{\"name\":\"b\"}]}",
                 7,
                 6,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule ignoreRule = new DiffRule("order-sync", DiffRuleType.IGNORE, "items[*].name", "", true);
 
         DiffResult result = service.execute(request, List.of(ignoreRule));
@@ -207,7 +216,8 @@ class DiffDomainServiceTest {
                 "{\"groups\":[{\"items\":[{\"id\":1,\"name\":\"a\"},{\"id\":2,\"name\":\"b\"}]}]}",
                 12,
                 11,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule sortRule = new DiffRule("order-sync", DiffRuleType.SORT, "$.groups[*].items", "id", true);
 
         DiffResult result = service.execute(request, List.of(sortRule));
@@ -225,7 +235,8 @@ class DiffDomainServiceTest {
                 "{\"items\":[{\"user\":{\"id\":1},\"name\":\"a\"},{\"user\":{\"id\":2},\"name\":\"b\"}]}",
                 10,
                 10,
-                "{}");
+                "{}",
+                null, null, null, null, null, null, null, null, null, null);
         DiffRule sortRule = new DiffRule("order-sync", DiffRuleType.SORT, "$.items", "$.user.id", true);
 
         DiffResult result = service.execute(request, List.of(sortRule));

@@ -36,8 +36,9 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
 
     /**
      * Persist data.
+     * 
      * @param request 请求参数。
-     * @param result result object.
+     * @param result  result object.
      * @return 返回结果。
      */
     @Override
@@ -58,6 +59,17 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
         dataObject.setNewCostTimeMs(request.getNewCostTimeMs());
         dataObject.setTotalCostTimeMs((int) result.getCostTimeMs());
         dataObject.setCreateTime(LocalDateTime.now());
+        dataObject.setOldSuccess(request.getOldSuccess() != null && request.getOldSuccess() ? 1 : 0);
+        dataObject.setNewSuccess(request.getNewSuccess() != null && request.getNewSuccess() ? 1 : 0);
+        dataObject.setOldErrorMessage(request.getOldErrorMessage());
+        dataObject.setNewErrorMessage(request.getNewErrorMessage());
+        dataObject.setOldRequestParams(request.getOldRequestParams());
+        dataObject.setNewRequestParams(request.getNewRequestParams());
+        dataObject.setMigrationStatus(request.getMigrationStatus());
+        dataObject.setGrayscaleRules(request.getGrayscaleRules());
+        dataObject.setGrayscaleHit(request.getGrayscaleHit() != null && request.getGrayscaleHit() ? 1 : 0);
+        dataObject
+                .setFallbackTriggered(request.getFallbackTriggered() != null && request.getFallbackTriggered() ? 1 : 0);
         diffRecordMapper.insert(dataObject);
         log.info("diff_record.save migrationKey={}, traceId={}, hasDiff={}, diffItemCount={}",
                 request.getMigrationKey(), request.getTraceId(), dataObject.getHasDiff(), result.getDiffItems().size());
@@ -111,7 +123,17 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
                 dataObject.getOldCostTimeMs(),
                 dataObject.getNewCostTimeMs(),
                 dataObject.getTotalCostTimeMs(),
-                dataObject.getCreateTime());
+                dataObject.getCreateTime(),
+                Integer.valueOf(1).equals(dataObject.getOldSuccess()),
+                Integer.valueOf(1).equals(dataObject.getNewSuccess()),
+                dataObject.getOldErrorMessage(),
+                dataObject.getNewErrorMessage(),
+                dataObject.getOldRequestParams(),
+                dataObject.getNewRequestParams(),
+                dataObject.getMigrationStatus(),
+                dataObject.getGrayscaleRules(),
+                Integer.valueOf(1).equals(dataObject.getGrayscaleHit()),
+                Integer.valueOf(1).equals(dataObject.getFallbackTriggered()));
     }
 
     private record DiffItemPayload(String fieldPath, String oldValue, String newValue, String diffType) {

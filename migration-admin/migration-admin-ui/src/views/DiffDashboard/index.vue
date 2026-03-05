@@ -429,6 +429,7 @@ onBeforeUnmount(() => {
       <el-select
         v-model="filterForm.migration_status"
         clearable
+        filterable
         :placeholder="UI_TEXT.statusPlaceholder"
         style="width: 220px"
         @change="handleMigrationStatusChange"

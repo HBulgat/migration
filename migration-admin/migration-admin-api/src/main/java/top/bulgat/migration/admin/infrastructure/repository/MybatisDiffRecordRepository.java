@@ -36,6 +36,7 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
 
     /**
      * Persist data.
+     * 
      * @param record record entity.
      * @return 返回结果。
      */
@@ -50,6 +51,7 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
 
     /**
      * 执行 findById 业务逻辑。
+     * 
      * @param id record id.
      * @return 返回结果。
      */
@@ -103,6 +105,16 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
         dataObject.setNewCostTimeMs(record.getNewCostTimeMs());
         dataObject.setTotalCostTimeMs(record.getTotalCostTimeMs());
         dataObject.setCreateTime(record.getCreateTime() == null ? LocalDateTime.now() : record.getCreateTime());
+        dataObject.setOldSuccess(record.getOldSuccess() != null && record.getOldSuccess() ? 1 : 0);
+        dataObject.setNewSuccess(record.getNewSuccess() != null && record.getNewSuccess() ? 1 : 0);
+        dataObject.setOldErrorMessage(record.getOldErrorMessage());
+        dataObject.setNewErrorMessage(record.getNewErrorMessage());
+        dataObject.setOldRequestParams(record.getOldRequestParams());
+        dataObject.setNewRequestParams(record.getNewRequestParams());
+        dataObject.setMigrationStatus(record.getMigrationStatus());
+        dataObject.setGrayscaleRules(record.getGrayscaleRules());
+        dataObject.setGrayscaleHit(record.getGrayscaleHit() != null && record.getGrayscaleHit() ? 1 : 0);
+        dataObject.setFallbackTriggered(record.getFallbackTriggered() != null && record.getFallbackTriggered() ? 1 : 0);
         return dataObject;
     }
 
@@ -120,7 +132,17 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
                 dataObject.getOldCostTimeMs(),
                 dataObject.getNewCostTimeMs(),
                 dataObject.getTotalCostTimeMs(),
-                dataObject.getCreateTime());
+                dataObject.getCreateTime(),
+                Integer.valueOf(1).equals(dataObject.getOldSuccess()),
+                Integer.valueOf(1).equals(dataObject.getNewSuccess()),
+                dataObject.getOldErrorMessage(),
+                dataObject.getNewErrorMessage(),
+                dataObject.getOldRequestParams(),
+                dataObject.getNewRequestParams(),
+                dataObject.getMigrationStatus(),
+                dataObject.getGrayscaleRules(),
+                Integer.valueOf(1).equals(dataObject.getGrayscaleHit()),
+                Integer.valueOf(1).equals(dataObject.getFallbackTriggered()));
     }
 
     private String writeDiffItems(List<DiffItem> items) {

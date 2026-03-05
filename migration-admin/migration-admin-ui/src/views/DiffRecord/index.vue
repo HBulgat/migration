@@ -126,7 +126,7 @@ onMounted(async () => {
       </el-form-item>
 
       <el-form-item label="有无差异">
-        <el-select v-model="filterForm.has_diff" placeholder="全部" clearable style="width: 140px">
+        <el-select v-model="filterForm.has_diff" placeholder="全部" clearable filterable style="width: 140px">
           <el-option
             v-for="item in HAS_DIFF_OPTIONS"
             :key="item.value"

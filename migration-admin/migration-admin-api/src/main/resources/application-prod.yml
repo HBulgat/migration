@@ -2,8 +2,6 @@ server:
   port: 8080
 
 spring:
-  main:
-      allow-bean-definition-overriding: true
   datasource:
     url: ${MIGRATION_DB_URL}
     username: ${MIGRATION_DB_USERNAME}

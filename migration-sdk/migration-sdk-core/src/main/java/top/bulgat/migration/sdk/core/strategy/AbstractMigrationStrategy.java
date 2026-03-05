@@ -99,30 +99,42 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
 
     /**
      * 异步发送Diff请求；发生异常时仅打印日志。
+     * 即使新旧接口调用失败，也会发送请求以记录调用详情。
      *
-     * @param context        执行上下文
-     * @param oldResult      旧接口调用结果
-     * @param newResult      新接口调用结果
-     * @param grayscaleParam 用于发送的灰度参数
-     * @param <T>            返回值类型
+     * @param context           执行上下文
+     * @param oldResult         旧接口调用结果
+     * @param newResult         新接口调用结果
+     * @param grayscaleParam    用于发送的灰度参数
+     * @param grayscaleHit      是否命中灰度规则
+     * @param fallbackTriggered 是否触发降级
+     * @param <T>               返回值类型
      */
     protected <T> void sendDiffAsync(
             MigrationExecutionContext<T> context,
             InvocationResult<T> oldResult,
             InvocationResult<T> newResult,
-            Map<String, Object> grayscaleParam) {
-        if (!oldResult.isSuccess() || !newResult.isSuccess()) {
-            return;
-        }
+            Map<String, Object> grayscaleParam,
+            boolean grayscaleHit,
+            boolean fallbackTriggered) {
         try {
             context.getDiffServiceCaller().executeDiffAsync(DiffRequest.builder()
                     .migrationKey(context.getMigrationKey())
                     .traceId(ThreadContext.getTraceId())
-                    .oldJson(JSON.toJSONString(oldResult.value()))
-                    .newJson(JSON.toJSONString(newResult.value()))
+                    .oldJson(oldResult.isSuccess() ? JSON.toJSONString(oldResult.value()) : null)
+                    .newJson(newResult.isSuccess() ? JSON.toJSONString(newResult.value()) : null)
                     .oldCostTimeMs((int) oldResult.costTimeMs())
                     .newCostTimeMs((int) newResult.costTimeMs())
                     .grayscaleParam(JSON.toJSONString(grayscaleParam))
+                    .oldSuccess(oldResult.isSuccess())
+                    .newSuccess(newResult.isSuccess())
+                    .oldErrorMessage(oldResult.error() != null ? oldResult.error().getMessage() : null)
+                    .newErrorMessage(newResult.error() != null ? newResult.error().getMessage() : null)
+                    .oldRequestParams(JSON.toJSONString(context.getArgs()))
+                    .newRequestParams(JSON.toJSONString(context.getArgs()))
+                    .migrationStatus(context.getMigrationStatus())
+                    .grayscaleRules(JSON.toJSONString(context.getGrayscaleRules()))
+                    .grayscaleHit(grayscaleHit)
+                    .fallbackTriggered(fallbackTriggered)
                     .build());
         } catch (Exception ex) {
             log.warn("send diff async failed, migrationKey={}", context.getMigrationKey(), ex);

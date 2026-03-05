@@ -165,6 +165,7 @@ defineExpose({
             v-model="formData.rule_type" 
             placeholder="请选择规则类型" 
             style="width: 100%"
+            filterable
             @change="handleRuleTypeChange"
         >
           <el-option

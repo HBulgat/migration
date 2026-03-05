@@ -36,7 +36,7 @@ public class ValidationGrayStrategy extends AbstractMigrationStrategy {
 
         // 如果命中灰度，则异步发送Diff对比
         if (hitGray) {
-            sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam);
+            sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam, hitGray, false);
         }
 
         // 始终优先返回旧接口的结果

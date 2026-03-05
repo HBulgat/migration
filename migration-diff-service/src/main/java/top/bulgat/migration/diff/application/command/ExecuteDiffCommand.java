@@ -4,11 +4,21 @@ package top.bulgat.migration.diff.application.command;
  * ExecuteDiffCommand is an application command.
  */
 public record ExecuteDiffCommand(
-        String migrationKey,
-        String traceId,
-        String oldJson,
-        String newJson,
-        Integer oldCostTimeMs,
-        Integer newCostTimeMs,
-        String grayscaleParam) {
+                String migrationKey,
+                String traceId,
+                String oldJson,
+                String newJson,
+                Integer oldCostTimeMs,
+                Integer newCostTimeMs,
+                String grayscaleParam,
+                Boolean oldSuccess,
+                Boolean newSuccess,
+                String oldErrorMessage,
+                String newErrorMessage,
+                String oldRequestParams,
+                String newRequestParams,
+                Integer migrationStatus,
+                String grayscaleRules,
+                Boolean grayscaleHit,
+                Boolean fallbackTriggered) {
 }

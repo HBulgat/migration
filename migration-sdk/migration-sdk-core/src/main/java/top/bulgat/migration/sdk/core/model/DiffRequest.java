@@ -21,4 +21,14 @@ public class DiffRequest {
     private Integer oldCostTimeMs;
     private Integer newCostTimeMs;
     private String grayscaleParam;
+    private Boolean oldSuccess;
+    private Boolean newSuccess;
+    private String oldErrorMessage;
+    private String newErrorMessage;
+    private String oldRequestParams;
+    private String newRequestParams;
+    private Integer migrationStatus;
+    private String grayscaleRules;
+    private Boolean grayscaleHit;
+    private Boolean fallbackTriggered;
 }

@@ -17,7 +17,6 @@ public class AdminApiApplication {
      * @param args 启动参数
      */
     public static void main(String[] args) {
-        System.setProperty("spring.main.allow-bean-definition-overriding", "true");
         SpringApplication.run(AdminApiApplication.class, args);
     }
 }

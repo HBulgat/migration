@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.bulgat.common.base.exception.ErrorCode;
@@ -18,7 +19,7 @@ public class JwtSecurityInterceptor implements HandlerInterceptor {
     private final String internalToken;
 
     public JwtSecurityInterceptor(JwtTokenProvider tokenProvider, ObjectMapper objectMapper,
-            @org.springframework.beans.factory.annotation.Value("${migration.admin.internal-token:}") String internalToken) {
+            @Value("${migration.admin.internal-token:}") String internalToken) {
         this.tokenProvider = tokenProvider;
         this.objectMapper = objectMapper;
         this.internalToken = internalToken;

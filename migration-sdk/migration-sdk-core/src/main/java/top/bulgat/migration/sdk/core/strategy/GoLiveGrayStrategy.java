@@ -44,7 +44,8 @@ public class GoLiveGrayStrategy extends AbstractMigrationStrategy {
 
         // 未命中灰度：并发执行新旧接口，发送Diff，并返回旧接口结果
         ConcurrentInvocationResult<T> concurrentResult = invokeOldMainNewAsync(context);
-        sendDiffAsync(context, concurrentResult.oldResult(), concurrentResult.newResult(), grayscaleParam);
+        sendDiffAsync(context, concurrentResult.oldResult(), concurrentResult.newResult(), grayscaleParam, false,
+                false);
 
         if (concurrentResult.oldResult().isSuccess()) {
             return concurrentResult.oldResult().value();

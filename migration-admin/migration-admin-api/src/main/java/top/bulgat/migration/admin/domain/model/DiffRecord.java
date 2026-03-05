@@ -25,4 +25,14 @@ public class DiffRecord {
     private final Integer newCostTimeMs;
     private final Integer totalCostTimeMs;
     private final LocalDateTime createTime;
+    private final Boolean oldSuccess;
+    private final Boolean newSuccess;
+    private final String oldErrorMessage;
+    private final String newErrorMessage;
+    private final String oldRequestParams;
+    private final String newRequestParams;
+    private final Integer migrationStatus;
+    private final String grayscaleRules;
+    private final Boolean grayscaleHit;
+    private final Boolean fallbackTriggered;
 }

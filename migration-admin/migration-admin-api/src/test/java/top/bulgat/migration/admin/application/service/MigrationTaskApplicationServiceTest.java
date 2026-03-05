@@ -36,7 +36,8 @@ class MigrationTaskApplicationServiceTest {
     @Test
     void createAndList_shouldReturnPagedTasks() {
         service.createMigrationTask(new CreateMigrationTaskCommand("user.query", 1, "query old API"));
-        service.createMigrationTask(new CreateMigrationTaskCommand("user.update", 2, "update validate"));
+        service.createMigrationTask(new CreateMigrationTaskCommand("user.update", 1, "update validate"));
+        service.updateStatus(new UpdateMigrationTaskStatusCommand("user.update", 2));
 
         List<MigrationTask> firstPage = service.list(new ListMigrationTaskCommand(null, "user", 1, 10));
 
@@ -87,7 +88,8 @@ class MigrationTaskApplicationServiceTest {
     @Test
     void list_withCommand_shouldApplyFiltersAndPaging() {
         service.createMigrationTask(new CreateMigrationTaskCommand("cmd.list.1", 1, "a"));
-        service.createMigrationTask(new CreateMigrationTaskCommand("cmd.list.2", 2, "b"));
+        service.createMigrationTask(new CreateMigrationTaskCommand("cmd.list.2", 1, "b"));
+        service.updateStatus(new UpdateMigrationTaskStatusCommand("cmd.list.2", 2));
 
         List<MigrationTask> page = service.list(new ListMigrationTaskCommand(1, "cmd.list", 1, 10));
         long total = service.count(new ListMigrationTaskCommand(1, "cmd.list", 1, 10));
@@ -165,7 +167,6 @@ class MigrationTaskApplicationServiceTest {
                 () -> service.deleteByMigrationKey(new DeleteMigrationTaskCommand("missing.task")));
         assertEquals(ErrorCode.NOT_FOUND.getCode(), exception.getCode());
     }
-
 
     @Test
     void commandApis_shouldThrowWhenCommandIsNull() {

@@ -40,4 +40,24 @@ public class DiffRecordDO {
     private Integer totalCostTimeMs;
     @TableField("create_time")
     private LocalDateTime createTime;
+    @TableField("old_success")
+    private Integer oldSuccess;
+    @TableField("new_success")
+    private Integer newSuccess;
+    @TableField("old_error_message")
+    private String oldErrorMessage;
+    @TableField("new_error_message")
+    private String newErrorMessage;
+    @TableField("old_request_params")
+    private String oldRequestParams;
+    @TableField("new_request_params")
+    private String newRequestParams;
+    @TableField("migration_status")
+    private Integer migrationStatus;
+    @TableField("grayscale_rules")
+    private String grayscaleRules;
+    @TableField("grayscale_hit")
+    private Integer grayscaleHit;
+    @TableField("fallback_triggered")
+    private Integer fallbackTriggered;
 }

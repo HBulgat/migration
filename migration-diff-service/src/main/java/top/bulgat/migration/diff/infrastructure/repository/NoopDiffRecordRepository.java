@@ -23,8 +23,9 @@ public class NoopDiffRecordRepository implements DiffRecordRepository {
 
     /**
      * Persist data.
+     * 
      * @param request 请求参数。
-     * @param result result object.
+     * @param result  result object.
      * @return 返回结果。
      */
     @Override
@@ -45,7 +46,17 @@ public class NoopDiffRecordRepository implements DiffRecordRepository {
                 request.getOldCostTimeMs(),
                 request.getNewCostTimeMs(),
                 (int) result.getCostTimeMs(),
-                LocalDateTime.now());
+                LocalDateTime.now(),
+                request.getOldSuccess(),
+                request.getNewSuccess(),
+                request.getOldErrorMessage(),
+                request.getNewErrorMessage(),
+                request.getOldRequestParams(),
+                request.getNewRequestParams(),
+                request.getMigrationStatus(),
+                request.getGrayscaleRules(),
+                request.getGrayscaleHit(),
+                request.getFallbackTriggered());
         records.add(record);
         return record;
     }
