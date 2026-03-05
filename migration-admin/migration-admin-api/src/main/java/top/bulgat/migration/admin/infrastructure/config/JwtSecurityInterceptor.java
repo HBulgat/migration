@@ -15,13 +15,11 @@ import java.io.IOException;
 public class JwtSecurityInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider tokenProvider;
-    private final ObjectMapper objectMapper;
     private final String internalToken;
 
-    public JwtSecurityInterceptor(JwtTokenProvider tokenProvider, ObjectMapper objectMapper,
+    public JwtSecurityInterceptor(JwtTokenProvider tokenProvider,
             @Value("${migration.admin.internal-token:}") String internalToken) {
         this.tokenProvider = tokenProvider;
-        this.objectMapper = objectMapper;
         this.internalToken = internalToken;
     }
 
