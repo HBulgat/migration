@@ -52,7 +52,7 @@ class DiffControllerTest {
 
     @Test
     void execute_shouldReturnDiffResult() throws Exception {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 "user.query",
                 "trace-1",
                 "{\"a\":1}",
@@ -86,7 +86,21 @@ class DiffControllerTest {
     }
 
     @Test
-    void execute_shouldReturnBadRequestWhenOldJsonMissing() throws Exception {
+    void execute_shouldAllowMissingOldJson() throws Exception {
+        ExecuteDiffCommand command = createCommand(
+                "user.query",
+                "trace-4",
+                null,
+                "{\"a\":2}",
+                null,
+                null,
+                null);
+        DiffResult domainResult = new DiffResult(false, List.of(), 2L);
+        DiffExecuteResponse response = new DiffExecuteResponse(false, List.of(), 2L);
+        when(assembler.toCommand(any())).thenReturn(command);
+        when(applicationService.executeDiff(command)).thenReturn(domainResult);
+        when(assembler.toResponse(domainResult)).thenReturn(response);
+
         mockMvc.perform(post("/api/v1/diff")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -95,13 +109,14 @@ class DiffControllerTest {
                                   "new_json": "{\\"a\\":2}"
                                 }
                                 """))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(400));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.has_diff").value(false))
+                .andExpect(jsonPath("$.data.cost_time_ms").value(2));
     }
 
     @Test
     void execute_shouldReturnBizErrorResultWhenBusinessExceptionRaised() throws Exception {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 "user.query",
                 "trace-2",
                 "{\"a\":1}",
@@ -178,4 +193,31 @@ class DiffControllerTest {
                 .andExpect(jsonPath("$.code").value(400));
     }
 
+    private ExecuteDiffCommand createCommand(
+            String migrationKey,
+            String traceId,
+            String oldJson,
+            String newJson,
+            Integer oldCostTimeMs,
+            Integer newCostTimeMs,
+            String grayscaleParam) {
+        return new ExecuteDiffCommand(
+                migrationKey,
+                traceId,
+                oldJson,
+                newJson,
+                oldCostTimeMs,
+                newCostTimeMs,
+                grayscaleParam,
+                true,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+    }
 }

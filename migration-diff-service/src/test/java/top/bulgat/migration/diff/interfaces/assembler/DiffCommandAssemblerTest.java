@@ -25,7 +25,17 @@ class DiffCommandAssemblerTest {
                 "{\"a\":2}",
                 10,
                 11,
-                "{\"uid\":1}");
+                "{\"uid\":1}",
+                true,
+                false,
+                "old-error",
+                "new-error",
+                "{\"old\":1}",
+                "{\"new\":2}",
+                3,
+                "{\"rule\":\"gray\"}",
+                true,
+                false);
 
         ExecuteDiffCommand command = assembler.toCommand(request);
 
@@ -33,6 +43,11 @@ class DiffCommandAssemblerTest {
         assertEquals("trace-1", command.traceId());
         assertEquals("{\"a\":1}", command.oldJson());
         assertEquals("{\"a\":2}", command.newJson());
+        assertEquals(true, command.oldSuccess());
+        assertEquals(false, command.newSuccess());
+        assertEquals(3, command.migrationStatus());
+        assertEquals("{\"rule\":\"gray\"}", command.grayscaleRules());
+        assertEquals(false, command.fallbackTriggered());
     }
 
     @Test

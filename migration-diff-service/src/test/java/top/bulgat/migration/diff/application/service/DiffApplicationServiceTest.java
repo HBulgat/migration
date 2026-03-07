@@ -1,6 +1,7 @@
 package top.bulgat.migration.diff.application.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -39,7 +40,7 @@ class DiffApplicationServiceTest {
 
     @Test
     void executeDiff_shouldThrowWhenMigrationKeyMissing() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 " ",
                 "trace-1",
                 "{\"a\":1}",
@@ -60,8 +61,8 @@ class DiffApplicationServiceTest {
     }
 
     @Test
-    void executeDiff_shouldThrowWhenOldJsonMissing() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+    void executeDiff_shouldAllowBlankOldJson() {
+        ExecuteDiffCommand command = createCommand(
                 "user.query",
                 "trace-1",
                 "",
@@ -69,15 +70,18 @@ class DiffApplicationServiceTest {
                 10,
                 8,
                 "{}");
+        DiffResult result = new DiffResult(false, List.of(), 3L);
+        when(diffRuleRepository.findEnabledRules("user.query")).thenReturn(List.of());
+        when(diffDomainService.execute(any(DiffRequest.class), eq(List.of()))).thenReturn(result);
 
-        BizException exception = assertThrows(BizException.class, () -> service.executeDiff(command));
+        DiffResult actual = assertDoesNotThrow(() -> service.executeDiff(command));
 
-        assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
+        assertEquals(result, actual);
     }
 
     @Test
-    void executeDiff_shouldThrowWhenNewJsonMissing() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+    void executeDiff_shouldAllowBlankNewJson() {
+        ExecuteDiffCommand command = createCommand(
                 "user.query",
                 "trace-1",
                 "{\"a\":1}",
@@ -85,16 +89,19 @@ class DiffApplicationServiceTest {
                 10,
                 8,
                 "{}");
+        DiffResult result = new DiffResult(false, List.of(), 4L);
+        when(diffRuleRepository.findEnabledRules("user.query")).thenReturn(List.of());
+        when(diffDomainService.execute(any(DiffRequest.class), eq(List.of()))).thenReturn(result);
 
-        BizException exception = assertThrows(BizException.class, () -> service.executeDiff(command));
+        DiffResult actual = assertDoesNotThrow(() -> service.executeDiff(command));
 
-        assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
+        assertEquals(result, actual);
     }
 
     @Test
     void executeDiff_shouldThrowWhenMigrationKeyTooLong() {
         String longMigrationKey = "x".repeat(129);
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 longMigrationKey,
                 "trace-1",
                 "{\"a\":1}",
@@ -110,7 +117,7 @@ class DiffApplicationServiceTest {
 
     @Test
     void executeDiff_shouldThrowWhenMigrationKeyContainsSpace() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 "user query",
                 "trace-1",
                 "{\"a\":1}",
@@ -126,7 +133,7 @@ class DiffApplicationServiceTest {
 
     @Test
     void executeDiff_shouldThrowWhenMigrationKeyContainsTab() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 "user	query",
                 "trace-1",
                 "{\"a\":1}",
@@ -142,7 +149,7 @@ class DiffApplicationServiceTest {
 
     @Test
     void executeDiff_shouldThrowWhenCostTimeNegative() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 "user.query",
                 "trace-1",
                 "{\"a\":1}",
@@ -158,7 +165,7 @@ class DiffApplicationServiceTest {
 
     @Test
     void executeDiff_shouldThrowWhenNewCostTimeNegative() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 "user.query",
                 "trace-1",
                 "{\"a\":1}",
@@ -174,7 +181,7 @@ class DiffApplicationServiceTest {
 
     @Test
     void executeDiff_shouldLoadRulesAndPersistRecord() {
-        ExecuteDiffCommand command = new ExecuteDiffCommand(
+        ExecuteDiffCommand command = createCommand(
                 "user.query",
                 "trace-2",
                 "{\"a\":1}",
@@ -198,5 +205,33 @@ class DiffApplicationServiceTest {
         verify(diffRuleRepository).findEnabledRules("user.query");
         verify(diffDomainService).execute(any(DiffRequest.class), eq(rules));
         verify(diffRecordRepository).save(any(DiffRequest.class), eq(result));
+    }
+
+    private ExecuteDiffCommand createCommand(
+            String migrationKey,
+            String traceId,
+            String oldJson,
+            String newJson,
+            Integer oldCostTimeMs,
+            Integer newCostTimeMs,
+            String grayscaleParam) {
+        return new ExecuteDiffCommand(
+                migrationKey,
+                traceId,
+                oldJson,
+                newJson,
+                oldCostTimeMs,
+                newCostTimeMs,
+                grayscaleParam,
+                true,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 }
