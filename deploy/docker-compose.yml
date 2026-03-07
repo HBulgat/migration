@@ -19,6 +19,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - LOGGING_FILE_PATH=/app/logs/migration.admin.api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - /var/log/myapp/migration.admin.api:/app/logs/migration.admin.api
     restart: always
@@ -43,6 +45,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - LOGGING_FILE_PATH=/app/logs/migration.diff.service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - /var/log/myapp/migration.diff.service:/app/logs/migration.diff.service
     restart: always
