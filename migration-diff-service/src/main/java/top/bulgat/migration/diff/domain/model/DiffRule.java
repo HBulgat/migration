@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Diff rule module.
+ * Diff 规则模型。
  */
 @Getter
 @AllArgsConstructor

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 /**
- * Grayscale rule entity module.
+ * 灰度规则实体。
  */
 @Getter
 public class GrayscaleRule {
@@ -18,7 +18,7 @@ public class GrayscaleRule {
     private LocalDateTime updateTime;
 
     /**
-     * Create rule with current timestamps module.
+     * 使用当前时间创建规则。
      */
     public GrayscaleRule(
             String ruleId,
@@ -30,7 +30,7 @@ public class GrayscaleRule {
     }
 
     /**
-     * Create rule with explicit timestamps module.
+     * 使用指定时间创建规则。
      */
     public GrayscaleRule(
             String ruleId,
@@ -50,7 +50,7 @@ public class GrayscaleRule {
     }
 
     /**
-     * Partially update rule fields module.
+     * 部分更新规则字段。
      */
     public void update(GrayscaleRuleType targetType, String targetValue, Boolean targetEnable) {
         if (targetType != null) {
@@ -66,7 +66,7 @@ public class GrayscaleRule {
     }
 
     /**
-     * Toggle rule enable status module.
+     * 切换规则启用状态。
      */
     public void updateEnable(boolean targetEnable) {
         this.enable = targetEnable;

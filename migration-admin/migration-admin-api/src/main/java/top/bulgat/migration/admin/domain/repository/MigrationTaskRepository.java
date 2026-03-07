@@ -5,7 +5,7 @@ import java.util.Optional;
 import top.bulgat.migration.admin.domain.model.MigrationTask;
 
 /**
- * MigrationTaskRepository defines persistence access.
+ * MigrationTaskRepository 定义持久化访问能力。
  */
 public interface MigrationTaskRepository {
 

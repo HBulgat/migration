@@ -5,7 +5,7 @@ import top.bulgat.migration.diff.domain.model.DiffRequest;
 import top.bulgat.migration.diff.domain.model.DiffResult;
 
 /**
- * DiffRecordRepository defines persistence access.
+ * DiffRecordRepository 定义持久化访问能力。
  */
 public interface DiffRecordRepository {
 

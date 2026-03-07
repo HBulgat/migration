@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Diff execution result module.
+ * Diff 执行结果模型。
  */
 @Getter
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class DiffResult {
     private final long costTimeMs;
 
     /**
-     * Keep backward compatible boolean accessor used by existing services module.
+     * 保留现有服务使用的布尔访问方法，以兼容旧调用方。
      */
     public boolean hasDiff() {
         return hasDiff;

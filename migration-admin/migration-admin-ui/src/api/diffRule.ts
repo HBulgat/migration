@@ -1,7 +1,7 @@
 import { get, post } from '@/api/http'
 import type { PageResult } from '@/types'
 
-// ==================== Interfaces ====================
+// ==================== 接口定义 ====================
 
 export interface DiffRule {
     migration_key: string
@@ -42,7 +42,7 @@ export interface DeleteDiffRuleRequest {
     rule_id: string
 }
 
-// ==================== API Functions ====================
+// ==================== API 方法 ====================
 
 export const createDiffRule = (data: CreateDiffRuleRequest) => {
     return post<DiffRule>('/api/v1/diff_rule/create', data)

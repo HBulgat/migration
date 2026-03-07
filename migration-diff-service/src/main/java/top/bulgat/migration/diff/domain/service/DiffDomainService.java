@@ -27,8 +27,8 @@ import top.bulgat.migration.diff.domain.rule.DiffRuleExecutor;
 import top.bulgat.migration.diff.domain.rule.DiffRuleExecutorRegistry;
 
 /**
- * Domain service for diff comparison.
- * Handles JSON patch generation, sort preprocessing, and rule filtering.
+ * Diff 比对领域服务。
+ * 负责 JSON Patch 生成、排序预处理和规则过滤。
  */
 @Component
 public class DiffDomainService {
@@ -45,12 +45,12 @@ public class DiffDomainService {
     }
 
     /**
-     * Executes diff comparison for a single request.
-     * Sort rules are applied before JSON patch calculation and rule filtering.
+     * 执行单次 Diff 比对。
+     * 会先应用排序规则，再进行 JSON Patch 计算和规则过滤。
      *
-     * @param request diff input payload
-     * @param rules active rules for this migration key
-     * @return diff result after rule filtering
+     * @param request Diff 输入参数
+     * @param rules 该 migration_key 对应的生效规则
+     * @return 规则过滤后的 Diff 结果
      */
     public DiffResult execute(DiffRequest request, List<DiffRule> rules) {
         long start = System.currentTimeMillis();

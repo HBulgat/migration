@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Migration lifecycle status module.
+ * 迁移生命周期状态枚举。
  */
 @Getter
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public enum MigrationStatus {
     private final String desc;
 
     /**
-     * Resolve status by numeric code module.
+     * 根据数值编码解析状态。
      */
     public static MigrationStatus fromCode(int code) {
         for (MigrationStatus status : values()) {
@@ -33,7 +33,7 @@ public enum MigrationStatus {
     }
 
     /**
-     * Validate whether current status can switch to target status module.
+     * 校验当前状态是否允许切换到目标状态。
      */
     public boolean canSwitchTo(MigrationStatus target) {
         if (target == this) {

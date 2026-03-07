@@ -3,7 +3,7 @@ package top.bulgat.migration.admin.infrastructure.configcenter;
 import java.util.Optional;
 
 /**
- * ConfigCenterGateway accesses config center capabilities.
+ * 配置中心网关能力定义。
  */
 public interface ConfigCenterGateway {
 

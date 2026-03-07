@@ -16,7 +16,7 @@ import top.bulgat.migration.sdk.starter.aop.MigrationAnnotationAdvisor;
 import top.bulgat.migration.sdk.starter.aop.MigrationInterceptor;
 
 /**
- * migration starter 自动装配。
+ * 迁移 Starter 自动装配。
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(MigrationProperties.class)

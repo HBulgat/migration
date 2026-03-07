@@ -15,7 +15,7 @@ import top.bulgat.migration.admin.domain.repository.MigrationTaskRepository;
 import top.bulgat.migration.admin.infrastructure.configcenter.ConfigCenterGateway;
 
 /**
- * ConfigCenterMigrationTaskRepository defines persistence access.
+ * ConfigCenterMigrationTaskRepository 定义持久化访问能力。
  */
 @Primary
 @Repository
@@ -34,7 +34,7 @@ public class ConfigCenterMigrationTaskRepository implements MigrationTaskReposit
     }
 
     /**
-     * Persist data.
+     * 持久化数据。
      * @param task 任务实体。
      * @return 返回结果。
      */
@@ -60,7 +60,7 @@ public class ConfigCenterMigrationTaskRepository implements MigrationTaskReposit
 
     /**
      * 执行 existsByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override
@@ -70,7 +70,7 @@ public class ConfigCenterMigrationTaskRepository implements MigrationTaskReposit
 
     /**
      * 执行 findByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override
@@ -100,7 +100,7 @@ public class ConfigCenterMigrationTaskRepository implements MigrationTaskReposit
 
     /**
      * 执行 deleteByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      */
     @Override
     public void deleteByMigrationKey(String migrationKey) {

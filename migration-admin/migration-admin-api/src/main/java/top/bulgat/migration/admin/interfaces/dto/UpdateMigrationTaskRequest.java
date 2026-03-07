@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * UpdateMigrationTaskRequest is an API request DTO.
+ * 接口请求 DTO。
  */
 public record UpdateMigrationTaskRequest(
         @JsonProperty("migration_key")

@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.application.command;
 
 /**
- * UpdateGrayscaleRuleEnableCommand contains payload for toggling grayscale rule enable status.
+ * 灰度规则启停命令，包含启停参数。
  */
 public record UpdateGrayscaleRuleEnableCommand(
         String migrationKey,

@@ -16,7 +16,7 @@ import top.bulgat.migration.sdk.core.model.GrayscaleRuleType;
 import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
 
 /**
- * Default grayscale matcher supporting percentage, lists and expression rules.
+ * 默认灰度匹配器，支持百分比、名单和表达式规则。
  */
 public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
 
@@ -26,11 +26,11 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     private static final Map<String, JSONArray> JSON_ARRAY_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * Evaluates grayscale rules in order and returns on first decision.
+     * 按顺序评估灰度规则，并在首次命中时返回结果。
      *
-     * @param rules grayscale rules
-     * @param params grayscale parameters
-     * @return true when request hits grayscale
+     * @param rules 灰度规则
+     * @param params 灰度参数
+     * @return 命中灰度时返回 true
      */
     @Override
     public boolean match(List<GrayscaleConfig> rules, Map<String, Object> params) {
@@ -68,11 +68,11 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     }
 
     /**
-     * Matches percentage rule by hashing stable subject into [0, 99].
+     * 通过哈希稳定主体值到 [0, 99] 区间来匹配百分比规则。
      *
-     * @param ruleValue percentage text
-     * @param params grayscale parameters
-     * @return match result
+     * @param ruleValue 百分比文本
+     * @param params 灰度参数
+     * @return 匹配结果
      */
     private boolean matchPercentage(String ruleValue, Map<String, Object> params) {
         int percentage;
@@ -95,11 +95,11 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     }
 
     /**
-     * Matches whitelist/blacklist rule represented by JSON array.
+     * 匹配由 JSON 数组表示的白名单或黑名单规则。
      *
-     * @param ruleValue json array text
-     * @param params grayscale parameters
-     * @return true when subject exists in collection
+     * @param ruleValue JSON 数组文本
+     * @param params 灰度参数
+     * @return 主体存在于集合中时返回 true
      */
     private boolean matchCollection(String ruleValue, Map<String, Object> params) {
         String subject = extractSubject(params);
@@ -115,11 +115,11 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     }
 
     /**
-     * Evaluates expression rule using SpEL.
+     * 使用 SpEL 计算表达式规则。
      *
-     * @param expressionText expression text
-     * @param params grayscale parameters
-     * @return expression result
+     * @param expressionText 表达式文本
+     * @param params 灰度参数
+     * @return 表达式结果
      */
     private boolean matchExpression(String expressionText, Map<String, Object> params) {
         try {
@@ -139,10 +139,10 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     }
 
     /**
-     * Extracts stable subject id for hashing and list matching.
+     * 提取稳定主体标识，用于哈希和名单匹配。
      *
-     * @param params grayscale parameters
-     * @return subject text
+     * @param params 灰度参数
+     * @return 主体文本
      */
     private String extractSubject(Map<String, Object> params) {
         // 按优先级顺序查找主题ID

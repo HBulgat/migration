@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 /**
- * MigrationTaskResponse is an API response DTO.
+ * 接口响应 DTO。
  */
 public record MigrationTaskResponse(
         @JsonProperty("migration_key") String migrationKey,

@@ -22,7 +22,7 @@ import top.bulgat.migration.admin.interfaces.dto.DiffRecordResponse;
 import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
 
 /**
- * Diff record query API.
+ * Diff 记录查询接口。
  */
 @Tag(name = "Diff Record API", description = "Query diff record list, detail and statistics")
 @Validated

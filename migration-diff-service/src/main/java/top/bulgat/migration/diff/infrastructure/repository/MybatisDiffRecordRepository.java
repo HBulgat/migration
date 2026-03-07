@@ -19,7 +19,7 @@ import top.bulgat.migration.diff.infrastructure.persistence.entity.DiffRecordDO;
 import top.bulgat.migration.diff.infrastructure.persistence.mapper.DiffRecordMapper;
 
 /**
- * MybatisDiffRecordRepository defines persistence access.
+ * MybatisDiffRecordRepository 定义持久化访问能力。
  */
 @Primary
 @Repository
@@ -35,10 +35,10 @@ public class MybatisDiffRecordRepository implements DiffRecordRepository {
     }
 
     /**
-     * Persist data.
+     * 持久化数据。
      * 
      * @param request 请求参数。
-     * @param result  result object.
+     * @param result  结果对象。
      * @return 返回结果。
      */
     @Override

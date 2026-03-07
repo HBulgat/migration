@@ -3,7 +3,7 @@ package top.bulgat.migration.admin.interfaces.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * DiffItemResponse is an API response DTO.
+ * 接口响应 DTO。
  */
 public record DiffItemResponse(
         @JsonProperty("field_path") String fieldPath,

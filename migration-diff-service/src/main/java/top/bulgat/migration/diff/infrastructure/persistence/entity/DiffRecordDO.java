@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
- * Diff record data object for MyBatis module.
+ * Diff 记录 MyBatis 数据对象。
  */
 @Data
 @TableName("diff_record")

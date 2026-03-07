@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import top.bulgat.migration.diff.infrastructure.persistence.entity.DiffRecordDO;
 
 /**
- * DiffRecordMapper is the MyBatis mapper.
+ * DiffRecord 的 MyBatis Mapper。
  */
 @Mapper
 public interface DiffRecordMapper extends BaseMapper<DiffRecordDO> {

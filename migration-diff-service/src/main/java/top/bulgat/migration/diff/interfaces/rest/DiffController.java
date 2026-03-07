@@ -14,7 +14,7 @@ import top.bulgat.migration.diff.interfaces.dto.DiffExecuteRequest;
 import top.bulgat.migration.diff.interfaces.dto.DiffExecuteResponse;
 
 /**
- * Diff execution endpoint.
+ * Diff 执行接口。
  */
 @Tag(name = "Diff API", description = "Execute JSON diff with configured rules")
 @RestController
@@ -30,10 +30,10 @@ public class DiffController {
     }
 
     /**
-     * Execute one diff request.
+     * 执行一次 Diff 请求。
      *
-     * @param request diff 请求参数。
-     * @return diff execution result
+     * @param request Diff 请求参数。
+     * @return Diff 执行结果
      */
     @Operation(summary = "Execute diff", description = "Compare old_json and new_json with diff rules")
     @PostMapping

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Persisted diff record aggregate module.
+ * 已持久化的 Diff 记录聚合。
  */
 @Getter
 @AllArgsConstructor

@@ -129,9 +129,9 @@ const handleSubmit = async () => {
         emit('success')
         handleClose()
       } catch (e: any) {
-        // http.ts interceptor already handles error messages if not silent, but keeping this block as fallback
+        // http.ts 拦截器在非 silent 场景下已统一处理错误提示，这里保留兜底逻辑
         if (e.message !== '请求失败，请稍后重试' && e.message !== '网络请求异常') {
-          // ElMessage in api/http handles most of it, but just in case
+          // api/http 里的 ElMessage 已覆盖大部分场景，这里保留兜底处理
         }
       } finally {
         submitting.value = false

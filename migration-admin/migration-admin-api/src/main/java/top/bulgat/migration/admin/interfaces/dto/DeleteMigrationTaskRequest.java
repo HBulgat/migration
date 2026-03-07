@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * DeleteMigrationTaskRequest is an API request DTO.
+ * 接口请求 DTO。
  */
 public record DeleteMigrationTaskRequest(
         @JsonProperty("migration_key")

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Diff execution request in domain layer module.
+ * 领域层 Diff 执行请求。
  */
 @Getter
 @AllArgsConstructor

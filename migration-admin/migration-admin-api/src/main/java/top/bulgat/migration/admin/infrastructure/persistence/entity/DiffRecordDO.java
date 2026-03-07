@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
- * Diff record persistence object module.
+ * Diff 记录持久化对象。
  */
 @Data
 @TableName("diff_record")

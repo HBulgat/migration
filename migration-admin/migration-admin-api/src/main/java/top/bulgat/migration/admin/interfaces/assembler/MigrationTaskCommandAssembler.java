@@ -18,7 +18,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateMigrationTaskRequest;
 import top.bulgat.migration.admin.interfaces.dto.UpdateMigrationTaskStatusRequest;
 
 /**
- * MigrationTaskCommandAssembler 用于转换DTO和领域模型。
+ * 用于转换 DTO 与领域模型。
  */
 @Component
 public class MigrationTaskCommandAssembler {

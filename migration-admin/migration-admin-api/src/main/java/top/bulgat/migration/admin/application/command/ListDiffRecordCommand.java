@@ -3,7 +3,7 @@ package top.bulgat.migration.admin.application.command;
 import java.time.LocalDate;
 
 /**
- * ListDiffRecordCommand contains filters and pagination arguments for diff record listing.
+ * Diff 记录列表查询命令，包含筛选与分页参数。
  */
 public record ListDiffRecordCommand(
         String migrationKey,

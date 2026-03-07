@@ -10,7 +10,7 @@ public interface DiffServiceCaller extends AutoCloseable {
     /**
      * 异步发送 Diff 请求。
      *
-     * @param request diff 请求
+     * @param request Diff 请求
      */
     void executeDiffAsync(DiffRequest request);
 

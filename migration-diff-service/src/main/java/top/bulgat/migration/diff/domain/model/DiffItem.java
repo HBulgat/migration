@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Single diff detail item module.
+ * 单个 Diff 明细项。
  */
 @Getter
 @AllArgsConstructor

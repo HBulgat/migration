@@ -16,7 +16,7 @@ import top.bulgat.migration.admin.interfaces.dto.DiffRecordResponse;
 import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
 
 /**
- * DiffRecordAssembler 用于转换DTO和领域模型。
+ * 用于转换 DTO 与领域模型。
  */
 @Component
 public class DiffRecordAssembler {
@@ -25,10 +25,10 @@ public class DiffRecordAssembler {
 
     /**
      * 执行 toListCommand 业务逻辑。
-     * @param migrationKey migration key.
-     * @param hasDiff has-diff filter.
-     * @param startDate start date.
-     * @param endDate end date.
+     * @param migrationKey 迁移标识。
+     * @param hasDiff 是否有差异过滤条件。
+     * @param startDate 开始时间。
+     * @param endDate 结束时间。
      * @param page 页码。
      * @param pageSize 每页大小。
      * @return 返回结果。
@@ -45,10 +45,10 @@ public class DiffRecordAssembler {
 
     /**
      * 执行 toCountCommand 业务逻辑。
-     * @param migrationKey migration key.
-     * @param hasDiff has-diff filter.
-     * @param startDate start date.
-     * @param endDate end date.
+     * @param migrationKey 迁移标识。
+     * @param hasDiff 是否有差异过滤条件。
+     * @param startDate 开始时间。
+     * @param endDate 结束时间。
      * @return 返回结果。
      */
     public CountDiffRecordCommand toCountCommand(
@@ -61,7 +61,7 @@ public class DiffRecordAssembler {
 
     /**
      * 执行 toDetailCommand 业务逻辑。
-     * @param id record id.
+     * @param id 记录 ID。
      * @return 返回结果。
      */
     public DetailDiffRecordCommand toDetailCommand(long id) {
@@ -70,9 +70,9 @@ public class DiffRecordAssembler {
 
     /**
      * 执行 toStatisticsCommand 业务逻辑。
-     * @param migrationKey migration key.
-     * @param startDate start date.
-     * @param endDate end date.
+     * @param migrationKey 迁移标识。
+     * @param startDate 开始时间。
+     * @param endDate 结束时间。
      * @return 返回结果。
      */
     public StatisticsDiffRecordCommand toStatisticsCommand(
@@ -84,7 +84,7 @@ public class DiffRecordAssembler {
 
     /**
      * 执行 toResponse 业务逻辑。
-     * @param record record entity.
+     * @param record 记录实体。
      * @return 返回结果。
      */
     public DiffRecordResponse toResponse(DiffRecord record) {

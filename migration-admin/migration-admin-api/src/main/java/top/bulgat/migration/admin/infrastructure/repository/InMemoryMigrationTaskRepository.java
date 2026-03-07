@@ -10,7 +10,7 @@ import top.bulgat.migration.admin.domain.model.MigrationTask;
 import top.bulgat.migration.admin.domain.repository.MigrationTaskRepository;
 
 /**
- * InMemoryMigrationTaskRepository defines persistence access.
+ * InMemoryMigrationTaskRepository 定义持久化访问能力。
  */
 @Repository
 public class InMemoryMigrationTaskRepository implements MigrationTaskRepository {
@@ -18,7 +18,7 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
     private final Map<String, MigrationTask> tasks = new ConcurrentHashMap<>();
 
     /**
-     * Persist data.
+     * 持久化数据。
      * @param task 任务实体。
      * @return 返回结果。
      */
@@ -30,7 +30,7 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
 
     /**
      * 执行 existsByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override
@@ -40,7 +40,7 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
 
     /**
      * 执行 findByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override
@@ -59,7 +59,7 @@ public class InMemoryMigrationTaskRepository implements MigrationTaskRepository 
 
     /**
      * 执行 deleteByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      */
     @Override
     public void deleteByMigrationKey(String migrationKey) {

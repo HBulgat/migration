@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * DiffExecuteRequest is an API request DTO.
+ * 接口请求 DTO。
  */
 public record DiffExecuteRequest(
         @JsonProperty("migration_key") @NotBlank @Size(max = 128) @Pattern(regexp = "^\\S+$") String migrationKey,

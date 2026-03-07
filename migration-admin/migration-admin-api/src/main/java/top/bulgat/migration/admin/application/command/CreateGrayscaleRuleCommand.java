@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.application.command;
 
 /**
- * CreateGrayscaleRuleCommand contains payload for creating a grayscale rule.
+ * 创建灰度规则命令，包含创建参数。
  */
 public record CreateGrayscaleRuleCommand(
         String migrationKey,

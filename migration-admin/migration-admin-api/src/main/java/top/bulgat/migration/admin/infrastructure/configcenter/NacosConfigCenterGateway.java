@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
- * NacosConfigCenterGateway accesses config center capabilities.
+ * Nacos配置中心网关能力定义。
  */
 @Primary
 @Component
@@ -37,11 +37,11 @@ public class NacosConfigCenterGateway implements ConfigCenterGateway {
     }
 
     /**
-     * Publish config content.
+     * 发布配置内容。
      *
-     * @param dataId config data id.
-     * @param group config group.
-     * @param content config content.
+     * @param dataId 配置 dataId。
+     * @param group 配置分组。
+     * @param content 配置内容。
      */
     @Override
     public void publish(String dataId, String group, String content) {
@@ -53,10 +53,10 @@ public class NacosConfigCenterGateway implements ConfigCenterGateway {
     }
 
     /**
-     * Load config content.
+     * 加载配置内容。
      *
-     * @param dataId config data id.
-     * @param group config group.
+     * @param dataId 配置 dataId。
+     * @param group 配置分组。
      * @return 返回结果。
      */
     @Override
@@ -70,10 +70,10 @@ public class NacosConfigCenterGateway implements ConfigCenterGateway {
     }
 
     /**
-     * Delete data by request.
+     * 按请求删除数据。
      *
-     * @param dataId config data id.
-     * @param group config group.
+     * @param dataId 配置 dataId。
+     * @param group 配置分组。
      */
     @Override
     public void delete(String dataId, String group) {

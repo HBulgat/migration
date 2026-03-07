@@ -16,7 +16,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleEnableReques
 import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleRequest;
 
 /**
- * GrayscaleRuleAssembler 用于转换DTO和领域模型。
+ * 用于转换 DTO 与领域模型。
  */
 @Component
 public class GrayscaleRuleAssembler {
@@ -70,7 +70,7 @@ public class GrayscaleRuleAssembler {
 
     /**
      * 执行 toListCommand 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @param page 页码。
      * @param pageSize 每页大小。
      * @return 返回结果。
@@ -81,7 +81,7 @@ public class GrayscaleRuleAssembler {
 
     /**
      * 执行 toResponse 业务逻辑。
-     * @param rule rule entity.
+     * @param rule 规则实体。
      * @return 返回结果。
      */
     public GrayscaleRuleResponse toResponse(GrayscaleRule rule) {
@@ -97,7 +97,7 @@ public class GrayscaleRuleAssembler {
 
     /**
      * 执行 toResponseList 业务逻辑。
-     * @param rules rule collection.
+     * @param rules 规则集合。
      * @return 返回结果。
      */
     public List<GrayscaleRuleResponse> toResponseList(List<GrayscaleRule> rules) {

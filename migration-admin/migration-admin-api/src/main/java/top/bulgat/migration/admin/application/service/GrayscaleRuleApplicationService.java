@@ -113,7 +113,7 @@ public class GrayscaleRuleApplicationService {
     /**
      * 查询指定迁移任务下的全部灰度规则，供 SDK 配置读取使用。
      *
-     * @param migrationKey migration key
+     * @param migrationKey 迁移标识
      * @return 全量灰度规则
      */
     public List<GrayscaleRule> listAllByMigrationKey(String migrationKey) {

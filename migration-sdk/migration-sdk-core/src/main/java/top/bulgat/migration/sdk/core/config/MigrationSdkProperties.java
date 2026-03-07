@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * SDK runtime properties.
+ * SDK 运行时配置。
  */
 @Data
 @Builder
@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MigrationSdkProperties {
 
-    /** Environment variable for config center url. */
+    /** 配置中心地址环境变量。 */
     public static final String ENV_CONFIG_CENTER_URL = "MIGRATION_CONFIG_CENTER_URL";
-    /** Environment variable for diff service url. */
+    /** Diff 服务地址环境变量。 */
     public static final String ENV_DIFF_SERVICE_URL = "MIGRATION_DIFF_SERVICE_URL";
-    /** Environment variable for default timeout. */
+    /** 默认超时环境变量。 */
     public static final String ENV_DEFAULT_TIMEOUT = "MIGRATION_DEFAULT_TIMEOUT";
-    /** Environment variable for internal token. */
+    /** 内部令牌环境变量。 */
     public static final String ENV_INTERNAL_TOKEN = "MIGRATION_INTERNAL_TOKEN";
 
     private String configCenterUrl;
@@ -29,9 +29,9 @@ public class MigrationSdkProperties {
     private String internalToken;
 
     /**
-     * Builds properties from environment variables.
+     * 从环境变量构建配置。
      *
-     * @return sdk properties
+     * @return SDK 配置
      */
     public static MigrationSdkProperties fromEnv() {
         int timeout = 5000;
@@ -52,11 +52,11 @@ public class MigrationSdkProperties {
     }
 
     /**
-     * Resolves environment variable with default fallback.
+     * 解析环境变量，缺失时回退默认值。
      *
      * @param key          env key
-     * @param defaultValue fallback value
-     * @return resolved value
+     * @param defaultValue 默认值
+     * @return 解析结果
      */
     private static String resolve(String key, String defaultValue) {
         String value = System.getenv(key);

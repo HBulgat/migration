@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.domain.model;
 
 /**
- * DiffType defines enum values.
+ * DiffType 枚举定义。
  */
 public enum DiffType {
     ADD,

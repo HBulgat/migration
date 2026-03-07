@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 /**
- * InMemoryConfigCenterGateway accesses config center capabilities.
+ * InMemory配置中心网关能力定义。
  */
 @Component
 public class InMemoryConfigCenterGateway implements ConfigCenterGateway {
@@ -14,11 +14,11 @@ public class InMemoryConfigCenterGateway implements ConfigCenterGateway {
     private final Map<String, String> configs = new ConcurrentHashMap<>();
 
     /**
-     * Publish config content.
+     * 发布配置内容。
      *
-     * @param dataId config data id.
-     * @param group config group.
-     * @param content config content.
+     * @param dataId 配置 dataId。
+     * @param group 配置分组。
+     * @param content 配置内容。
      */
     @Override
     public void publish(String dataId, String group, String content) {
@@ -26,10 +26,10 @@ public class InMemoryConfigCenterGateway implements ConfigCenterGateway {
     }
 
     /**
-     * Load config content.
+     * 加载配置内容。
      *
-     * @param dataId config data id.
-     * @param group config group.
+     * @param dataId 配置 dataId。
+     * @param group 配置分组。
      * @return 返回结果。
      */
     @Override
@@ -38,10 +38,10 @@ public class InMemoryConfigCenterGateway implements ConfigCenterGateway {
     }
 
     /**
-     * Delete data by request.
+     * 按请求删除数据。
      *
-     * @param dataId config data id.
-     * @param group config group.
+     * @param dataId 配置 dataId。
+     * @param group 配置分组。
      */
     @Override
     public void delete(String dataId, String group) {

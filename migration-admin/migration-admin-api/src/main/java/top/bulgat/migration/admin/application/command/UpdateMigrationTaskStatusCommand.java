@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.application.command;
 
 /**
- * UpdateMigrationTaskStatusCommand contains target status for migration task transition.
+ * 迁移任务状态变更命令，包含目标状态。
  */
 public record UpdateMigrationTaskStatusCommand(
         String migrationKey,

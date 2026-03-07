@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 
 /**
- * GrayscaleRuleResponse is an API response DTO.
+ * 接口响应 DTO。
  */
 public record GrayscaleRuleResponse(
         @JsonProperty("rule_id") String ruleId,

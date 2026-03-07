@@ -15,7 +15,7 @@ import top.bulgat.migration.admin.domain.repository.GrayscaleRuleRepository;
 import top.bulgat.migration.admin.infrastructure.configcenter.ConfigCenterGateway;
 
 /**
- * ConfigCenterGrayscaleRuleRepository defines persistence access.
+ * ConfigCenterGrayscaleRuleRepository 定义持久化访问能力。
  */
 @Primary
 @Repository
@@ -34,8 +34,8 @@ public class ConfigCenterGrayscaleRuleRepository implements GrayscaleRuleReposit
     }
 
     /**
-     * Persist data.
-     * @param rule rule entity.
+     * 持久化数据。
+     * @param rule 规则实体。
      * @return 返回结果。
      */
     @Override
@@ -58,8 +58,8 @@ public class ConfigCenterGrayscaleRuleRepository implements GrayscaleRuleReposit
 
     /**
      * 执行 findByMigrationKeyAndRuleId 业务逻辑。
-     * @param migrationKey migration key.
-     * @param ruleId record id.
+     * @param migrationKey 迁移标识。
+     * @param ruleId 记录 ID。
      * @return 返回结果。
      */
     @Override
@@ -71,7 +71,7 @@ public class ConfigCenterGrayscaleRuleRepository implements GrayscaleRuleReposit
 
     /**
      * 执行 findByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override
@@ -106,14 +106,14 @@ public class ConfigCenterGrayscaleRuleRepository implements GrayscaleRuleReposit
             }
             return rules;
         } catch (Exception ex) {
-            throw new IllegalStateException("failed to load grayscale rules", ex);
+            throw new IllegalStateException("failed to load 灰度规则", ex);
         }
     }
 
     /**
      * 执行 deleteByMigrationKeyAndRuleId 业务逻辑。
-     * @param migrationKey migration key.
-     * @param ruleId record id.
+     * @param migrationKey 迁移标识。
+     * @param ruleId 记录 ID。
      */
     @Override
     public void deleteByMigrationKeyAndRuleId(String migrationKey, String ruleId) {
@@ -124,7 +124,7 @@ public class ConfigCenterGrayscaleRuleRepository implements GrayscaleRuleReposit
 
     /**
      * 执行 deleteByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      */
     @Override
     public void deleteByMigrationKey(String migrationKey) {
@@ -151,7 +151,7 @@ public class ConfigCenterGrayscaleRuleRepository implements GrayscaleRuleReposit
                     RULE_GROUP,
                     objectMapper.writeValueAsString(payload));
         } catch (Exception ex) {
-            throw new IllegalStateException("failed to persist grayscale rules", ex);
+            throw new IllegalStateException("failed to persist 灰度规则", ex);
         }
     }
 

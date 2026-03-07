@@ -12,7 +12,7 @@ import top.bulgat.migration.admin.domain.model.DiffRecord;
 import top.bulgat.migration.admin.domain.repository.DiffRecordRepository;
 
 /**
- * InMemoryDiffRecordRepository defines persistence access.
+ * InMemoryDiffRecordRepository 定义持久化访问能力。
  */
 @Repository
 public class InMemoryDiffRecordRepository implements DiffRecordRepository {
@@ -21,8 +21,8 @@ public class InMemoryDiffRecordRepository implements DiffRecordRepository {
     private final List<DiffRecord> records = new CopyOnWriteArrayList<>();
 
     /**
-     * Persist data.
-     * @param record record entity.
+     * 持久化数据。
+     * @param record 记录实体。
      * @return 返回结果。
      */
     @Override
@@ -60,7 +60,7 @@ public class InMemoryDiffRecordRepository implements DiffRecordRepository {
 
     /**
      * 执行 findById 业务逻辑。
-     * @param id record id.
+     * @param id 记录 ID。
      * @return 返回结果。
      */
     @Override

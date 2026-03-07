@@ -18,9 +18,9 @@ public class MigrationProperties {
         private String internalToken;
 
         /**
-         * 转换为 core sdk 配置。
+         * 转换为 核心 SDK 配置。
          *
-         * @return core sdk 配置
+         * @return 核心 SDK 配置
          */
         public MigrationSdkProperties toSdkProperties() {
                 MigrationSdkProperties fromEnv = MigrationSdkProperties.fromEnv();

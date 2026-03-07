@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.domain.model;
 
 /**
- * Grayscale rule type module.
+ * 灰度规则类型枚举。
  */
 public enum GrayscaleRuleType {
     PERCENTAGE,
@@ -10,7 +10,7 @@ public enum GrayscaleRuleType {
     EXPRESSION;
 
     /**
-     * Parse rule type from text module.
+     * 从文本解析规则类型。
      */
     public static GrayscaleRuleType fromValue(String value) {
         return GrayscaleRuleType.valueOf(value.toUpperCase());

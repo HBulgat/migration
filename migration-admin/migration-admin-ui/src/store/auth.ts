@@ -13,7 +13,7 @@ import {
 export const useAuthStore = defineStore('auth', () => {
   const accessToken = ref(getAccessToken())
   const userInfo = ref<AuthUserInfo | null>(getStoredUserInfo())
-  // Force one server-side auth check after page reload, even when user_info exists locally.
+  // 页面刷新后强制向服务端校验一次登录态，即使本地已有 user_info。
   const profileChecked = ref(false)
 
   const isAuthenticated = computed(() => Boolean(accessToken.value))

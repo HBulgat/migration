@@ -26,7 +26,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleRequest;
 /**
  * 灰度规则管理接口.
  */
-@Tag(name = "Grayscale Rule API", description = "Manage migration grayscale rules")
+@Tag(name = "Grayscale Rule API", description = "Manage migration 灰度规则")
 @Validated
 @RestController
 @RequestMapping("/api/v1/grayscale_rule")

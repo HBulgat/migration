@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Diff record aggregate for admin read side module.
+ * 管理端读侧使用的 Diff 记录聚合。
  */
 @Getter
 @AllArgsConstructor

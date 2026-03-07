@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * DiffRecordResponse is an API response DTO.
+ * 接口响应 DTO。
  */
 public record DiffRecordResponse(
         @JsonProperty("id") long id,

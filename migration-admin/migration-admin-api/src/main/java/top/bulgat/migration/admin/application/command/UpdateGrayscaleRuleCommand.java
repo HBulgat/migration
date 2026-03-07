@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.application.command;
 
 /**
- * UpdateGrayscaleRuleCommand contains patch fields for updating a grayscale rule.
+ * 更新灰度规则命令，包含可变更字段。
  */
 public record UpdateGrayscaleRuleCommand(
         String migrationKey,

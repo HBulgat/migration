@@ -3,7 +3,7 @@ package top.bulgat.migration.admin.application.command;
 import java.time.LocalDate;
 
 /**
- * StatisticsDiffRecordCommand contains filters for querying diff statistics.
+ * Diff 统计查询命令，包含筛选条件。
  */
 public record StatisticsDiffRecordCommand(
         String migrationKey,

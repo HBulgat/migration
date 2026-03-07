@@ -1,7 +1,7 @@
 package top.bulgat.migration.diff.application.command;
 
 /**
- * ExecuteDiffCommand is an application command.
+ * Diff 执行应用命令。
  */
 public record ExecuteDiffCommand(
                 String migrationKey,

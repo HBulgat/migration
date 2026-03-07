@@ -10,7 +10,7 @@ import top.bulgat.migration.admin.domain.model.GrayscaleRule;
 import top.bulgat.migration.admin.domain.repository.GrayscaleRuleRepository;
 
 /**
- * InMemoryGrayscaleRuleRepository defines persistence access.
+ * InMemoryGrayscaleRuleRepository 定义持久化访问能力。
  */
 @Repository
 public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository {
@@ -18,8 +18,8 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
     private final Map<String, Map<String, GrayscaleRule>> ruleStore = new ConcurrentHashMap<>();
 
     /**
-     * Persist data.
-     * @param rule rule entity.
+     * 持久化数据。
+     * @param rule 规则实体。
      * @return 返回结果。
      */
     @Override
@@ -31,8 +31,8 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
 
     /**
      * 执行 findByMigrationKeyAndRuleId 业务逻辑。
-     * @param migrationKey migration key.
-     * @param ruleId record id.
+     * @param migrationKey 迁移标识。
+     * @param ruleId 记录 ID。
      * @return 返回结果。
      */
     @Override
@@ -46,7 +46,7 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
 
     /**
      * 执行 findByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override
@@ -60,8 +60,8 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
 
     /**
      * 执行 deleteByMigrationKeyAndRuleId 业务逻辑。
-     * @param migrationKey migration key.
-     * @param ruleId record id.
+     * @param migrationKey 迁移标识。
+     * @param ruleId 记录 ID。
      */
     @Override
     public void deleteByMigrationKeyAndRuleId(String migrationKey, String ruleId) {
@@ -74,7 +74,7 @@ public class InMemoryGrayscaleRuleRepository implements GrayscaleRuleRepository 
 
     /**
      * 执行 deleteByMigrationKey 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      */
     @Override
     public void deleteByMigrationKey(String migrationKey) {

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * UpdateGrayscaleRuleRequest is an API request DTO.
+ * 接口请求 DTO。
  */
 public record UpdateGrayscaleRuleRequest(
         @JsonProperty("migration_key")

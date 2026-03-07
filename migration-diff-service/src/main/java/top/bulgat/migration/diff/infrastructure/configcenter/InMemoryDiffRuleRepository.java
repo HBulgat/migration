@@ -10,7 +10,7 @@ import top.bulgat.migration.diff.domain.model.DiffRule;
 import top.bulgat.migration.diff.domain.repository.DiffRuleRepository;
 
 /**
- * InMemoryDiffRuleRepository defines persistence access.
+ * InMemoryDiffRuleRepository 定义持久化访问能力。
  */
 @ConditionalOnMissingBean(DiffRuleRepository.class)
 @Repository
@@ -20,7 +20,7 @@ public class InMemoryDiffRuleRepository implements DiffRuleRepository {
 
     /**
      * 执行 findEnabledRules 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override

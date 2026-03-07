@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.mybatis.spring.annotation.MapperScan;
 
 /**
- * migration-diff 启动类。
+ * Diff 服务启动类。
  */
 @MapperScan("top.bulgat.migration.diff.infrastructure.persistence.mapper")
 @SpringBootApplication

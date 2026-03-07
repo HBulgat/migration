@@ -4,7 +4,7 @@ import java.util.List;
 import top.bulgat.migration.diff.domain.model.DiffRule;
 
 /**
- * DiffRuleRepository defines persistence access.
+ * DiffRuleRepository 定义持久化访问能力。
  */
 public interface DiffRuleRepository {
 

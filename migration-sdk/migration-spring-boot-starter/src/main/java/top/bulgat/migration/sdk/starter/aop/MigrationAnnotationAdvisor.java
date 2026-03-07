@@ -15,7 +15,7 @@ public class MigrationAnnotationAdvisor extends AbstractPointcutAdvisor {
     private final Pointcut pointcut;
 
     /**
-     * 创建基于注解的Advisor。
+     * 创建基于注解的顾问。
      *
      * @param interceptor 迁移拦截器
      */
@@ -25,9 +25,9 @@ public class MigrationAnnotationAdvisor extends AbstractPointcutAdvisor {
     }
 
     /**
-     * 返回拦截器Advice。
+     * 返回拦截器通知。
      *
-     * @return AOP Advice
+     * @return AOP 拦截通知
      */
     @Override
     public Advice getAdvice() {
@@ -35,9 +35,9 @@ public class MigrationAnnotationAdvisor extends AbstractPointcutAdvisor {
     }
 
     /**
-     * 返回匹配 {@link Migration} 注解方法的Pointcut。
+     * 返回匹配 {@link Migration} 注解方法的切点。
      *
-     * @return AOP Pointcut
+     * @return AOP 切点定义
      */
     @Override
     public Pointcut getPointcut() {

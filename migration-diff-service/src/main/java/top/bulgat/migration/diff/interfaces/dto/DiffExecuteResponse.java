@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * DiffExecuteResponse is an API response DTO.
+ * 接口响应 DTO。
  */
 public record DiffExecuteResponse(
         @JsonProperty("has_diff") boolean hasDiff,
@@ -12,7 +12,7 @@ public record DiffExecuteResponse(
         @JsonProperty("cost_time_ms") long costTimeMs) {
 
     /**
-     * DiffItemResponse is an API response DTO.
+     * 接口响应 DTO。
      */
     public record DiffItemResponse(
             @JsonProperty("path") String path,

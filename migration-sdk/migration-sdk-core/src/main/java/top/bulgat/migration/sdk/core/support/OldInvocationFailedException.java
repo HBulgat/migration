@@ -1,16 +1,16 @@
 package top.bulgat.migration.sdk.core.support;
 
 /**
- * Marker exception used to indicate old method has already been invoked and failed.
+ * 用于标记旧方法已执行且失败的异常。
  */
 public class OldInvocationFailedException extends RuntimeException {
 
     private final Exception oldError;
 
     /**
-     * Creates marker exception.
+     * 创建标记异常。
      *
-     * @param oldError exception thrown by old method
+     * @param oldError 旧方法抛出的异常
      */
     public OldInvocationFailedException(Exception oldError) {
         super(oldError);
@@ -18,9 +18,9 @@ public class OldInvocationFailedException extends RuntimeException {
     }
 
     /**
-     * Returns old method error.
+     * 返回旧方法异常。
      *
-     * @return old method exception
+     * @return 旧方法 exception
      */
     public Exception getOldError() {
         return oldError;

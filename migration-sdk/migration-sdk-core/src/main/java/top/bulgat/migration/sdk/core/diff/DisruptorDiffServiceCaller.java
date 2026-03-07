@@ -23,7 +23,7 @@ import top.bulgat.migration.sdk.core.model.DiffRequest;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
 
 /**
- * Disruptor-based async diff caller.
+ * 基于 Disruptor 的异步 Diff 调用器。
  */
 public class DisruptorDiffServiceCaller implements DiffServiceCaller {
 
@@ -36,19 +36,19 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     private final RingBuffer<DiffEvent> ringBuffer;
 
     /**
-     * Creates diff caller from SDK properties.
+     * 根据 SDK 配置创建 Diff 调用器。
      *
-     * @param properties sdk runtime properties
+     * @param properties SDK 运行时配置
      */
     public DisruptorDiffServiceCaller(MigrationSdkProperties properties) {
         this(trimTrailingSlash(properties.getDiffServiceUrl()), createHttpClient(properties.getDefaultTimeout()));
     }
 
     /**
-     * Constructor for tests and custom injection.
+     * 供测试或自定义注入使用的构造函数。
      *
-     * @param diffServiceUrl diff service url
-     * @param httpClient     http client
+     * @param diffServiceUrl Diff 服务地址
+     * @param httpClient     HTTP 客户端
      */
     DisruptorDiffServiceCaller(String diffServiceUrl, CloseableHttpClient httpClient) {
         this.diffServiceUrl = trimTrailingSlash(diffServiceUrl);
@@ -67,9 +67,9 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     }
 
     /**
-     * Publishes diff request to disruptor queue.
+     * 将 Diff 请求发布到 Disruptor 队列。
      *
-     * @param request diff request
+     * @param request Diff 请求
      */
     @Override
     public void executeDiffAsync(DiffRequest request) {
@@ -86,7 +86,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     }
 
     /**
-     * Closes disruptor and HTTP client resources.
+     * 关闭 Disruptor 和 HTTP 客户端资源。
      */
     @Override
     public void close() {
@@ -103,9 +103,9 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     }
 
     /**
-     * Sends one diff request to remote diff service.
+     * 向远端 Diff 服务发送一次请求。
      *
-     * @param request diff request
+     * @param request Diff 请求
      */
     private void send(DiffRequest request) {
         if (request == null) {
@@ -140,21 +140,21 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
             if (status >= 400) {
                 HttpEntity entity = response.getEntity();
                 String body = entity == null ? "" : EntityUtils.toString(entity, StandardCharsets.UTF_8);
-                log.warn("diff request failed, status={}, migrationKey={}, body={}",
+                log.warn("Diff 请求 failed, status={}, migrationKey={}, body={}",
                         status,
                         request.getMigrationKey(),
                         body);
             }
         } catch (Exception ex) {
-            log.warn("diff request failed, migrationKey={}", request.getMigrationKey(), ex);
+            log.warn("Diff 请求 failed, migrationKey={}", request.getMigrationKey(), ex);
         }
     }
 
     /**
-     * Creates HTTP client with timeout settings.
+     * 创建带超时配置的 HTTP 客户端。
      *
-     * @param timeout timeout in milliseconds
-     * @return http client
+     * @param timeout 超时时间（毫秒）
+     * @return HTTP 客户端
      */
     private static CloseableHttpClient createHttpClient(int timeout) {
         RequestConfig requestConfig = RequestConfig.custom()
@@ -166,10 +166,10 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     }
 
     /**
-     * Normalizes url value and provides default when blank.
+     * 规范化 URL，并在为空时提供默认值。
      *
-     * @param value raw url value
-     * @return normalized url
+     * @param value 原始 URL value
+     * @return 规范化后的 URL
      */
     private static String trimTrailingSlash(String value) {
         if (value == null || value.isBlank()) {
@@ -182,7 +182,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     }
 
     /**
-     * Disruptor event container.
+     * Disruptor 事件容器。
      */
     private static final class DiffEvent {
         private DiffRequest request;

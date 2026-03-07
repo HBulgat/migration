@@ -16,7 +16,7 @@ public class AuthProperties {
     private String password;
     private String displayName = "System Administrator";
     private String jwtSecret;
-    private long jwtExpirationMs = 86400000; // default 24 hours
+    private long jwtExpirationMs = 86400000; // 默认 24 小时
 
     @PostConstruct
     public void validate() {

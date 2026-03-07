@@ -75,7 +75,7 @@ public class MigrationClient implements AutoCloseable {
      *
      * @param config            基础迁移配置
      * @param configClient      配置中心客户端
-     * @param diffServiceCaller Diff服务调用器
+     * @param diffServiceCaller Diff 服务调用器
      * @param grayscaleMatcher  灰度规则匹配器
      * @param strategyRegistry  策略注册表
      * @param executorService   异步调用线程池
@@ -95,7 +95,7 @@ public class MigrationClient implements AutoCloseable {
      *
      * @param config            基础迁移配置
      * @param configClient      配置中心客户端
-     * @param diffServiceCaller Diff调用器
+     * @param diffServiceCaller Diff 调用器
      * @param grayscaleMatcher  灰度匹配器
      * @param strategyRegistry  迁移策略注册表
      * @param executorService   线程池
@@ -238,7 +238,7 @@ public class MigrationClient implements AutoCloseable {
             }
             return latestConfig;
         } catch (Exception ex) {
-            log.warn("load migration config failed, fallback to OLD, migrationKey={}", config.getMigrationKey(), ex);
+            log.warn("load 迁移配置 failed, fallback to OLD, migrationKey={}", config.getMigrationKey(), ex);
             return MigrationConfig.builder()
                     .migrationKey(config.getMigrationKey())
                     .status(MigrationStatus.OLD.getCode())
@@ -256,7 +256,7 @@ public class MigrationClient implements AutoCloseable {
             List<GrayscaleConfig> rules = configClient.getGrayscaleRules(config.getMigrationKey());
             return rules == null ? Collections.emptyList() : rules;
         } catch (Exception ex) {
-            log.warn("load grayscale rules failed, migrationKey={}", config.getMigrationKey(), ex);
+            log.warn("load 灰度规则 failed, migrationKey={}", config.getMigrationKey(), ex);
             return Collections.emptyList();
         }
     }

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 /**
- * Migration task aggregate module.
+ * 迁移任务聚合。
  */
 @Getter
 public class MigrationTask {
@@ -16,14 +16,14 @@ public class MigrationTask {
     private LocalDateTime updateTime;
 
     /**
-     * Create task with current timestamps module.
+     * 使用当前时间创建任务。
      */
     public MigrationTask(String migrationKey, MigrationStatus status, String description) {
         this(migrationKey, status, description, LocalDateTime.now(), LocalDateTime.now());
     }
 
     /**
-     * Create task with explicit timestamps module.
+     * 使用指定时间创建任务。
      */
     public MigrationTask(
             String migrationKey,
@@ -39,7 +39,7 @@ public class MigrationTask {
     }
 
     /**
-     * Change migration status module.
+     * 变更迁移状态。
      */
     public void changeStatus(MigrationStatus targetStatus) {
         this.status = targetStatus;
@@ -47,7 +47,7 @@ public class MigrationTask {
     }
 
     /**
-     * Update task description module.
+     * 更新任务描述。
      */
     public void updateDescription(String newDescription) {
         this.description = newDescription;

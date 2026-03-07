@@ -18,7 +18,7 @@ import top.bulgat.migration.diff.domain.model.DiffRuleType;
 import top.bulgat.migration.diff.domain.repository.DiffRuleRepository;
 
 /**
- * NacosDiffRuleRepository defines persistence access.
+ * NacosDiffRuleRepository 定义持久化访问能力。
  */
 @Primary
 @Repository
@@ -62,7 +62,7 @@ public class NacosDiffRuleRepository implements DiffRuleRepository {
 
     /**
      * 执行 findEnabledRules 业务逻辑。
-     * @param migrationKey migration key.
+     * @param migrationKey 迁移标识。
      * @return 返回结果。
      */
     @Override

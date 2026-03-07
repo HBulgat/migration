@@ -5,7 +5,7 @@ import java.util.Optional;
 import top.bulgat.migration.admin.domain.model.GrayscaleRule;
 
 /**
- * GrayscaleRuleRepository defines persistence access.
+ * GrayscaleRuleRepository 定义持久化访问能力。
  */
 public interface GrayscaleRuleRepository {
 

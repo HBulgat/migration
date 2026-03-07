@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.application.command;
 
 /**
- * ListMigrationTaskCommand contains filter and pagination arguments for task listing.
+ * 迁移任务列表查询命令，包含筛选与分页参数。
  */
 public record ListMigrationTaskCommand(
         Integer status,

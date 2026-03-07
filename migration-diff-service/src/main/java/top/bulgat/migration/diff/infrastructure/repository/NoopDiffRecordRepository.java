@@ -12,7 +12,7 @@ import top.bulgat.migration.diff.domain.model.DiffResult;
 import top.bulgat.migration.diff.domain.repository.DiffRecordRepository;
 
 /**
- * NoopDiffRecordRepository defines persistence access.
+ * NoopDiffRecordRepository 定义持久化访问能力。
  */
 @ConditionalOnMissingBean(DiffRecordRepository.class)
 @Repository
@@ -22,10 +22,10 @@ public class NoopDiffRecordRepository implements DiffRecordRepository {
     private final List<DiffRecord> records = new CopyOnWriteArrayList<>();
 
     /**
-     * Persist data.
+     * 持久化数据。
      * 
      * @param request 请求参数。
-     * @param result  result object.
+     * @param result  结果对象。
      * @return 返回结果。
      */
     @Override

@@ -9,7 +9,7 @@ import top.bulgat.migration.diff.interfaces.dto.DiffExecuteRequest;
 import top.bulgat.migration.diff.interfaces.dto.DiffExecuteResponse;
 
 /**
- * DiffCommandAssembler 用于转换DTO和领域模型。
+ * 用于转换 DTO 与领域模型。
  */
 @Component
 public class DiffCommandAssembler {
@@ -44,7 +44,7 @@ public class DiffCommandAssembler {
     /**
      * 执行 toResponse 业务逻辑。
      * 
-     * @param result result object.
+     * @param result 结果对象。
      * @return 返回结果。
      */
     public DiffExecuteResponse toResponse(DiffResult result) {

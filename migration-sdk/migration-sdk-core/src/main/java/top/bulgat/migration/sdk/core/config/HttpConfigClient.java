@@ -23,8 +23,7 @@ import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 
 /**
- * HTTP-based config client for reading migration settings from
- * migration-admin-api.
+ * 基于 HTTP 的配置客户端，用于从 migration-admin-api 读取迁移配置。
  */
 public class HttpConfigClient implements ConfigClient {
 
@@ -36,9 +35,9 @@ public class HttpConfigClient implements ConfigClient {
     private final String internalToken;
 
     /**
-     * Creates client from SDK properties.
+     * 根据 SDK 配置创建客户端。
      *
-     * @param properties sdk runtime properties
+     * @param properties SDK 运行时配置
      */
     public HttpConfigClient(MigrationSdkProperties properties) {
         this(
@@ -48,11 +47,11 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Constructor for tests and custom injection.
+     * 供测试或自定义注入使用的构造函数。
      *
-     * @param baseUrl       admin-api base url
-     * @param httpClient    http client
-     * @param internalToken token for M2M authentication
+     * @param baseUrl       Admin API 基础地址
+     * @param httpClient    HTTP 客户端
+     * @param internalToken 机器间认证令牌
      */
     HttpConfigClient(String baseUrl, CloseableHttpClient httpClient, String internalToken) {
         this.baseUrl = trimTrailingSlash(baseUrl);
@@ -61,10 +60,10 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Queries migration task config.
+     * 查询迁移任务配置。
      *
-     * @param migrationKey migration key
-     * @return migration config
+     * @param migrationKey 迁移标识
+     * @return 迁移配置
      */
     @Override
     public MigrationConfig getMigrationConfig(String migrationKey) {
@@ -92,10 +91,10 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Queries grayscale rules.
+     * 查询灰度规则。
      *
-     * @param migrationKey migration key
-     * @return grayscale rule list
+     * @param migrationKey 迁移标识
+     * @return 灰度规则列表
      */
     @Override
     public List<GrayscaleConfig> getGrayscaleRules(String migrationKey) {
@@ -104,7 +103,7 @@ public class HttpConfigClient implements ConfigClient {
         String body = executeGet(path);
 
         JSONObject root = JSON.parseObject(body);
-        ensureSuccess(root, "query grayscale rules");
+        ensureSuccess(root, "query 灰度规则");
         JSONArray list = root.getJSONArray("data");
         if (list == null || list.isEmpty()) {
             return List.of();
@@ -124,7 +123,7 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Closes underlying HTTP client.
+     * 关闭底层 HTTP 客户端。
      */
     @Override
     public void close() {
@@ -136,10 +135,10 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Executes HTTP GET request.
+     * 执行 HTTP GET 请求。
      *
-     * @param path request path
-     * @return response body
+     * @param path 请求路径
+     * @return 响应体
      */
     private String executeGet(String path) {
         HttpGet request = new HttpGet(baseUrl + path);
@@ -154,11 +153,11 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Executes HTTP POST request.
+     * 执行 HTTP POST 请求。
      *
-     * @param path     request path
-     * @param jsonBody json request body
-     * @return response body
+     * @param path     请求路径
+     * @param jsonBody JSON 请求体
+     * @return 响应体
      */
     private String executePost(String path, String jsonBody) {
         HttpPost request = new HttpPost(baseUrl + path);
@@ -174,11 +173,11 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Reads response body and validates status code.
+     * 读取响应体并校验状态码。
      *
-     * @param response http response
-     * @param action   action label used in exception message
-     * @return response text
+     * @param response HTTP 响应
+     * @param action   异常信息中的动作描述
+     * @return 响应文本
      */
     private String readBody(CloseableHttpResponse response, String action) {
         int statusCode = response.getStatusLine().getStatusCode();
@@ -196,10 +195,10 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Validates admin-api standard response code.
+     * 校验 admin-api 标准响应码。
      *
-     * @param root   parsed response json
-     * @param action action label used in exception message
+     * @param root   解析后的响应 JSON
+     * @param action 异常信息中的动作描述
      */
     private void ensureSuccess(JSONObject root, String action) {
         if (root == null) {
@@ -216,10 +215,10 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Creates an HTTP client with unified timeout settings.
+     * 创建统一超时配置的 HTTP 客户端。
      *
-     * @param timeout timeout in milliseconds
-     * @return http client
+     * @param timeout 超时时间（毫秒）
+     * @return HTTP 客户端
      */
     private static CloseableHttpClient createHttpClient(int timeout) {
         RequestConfig requestConfig = RequestConfig.custom()
@@ -233,10 +232,10 @@ public class HttpConfigClient implements ConfigClient {
     }
 
     /**
-     * Normalizes url value and provides default when blank.
+     * 规范化 URL，并在为空时提供默认值。
      *
-     * @param value raw url
-     * @return normalized url
+     * @param value 原始 URL
+     * @return 规范化后的 URL
      */
     private static String trimTrailingSlash(String value) {
         if (value == null || value.isBlank()) {

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Diff item displayed by admin query APIs module.
+ * 管理端查询接口展示的 Diff 明细项。
  */
 @Getter
 @AllArgsConstructor

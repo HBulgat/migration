@@ -15,6 +15,7 @@
     <modules>
         <module>migration-sdk</module>
         <module>migration-admin</module>
+        <module>migration-admin/migration-admin-api</module>
         <module>migration-diff-service</module>
     </modules>
 

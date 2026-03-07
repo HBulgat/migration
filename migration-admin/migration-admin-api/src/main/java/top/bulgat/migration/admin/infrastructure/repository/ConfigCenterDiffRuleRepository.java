@@ -55,7 +55,7 @@ public class ConfigCenterDiffRuleRepository implements DiffRuleRepository {
             List<DiffRuleConfig> configs = objectMapper.readValue(contentOpt.get(), new TypeReference<List<DiffRuleConfig>>() {});
             return configs.stream().map(this::toEntity).collect(Collectors.toList());
         } catch (Exception ex) {
-            log.error("Failed to deserialize diff rules for migration key: {}", migrationKey, ex);
+            log.error("Failed to deserialize diff rules for 迁移标识: {}", migrationKey, ex);
             return new ArrayList<>();
         }
     }
@@ -80,7 +80,7 @@ public class ConfigCenterDiffRuleRepository implements DiffRuleRepository {
             String content = objectMapper.writeValueAsString(configs);
             configCenterGateway.publish(DATA_ID_PREFIX + migrationKey, GROUP, content);
         } catch (Exception ex) {
-            throw new IllegalStateException("Failed to publish diff rules for migration key: " + migrationKey, ex);
+            throw new IllegalStateException("Failed to publish diff rules for 迁移标识: " + migrationKey, ex);
         }
     }
 

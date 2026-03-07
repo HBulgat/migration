@@ -4,7 +4,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * Default fallback implementation that delegates to old method.
+ * 默认降级实现，委托旧方法执行。
  *
  * @param <T> return type
  */
@@ -13,20 +13,20 @@ public final class DefaultOldFallback<T> implements BiFunction<Object[], Excepti
     private final Function<Object[], T> oldMethod;
 
     /**
-     * Creates default old-method fallback.
+     * 创建默认旧方法降级器。
      *
-     * @param oldMethod old method
+     * @param oldMethod 旧方法
      */
     public DefaultOldFallback(Function<Object[], T> oldMethod) {
         this.oldMethod = oldMethod;
     }
 
     /**
-     * Applies fallback logic.
+     * 执行降级逻辑。
      *
-     * @param args original invocation args
-     * @param ex failure raised in strategy execution
-     * @return fallback result
+     * @param args 原始调用参数
+     * @param ex 策略执行期间抛出的异常
+     * @return 降级结果
      */
     @Override
     public T apply(Object[] args, Exception ex) {

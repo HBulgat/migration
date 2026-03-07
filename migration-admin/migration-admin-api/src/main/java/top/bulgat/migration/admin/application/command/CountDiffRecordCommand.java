@@ -3,7 +3,7 @@ package top.bulgat.migration.admin.application.command;
 import java.time.LocalDate;
 
 /**
- * CountDiffRecordCommand contains filters for diff record count statistics.
+ * Diff 记录计数命令，包含统计筛选条件。
  */
 public record CountDiffRecordCommand(
         String migrationKey,

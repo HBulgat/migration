@@ -122,7 +122,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     /**
      * 将反射方法包装成可调用的函数。
      *
-     * @param target 目标Bean
+     * @param target 目标 Bean
      * @param method 反射的方法
      * @return 调用函数
      */
@@ -133,7 +133,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     /**
      * 将降级方法包装成可调用的函数，并在参数末尾追加异常对象。
      *
-     * @param target 目标Bean
+     * @param target 目标 Bean
      * @param method 降级方法
      * @return 降级调用函数
      */
@@ -149,7 +149,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     /**
      * 通过反射调用目标方法。
      *
-     * @param target 目标Bean
+     * @param target 目标 Bean
      * @param method 待调用的方法
      * @param args   方法入参
      * @return 调用结果
@@ -170,7 +170,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * 解析方法描述符，支持格式：methodName / beanName#methodName / beanName.methodName。
+     * 解析方法描述符，支持格式：方法名、beanName#methodName 或 beanName.methodName。
      */
     private ResolvedMethod resolveTargetMethod(
             Object defaultTarget,
@@ -270,7 +270,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     }
 
     /**
-     * 从Spring上下文中解析参数处理器实例，或者通过反射创建实例。
+     * 从Spring 上下文中解析参数处理器实例，或者通过反射创建实例。
      *
      * @param handlerClass 注解中指定的参数处理器类
      * @return 参数处理器实例
@@ -283,7 +283,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
             try {
                 return applicationContext.getBean(handlerClass);
             } catch (Exception ignored) {
-                // Fall back to reflection-based construction.
+                // 回退到基于反射的实例化方式。
             }
         }
         try {
@@ -329,7 +329,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     /**
      * 注入Spring应用上下文。
      *
-     * @param applicationContext Spring上下文
+     * @param applicationContext Spring 应用上下文
      */
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) {

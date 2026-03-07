@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.application.command;
 
 /**
- * ListGrayscaleRuleCommand contains filter and pagination arguments for rule listing.
+ * 灰度规则列表查询命令，包含筛选与分页参数。
  */
 public record ListGrayscaleRuleCommand(
         String migrationKey,

@@ -3,7 +3,7 @@ package top.bulgat.migration.admin.interfaces.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * DiffStatisticsResponse is an API response DTO.
+ * 接口响应 DTO。
  */
 public record DiffStatisticsResponse(
         @JsonProperty("total_count") long totalCount,

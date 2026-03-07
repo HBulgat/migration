@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Diff rule configuration model.
+ * Diff 规则配置模型。
  */
 @Data
 @Builder
@@ -22,6 +22,6 @@ public class DiffConfig {
     private String fieldPath;
     /** Rule value. */
     private String ruleValue;
-    /** Whether the rule is enabled. */
+    /** 规则是否启用。 */
     private Boolean enable;
 }

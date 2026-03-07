@@ -38,7 +38,7 @@ public class DiffApplicationService {
     /**
      * 执行一次Diff比对用例。
      *
-     * @param command Diff执行命令
+     * @param command Diff 执行命令
      * @return Diff结果
      */
     public DiffResult executeDiff(ExecuteDiffCommand command) {

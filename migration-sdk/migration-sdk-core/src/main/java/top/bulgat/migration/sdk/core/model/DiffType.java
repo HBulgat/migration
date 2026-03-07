@@ -1,7 +1,7 @@
 package top.bulgat.migration.sdk.core.model;
 
 /**
- * Diff change type enumeration.
+ * Diff 变更类型枚举。
  */
 public enum DiffType {
     MODIFY,
