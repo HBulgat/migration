@@ -19,8 +19,8 @@ services:
       - MIGRATION_DB_USERNAME=${MIGRATION_DB_USERNAME}
       - MIGRATION_DB_PASSWORD=${MIGRATION_DB_PASSWORD}
       - LOGGING_FILE_PATH=/app/logs/migration.admin.api
-    extra_hosts:
-      - "host.docker.internal:${HOST_IP}"
+#    extra_hosts:
+#      - "host.docker.internal:${HOST_IP}"
     volumes:
       - /var/log/myapp/migration.admin.api:/app/logs/migration.admin.api
     restart: always
@@ -45,8 +45,8 @@ services:
       - MIGRATION_DB_USERNAME=${MIGRATION_DB_USERNAME}
       - MIGRATION_DB_PASSWORD=${MIGRATION_DB_PASSWORD}
       - LOGGING_FILE_PATH=/app/logs/migration.diff.service
-    extra_hosts:
-      - "host.docker.internal:${HOST_IP}"
+#    extra_hosts:
+#      - "host.docker.internal:${HOST_IP}"
     volumes:
       - /var/log/myapp/migration.diff.service:/app/logs/migration.diff.service
     restart: always
