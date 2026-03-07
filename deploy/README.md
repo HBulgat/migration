@@ -10,17 +10,18 @@
 
 ## 配置修改
 
-你需要修改 `docker-compose.yml` 文件中 `migration.admin.api` 和 `migration.diff.service` 服务的以下环境变量，确切指向您已部署的 Nacos 和 MySQL 实例：
+你需要在 `deploy/.env` 中配置以下环境变量，确切指向您已部署的 Nacos 和 MySQL 实例：
 
-- `MIGRATION_NACOS_SERVER_ADDR`: 例如 `192.168.1.100:8848`（请勿使用 `localhost` 或 `127.0.0.1`）
+- `HOST_IP`: Docker 所在宿主机的真实 IP，例如 `192.168.1.100`
+- `MIGRATION_NACOS_SERVER_ADDR`: 例如 `host.docker.internal:8848`
 - `MIGRATION_NACOS_NAMESPACE`: 例如 `migration`
 - `MIGRATION_NACOS_USERNAME`: 例如 `nacos`
 - `MIGRATION_NACOS_PASSWORD`: 例如 `nacos` 
-- `SPRING_DATASOURCE_URL`: MySQL 的 JDBC URL 连接串
-- `SPRING_DATASOURCE_USERNAME`: MySQL 用户名
-- `SPRING_DATASOURCE_PASSWORD`: MySQL 密码
+- `MIGRATION_DB_URL`: MySQL 的 JDBC URL 连接串，例如 `jdbc:mysql://host.docker.internal:3306/migration?...`
+- `MIGRATION_DB_USERNAME`: MySQL 用户名
+- `MIGRATION_DB_PASSWORD`: MySQL 密码
 
-> 如果 Nacos 和 MySQL 运行在部署 Docker 的同一台宿主机上，您通常可以使用 `host.docker.internal` 代替宿主机 IP（在 Mac/Windows 的 Docker Desktop，或带有 `--add-host host.docker.internal:host-gateway` 参数的 Linux Docker 20.10+ 上均可生效）。
+> 当前部署方式会通过 `extra_hosts` 将 `host.docker.internal` 映射到 `HOST_IP`。如果宿主机 IP 发生变化，请同步更新 `deploy/.env` 并重建容器。
 
 ## 构建与启动
 
