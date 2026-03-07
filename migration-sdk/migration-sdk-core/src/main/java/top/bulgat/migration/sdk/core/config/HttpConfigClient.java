@@ -70,7 +70,7 @@ public class HttpConfigClient implements ConfigClient {
     public MigrationConfig getMigrationConfig(String migrationKey) {
         JSONObject payload = new JSONObject();
         payload.put("migration_key", migrationKey);
-        String body = executePost("/api/v1/migration_task/query", payload.toJSONString());
+        String body = executePost("/api/internal/sdk/migration_task/query", payload.toJSONString());
 
         JSONObject root = JSON.parseObject(body);
         ensureSuccess(root, "query migration task");
@@ -100,20 +100,15 @@ public class HttpConfigClient implements ConfigClient {
     @Override
     public List<GrayscaleConfig> getGrayscaleRules(String migrationKey) {
         String encodedKey = URLEncoder.encode(migrationKey, StandardCharsets.UTF_8);
-        String path = "/api/v1/grayscale_rule/list?migration_key=" + encodedKey + "&page=1&pageSize=200";
+        String path = "/api/internal/sdk/grayscale_rule/list?migration_key=" + encodedKey;
         String body = executeGet(path);
 
         JSONObject root = JSON.parseObject(body);
         ensureSuccess(root, "query grayscale rules");
-        JSONObject data = root.getJSONObject("data");
-        if (data == null) {
-            return List.of();
-        }
-        JSONArray list = data.getJSONArray("list");
+        JSONArray list = root.getJSONArray("data");
         if (list == null || list.isEmpty()) {
             return List.of();
         }
-
         List<GrayscaleConfig> rules = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             JSONObject item = list.getJSONObject(i);

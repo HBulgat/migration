@@ -9,6 +9,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 migration:
+  admin:
+    internal-token: ${MIGRATION_ADMIN_INTERNAL_TOKEN}
+  auth:
+    username: ${MIGRATION_AUTH_USERNAME}
+    password: ${MIGRATION_AUTH_PASSWORD}
+    display-name: ${MIGRATION_AUTH_DISPLAY_NAME:System Administrator}
+    jwt-secret: ${MIGRATION_AUTH_JWT_SECRET}
+    jwt-expiration-ms: ${MIGRATION_AUTH_JWT_EXPIRATION_MS:86400000}
   nacos:
     server-addr: ${NACOS_SERVER_ADDR}
     namespace: ${NACOS_NAMESPACE:}

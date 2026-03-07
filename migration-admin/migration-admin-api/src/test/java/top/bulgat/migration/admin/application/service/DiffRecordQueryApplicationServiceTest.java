@@ -224,7 +224,17 @@ class DiffRecordQueryApplicationServiceTest {
                 oldCost,
                 newCost,
                 totalCost,
-                createTime);
+                createTime,
+                true,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false);
     }
 
 

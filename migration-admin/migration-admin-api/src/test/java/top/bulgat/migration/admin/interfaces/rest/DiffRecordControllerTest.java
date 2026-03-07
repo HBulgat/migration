@@ -26,6 +26,7 @@ import top.bulgat.migration.admin.application.command.ListDiffRecordCommand;
 import top.bulgat.migration.admin.application.command.StatisticsDiffRecordCommand;
 import top.bulgat.migration.admin.application.service.DiffRecordQueryApplicationService;
 import top.bulgat.migration.admin.domain.model.DiffRecord;
+import top.bulgat.migration.admin.domain.model.DiffItem;
 import top.bulgat.migration.admin.interfaces.assembler.DiffRecordAssembler;
 import top.bulgat.migration.admin.interfaces.dto.DiffRecordResponse;
 import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
@@ -105,14 +106,24 @@ class DiffRecordControllerTest {
                 "trace-2",
                 "{\"old\":1}",
                 "{\"new\":3}",
-                List.of(),
+                List.<DiffItem>of(),
                 true,
                 "MODIFY",
                 "{}",
                 100,
                 130,
                 230,
-                now);
+                now,
+                true,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false);
         DiffRecordResponse response = new DiffRecordResponse(
                 2L,
                 "user.query",

@@ -111,6 +111,17 @@ public class GrayscaleRuleApplicationService {
     }
 
     /**
+     * 查询指定迁移任务下的全部灰度规则，供 SDK 配置读取使用。
+     *
+     * @param migrationKey migration key
+     * @return 全量灰度规则
+     */
+    public List<GrayscaleRule> listAllByMigrationKey(String migrationKey) {
+        validateMigrationKey(migrationKey);
+        return doListAll(migrationKey);
+    }
+
+    /**
      * 统计指定迁移任务下的灰度规则总数。
      *
      * @param command 查询命令
@@ -178,8 +189,7 @@ public class GrayscaleRuleApplicationService {
     private List<GrayscaleRule> doList(String migrationKey, int page, int pageSize) {
         validateMigrationKey(migrationKey);
         validatePagination(page, pageSize);
-        return repository.findByMigrationKey(migrationKey).stream()
-                .sorted(Comparator.comparing(GrayscaleRule::getUpdateTime).reversed())
+        return doListAll(migrationKey).stream()
                 .skip((long) (page - 1) * pageSize)
                 .limit(pageSize)
                 .collect(Collectors.toList());
@@ -188,6 +198,12 @@ public class GrayscaleRuleApplicationService {
     private long doCount(String migrationKey) {
         validateMigrationKey(migrationKey);
         return repository.findByMigrationKey(migrationKey).size();
+    }
+
+    private List<GrayscaleRule> doListAll(String migrationKey) {
+        return repository.findByMigrationKey(migrationKey).stream()
+                .sorted(Comparator.comparing(GrayscaleRule::getUpdateTime).reversed())
+                .collect(Collectors.toList());
     }
 
     private GrayscaleRule getByMigrationKeyAndRuleId(String migrationKey, String ruleId) {
@@ -214,4 +230,3 @@ public class GrayscaleRuleApplicationService {
         }
     }
 }
-

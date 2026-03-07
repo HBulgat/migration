@@ -1,4 +1,4 @@
-package top.bulgat.migration.admin.infrastructure.config;
+package top.bulgat.migration.diff.infrastructure.config;
 
 import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,24 +10,22 @@ import top.bulgat.common.base.exception.ErrorCode;
 import top.bulgat.common.base.model.Result;
 
 @Component
-public class JwtSecurityInterceptor implements HandlerInterceptor {
+public class InternalTokenInterceptor implements HandlerInterceptor {
 
-    private final JwtTokenProvider tokenProvider;
+    private static final String INTERNAL_TOKEN_HEADER = "X-Internal-Token";
 
-    public JwtSecurityInterceptor(JwtTokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
+    private final InternalTokenProperties properties;
+
+    public InternalTokenInterceptor(InternalTokenProperties properties) {
+        this.properties = properties;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        // Admin HTTP 接口只接受后台用户 JWT 认证。
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            String token = bearerToken.substring(7);
-            if (tokenProvider.validateToken(token)) {
-                return true;
-            }
+        String token = request.getHeader(INTERNAL_TOKEN_HEADER);
+        if (properties.getInternalToken().equals(token)) {
+            return true;
         }
         sendUnauthorizedResponse(response);
         return false;

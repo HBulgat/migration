@@ -9,6 +9,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 migration:
+  diff:
+    internal-token: ${MIGRATION_DIFF_INTERNAL_TOKEN}
   nacos:
     server-addr: ${MIGRATION_NACOS_SERVER_ADDR:}
     namespace: ${MIGRATION_NACOS_NAMESPACE:}

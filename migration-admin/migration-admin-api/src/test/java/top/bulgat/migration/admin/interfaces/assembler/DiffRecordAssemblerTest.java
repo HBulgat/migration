@@ -66,7 +66,17 @@ class DiffRecordAssemblerTest {
                 100,
                 120,
                 220,
-                now);
+                now,
+                true,
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false);
 
         DiffRecordResponse response = assembler.toResponse(record);
         List<DiffRecordResponse> responseList = assembler.toResponseList(List.of(record));

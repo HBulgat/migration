@@ -42,7 +42,17 @@ public class InMemoryDiffRecordRepository implements DiffRecordRepository {
                     record.getOldCostTimeMs(),
                     record.getNewCostTimeMs(),
                     record.getTotalCostTimeMs(),
-                    record.getCreateTime());
+                    record.getCreateTime(),
+                    record.getOldSuccess(),
+                    record.getNewSuccess(),
+                    record.getOldErrorMessage(),
+                    record.getNewErrorMessage(),
+                    record.getOldRequestParams(),
+                    record.getNewRequestParams(),
+                    record.getMigrationStatus(),
+                    record.getGrayscaleRules(),
+                    record.getGrayscaleHit(),
+                    record.getFallbackTriggered());
         }
         records.add(target);
         return target;
@@ -73,4 +83,3 @@ public class InMemoryDiffRecordRepository implements DiffRecordRepository {
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }
-
