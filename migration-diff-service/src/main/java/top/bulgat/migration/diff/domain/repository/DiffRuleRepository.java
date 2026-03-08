@@ -10,4 +10,3 @@ public interface DiffRuleRepository {
 
     List<DiffRule> findEnabledRules(String migrationKey);
 }
-

@@ -32,13 +32,13 @@ public class ToleranceDiffRuleExecutor implements DiffRuleExecutor {
      */
     @Override
     public boolean shouldReport(DiffItem item, DiffRule rule) {
-        if (item.getDiffType() != DiffType.MODIFY) {
+        if (item.diffType() != DiffType.MODIFY) {
             return true;
         }
         try {
-            double oldValue = Double.parseDouble(item.getOldValue());
-            double newValue = Double.parseDouble(item.getNewValue());
-            double tolerance = Double.parseDouble(rule.getRuleValue());
+            double oldValue = Double.parseDouble(item.oldValue());
+            double newValue = Double.parseDouble(item.newValue());
+            double tolerance = Double.parseDouble(rule.ruleValue());
             return Math.abs(oldValue - newValue) > tolerance;
         } catch (Exception ex) {
             return true;

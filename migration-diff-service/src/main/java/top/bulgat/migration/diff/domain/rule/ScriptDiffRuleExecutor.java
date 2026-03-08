@@ -38,12 +38,12 @@ public class ScriptDiffRuleExecutor implements DiffRuleExecutor {
     @Override
     public boolean shouldReport(DiffItem item, DiffRule rule) {
         StandardEvaluationContext context = new StandardEvaluationContext();
-        context.setVariable("oldValue", item.getOldValue());
-        context.setVariable("newValue", item.getNewValue());
-        context.setVariable("fieldPath", item.getFieldPath());
-        context.setVariable("diffType", item.getDiffType().name());
+        context.setVariable("oldValue", item.oldValue());
+        context.setVariable("newValue", item.newValue());
+        context.setVariable("fieldPath", item.fieldPath());
+        context.setVariable("diffType", item.diffType().name());
         try {
-            Expression expression = PARSER.parseExpression(rule.getRuleValue());
+            Expression expression = PARSER.parseExpression(rule.ruleValue());
             Boolean shouldReport = expression.getValue(context, Boolean.class);
             return Boolean.TRUE.equals(shouldReport);
         } catch (Exception ex) {

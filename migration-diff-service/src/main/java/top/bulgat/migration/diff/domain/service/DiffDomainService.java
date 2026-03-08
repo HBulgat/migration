@@ -80,10 +80,10 @@ public class DiffDomainService {
 
     private void applySortRules(JsonNode rootNode, List<DiffRule> rules) {
         for (DiffRule rule : rules) {
-            if (!rule.isEnable() || rule.getRuleType() != DiffRuleType.SORT) {
+            if (!rule.enable() || rule.ruleType() != DiffRuleType.SORT) {
                 continue;
             }
-            sortArraysByRule(rootNode, normalizeRulePath(rule.getFieldPath()), rule.getRuleValue());
+            sortArraysByRule(rootNode, normalizeRulePath(rule.fieldPath()), rule.ruleValue());
         }
     }
 
@@ -245,13 +245,13 @@ public class DiffDomainService {
         for (DiffItem item : items) {
             boolean shouldReport = true;
             for (DiffRule rule : rules) {
-                if (!rule.isEnable() || rule.getRuleType() == DiffRuleType.SORT) {
+                if (!rule.enable() || rule.ruleType() == DiffRuleType.SORT) {
                     continue;
                 }
-                if (!matchesRule(item.getFieldPath(), rule.getFieldPath())) {
+                if (!matchesRule(item.fieldPath(), rule.fieldPath())) {
                     continue;
                 }
-                DiffRuleExecutor executor = ruleExecutorRegistry.getExecutor(rule.getRuleType());
+                DiffRuleExecutor executor = ruleExecutorRegistry.getExecutor(rule.ruleType());
                 if (executor != null && !executor.shouldReport(item, rule)) {
                     shouldReport = false;
                     break;

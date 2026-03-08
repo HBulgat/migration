@@ -1,7 +1,7 @@
 package top.bulgat.migration.sdk.core.strategy;
 
 import java.util.Map;
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 import top.bulgat.migration.sdk.core.support.OldInvocationFailedException;
 
 /**
@@ -15,8 +15,8 @@ public class DecommissioningGrayStrategy extends AbstractMigrationStrategy {
      * @return 目标迁移状态
      */
     @Override
-    public MigrationStatus getStatus() {
-        return MigrationStatus.DECOMMISSIONING_GRAY;
+    public MigrationTaskStatus getStatus() {
+        return MigrationTaskStatus.DECOMMISSIONING_GRAY;
     }
 
     /**

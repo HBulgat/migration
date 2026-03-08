@@ -30,7 +30,7 @@ export interface DeleteMigrationTaskPayload {
   migration_key: string
 }
 
-export interface UpdateMigrationStatusPayload {
+export interface UpdateMigrationTaskStatusPayload {
   migration_key: string
   target_status: number
 }
@@ -57,5 +57,5 @@ export const queryMigrationTask = (data: QueryMigrationTaskPayload): Promise<Mig
 export const deleteMigrationTask = (data: DeleteMigrationTaskPayload): Promise<void> =>
   post<void>(`${TASK_BASE_PATH}/delete`, data)
 
-export const updateMigrationStatus = (data: UpdateMigrationStatusPayload): Promise<void> =>
+export const updateMigrationTaskStatus = (data: UpdateMigrationTaskStatusPayload): Promise<void> =>
   post<void>(`${TASK_BASE_PATH}/update_status`, data)

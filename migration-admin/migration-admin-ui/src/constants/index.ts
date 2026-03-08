@@ -47,7 +47,7 @@ export const HAS_DIFF_OPTIONS: Array<OptionItem<number>> = [
   { label: '无差异', value: 0 },
 ]
 
-export function getMigrationStatusMeta(status: number): StatusMeta {
+export function getMigrationTaskStatusMeta(status: number): StatusMeta {
   return MIGRATION_STATUS_META[status] ?? { label: '未知状态', tagClass: 'status-old' }
 }
 

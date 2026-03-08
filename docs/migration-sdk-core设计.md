@@ -59,7 +59,7 @@ public class DiffConfig {
 }
 
 // 迁移状态枚举
-public enum MigrationStatus {
+public enum MigrationTaskStatus {
     OLD(1, "单旧"),
     VALIDATION_GRAY(2, "验证-灰度"),
     VALIDATION_ALL(3, "验证-全开"),
@@ -71,8 +71,8 @@ public enum MigrationStatus {
     private final int code;
     private final String desc;
 
-    public static MigrationStatus fromCode(int code) {
-        for (MigrationStatus status : values()) {
+    public static MigrationTaskStatus fromCode(int code) {
+        for (MigrationTaskStatus status : values()) {
             if (status.code == code) {
                 return status;
             }
@@ -184,7 +184,7 @@ public interface MigrationStrategy<T> {
 @Component
 public class MigrationStrategyRegistry {
 
-    private final Map<MigrationStatus, MigrationStrategy<?>> strategies = new HashMap<>();
+    private final Map<MigrationTaskStatus, MigrationStrategy<?>> strategies = new HashMap<>();
 
     @Autowired
     public MigrationStrategyRegistry(
@@ -195,7 +195,7 @@ public class MigrationStrategyRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> MigrationStrategy<T> getStrategy(MigrationStatus status) {
+    public <T> MigrationStrategy<T> getStrategy(MigrationTaskStatus status) {
         return (MigrationStrategy<T>) strategies.get(status);
     }
 }
@@ -205,8 +205,8 @@ public class MigrationStrategyRegistry {
 public class OldOnlyStrategy<T> implements MigrationStrategy<T> {
 
     @Override
-    public MigrationStatus getStatus() {
-        return MigrationStatus.OLD;
+    public MigrationTaskStatus getStatus() {
+        return MigrationTaskStatus.OLD;
     }
 
     @Override
@@ -234,14 +234,14 @@ public class ValidationStrategy<T> implements MigrationStrategy<T> {
     @Autowired
     private DiffServiceCaller diffServiceCaller;
 
-    private final MigrationStatus targetStatus;
+    private final MigrationTaskStatus targetStatus;
 
-    public ValidationStrategy(MigrationStatus targetStatus) {
+    public ValidationStrategy(MigrationTaskStatus targetStatus) {
         this.targetStatus = targetStatus;
     }
 
     @Override
-    public MigrationStatus getStatus() {
+    public MigrationTaskStatus getStatus() {
         return targetStatus;
     }
 
@@ -290,8 +290,8 @@ public class GoLiveGrayStrategy<T> implements MigrationStrategy<T> {
     private DiffServiceCaller diffServiceCaller;
 
     @Override
-    public MigrationStatus getStatus() {
-        return MigrationStatus.GO_LIVE_GRAY;
+    public MigrationTaskStatus getStatus() {
+        return MigrationTaskStatus.GO_LIVE_GRAY;
     }
 
     @Override
@@ -361,10 +361,10 @@ public class MigrationClient {
             // 从配置中心获取最新配置
             MigrationConfig migrationConfig = configClient.getMigrationConfig(config.getMigrationKey());
             int status = migrationConfig.getStatus();
-            MigrationStatus migrationStatus = MigrationStatus.fromCode(status);
+            MigrationTaskStatus MigrationTaskStatus = MigrationTaskStatus.fromCode(status);
 
             // 获取对应策略并执行
-            MigrationStrategy<T> strategy = strategyRegistry.getStrategy(migrationStatus);
+            MigrationStrategy<T> strategy = strategyRegistry.getStrategy(MigrationTaskStatus);
             return strategy.execute(oldMethod, newMethod, fallbackMethod, paramHandler, args);
         };
     }

@@ -1,12 +1,11 @@
 package top.bulgat.migration.sdk.core.config;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.TypeReference;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
@@ -18,6 +17,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import top.bulgat.common.base.model.Result;
 import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
@@ -71,23 +71,18 @@ public class HttpConfigClient implements ConfigClient {
         payload.put("migration_key", migrationKey);
         String body = executePost("/api/internal/sdk/migration_task/query", payload.toJSONString());
 
-        JSONObject root = JSON.parseObject(body);
-        ensureSuccess(root, "query migration task");
-        JSONObject data = root.getJSONObject("data");
-        if (data == null) {
+        Result<MigrationConfig> result = JSON.parseObject(body, new TypeReference<Result<MigrationConfig>>() {
+        });
+        ensureSuccess(result, "query migration task");
+        if (result.getData() == null) {
             throw new IllegalStateException("missing migration task response data");
         }
 
-        Integer status = data.getInteger("status");
-        if (status == null) {
-            status = 1;
+        MigrationConfig config = result.getData();
+        if (config.getStatus() == null) {
+            config.setStatus(1);
         }
-        return MigrationConfig.builder()
-                .migrationKey(data.getString("migration_key"))
-                .status(status)
-                .description(data.getString("description"))
-                .timeout(data.getInteger("timeout"))
-                .build();
+        return config;
     }
 
     /**
@@ -102,24 +97,15 @@ public class HttpConfigClient implements ConfigClient {
         String path = "/api/internal/sdk/grayscale_rule/list?migration_key=" + encodedKey;
         String body = executeGet(path);
 
-        JSONObject root = JSON.parseObject(body);
-        ensureSuccess(root, "query 灰度规则");
-        JSONArray list = root.getJSONArray("data");
-        if (list == null || list.isEmpty()) {
+        Result<List<GrayscaleConfig>> result = JSON.parseObject(body,
+                new TypeReference<>() {
+                });
+        ensureSuccess(result, "query grayscale rules");
+
+        if (result.getData() == null || result.getData().isEmpty()) {
             return List.of();
         }
-        List<GrayscaleConfig> rules = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            JSONObject item = list.getJSONObject(i);
-            rules.add(GrayscaleConfig.builder()
-                    .ruleId(item.getString("rule_id"))
-                    .migrationKey(item.getString("migration_key"))
-                    .ruleType(item.getString("rule_type"))
-                    .ruleValue(item.getString("rule_value"))
-                    .enable(item.getBoolean("enable"))
-                    .build());
-        }
-        return rules;
+        return result.getData();
     }
 
     /**
@@ -197,21 +183,18 @@ public class HttpConfigClient implements ConfigClient {
     /**
      * 校验 admin-api 标准响应码。
      *
-     * @param root   解析后的响应 JSON
+     * @param result 解析后的响应
      * @param action 异常信息中的动作描述
      */
-    private void ensureSuccess(JSONObject root, String action) {
-        if (root == null) {
+    private void ensureSuccess(Result<?> result, String action) {
+        if (result == null) {
             throw new IllegalStateException(action + " failed, empty response");
         }
-        Integer code = root.getInteger("code");
-        if (code == null) {
-            return;
-        }
+        int code = result.getCode();
         if (code == SUCCESS_CODE_0 || code == SUCCESS_CODE_200) {
             return;
         }
-        throw new IllegalStateException(action + " failed, code=" + code + ", message=" + root.getString("message"));
+        throw new IllegalStateException(action + " failed, code=" + code + ", message=" + result.getMessage());
     }
 
     /**

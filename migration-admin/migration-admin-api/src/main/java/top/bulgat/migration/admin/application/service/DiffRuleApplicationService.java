@@ -14,10 +14,10 @@ import top.bulgat.migration.admin.application.command.ListDiffRuleCommand;
 import top.bulgat.migration.admin.application.command.UpdateDiffRuleCommand;
 import top.bulgat.migration.admin.application.command.UpdateDiffRuleEnableCommand;
 import top.bulgat.migration.admin.domain.model.DiffRule;
-import top.bulgat.migration.admin.domain.model.DiffRuleType;
 import top.bulgat.migration.admin.domain.repository.DiffRuleRepository;
 import top.bulgat.migration.admin.domain.repository.MigrationTaskRepository;
 import top.bulgat.migration.admin.domain.service.DiffRuleDomainService;
+import top.bulgat.migration.config.common.model.enums.DiffRuleType;
 
 /**
  * Diff规则应用服务

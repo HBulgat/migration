@@ -1,6 +1,6 @@
 package top.bulgat.migration.sdk.core.strategy;
 
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 
 /**
  * 第7阶段（停用-全开）：仅调用新接口方法。
@@ -13,8 +13,8 @@ public class DecommissioningAllStrategy extends AbstractMigrationStrategy {
      * @return 目标迁移状态
      */
     @Override
-    public MigrationStatus getStatus() {
-        return MigrationStatus.DECOMMISSIONING_ALL;
+    public MigrationTaskStatus getStatus() {
+        return MigrationTaskStatus.DECOMMISSIONING_ALL;
     }
 
     /**

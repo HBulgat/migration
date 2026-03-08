@@ -2,6 +2,7 @@ package top.bulgat.migration.admin.domain.model;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
+import top.bulgat.migration.config.common.model.enums.MigrationTaskStatus;
 
 /**
  * 迁移任务聚合。
@@ -10,7 +11,7 @@ import lombok.Getter;
 public class MigrationTask {
 
     private final String migrationKey;
-    private MigrationStatus status;
+    private MigrationTaskStatus status;
     private String description;
     private final LocalDateTime createTime;
     private LocalDateTime updateTime;
@@ -18,7 +19,7 @@ public class MigrationTask {
     /**
      * 使用当前时间创建任务。
      */
-    public MigrationTask(String migrationKey, MigrationStatus status, String description) {
+    public MigrationTask(String migrationKey, MigrationTaskStatus status, String description) {
         this(migrationKey, status, description, LocalDateTime.now(), LocalDateTime.now());
     }
 
@@ -27,7 +28,7 @@ public class MigrationTask {
      */
     public MigrationTask(
             String migrationKey,
-            MigrationStatus status,
+            MigrationTaskStatus status,
             String description,
             LocalDateTime createTime,
             LocalDateTime updateTime) {
@@ -41,7 +42,7 @@ public class MigrationTask {
     /**
      * 变更迁移状态。
      */
-    public void changeStatus(MigrationStatus targetStatus) {
+    public void changeStatus(MigrationTaskStatus targetStatus) {
         this.status = targetStatus;
         this.updateTime = LocalDateTime.now();
     }

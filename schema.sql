@@ -29,16 +29,16 @@ CREATE TABLE IF NOT EXISTS diff_record (
     KEY idx_trace_id (trace_id),
     KEY idx_create_time (create_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Diff结果记录表';
-
--- 增量迁移语句(已有表执行)
--- ALTER TABLE diff_record
---   ADD COLUMN old_success TINYINT DEFAULT NULL COMMENT '旧接口是否调用成功(0-否/1-是)',
---   ADD COLUMN new_success TINYINT DEFAULT NULL COMMENT '新接口是否调用成功(0-否/1-是)',
---   ADD COLUMN old_error_message TEXT DEFAULT NULL COMMENT '旧接口异常信息',
---   ADD COLUMN new_error_message TEXT DEFAULT NULL COMMENT '新接口异常信息',
---   ADD COLUMN old_request_params LONGTEXT DEFAULT NULL COMMENT '旧接口请求入参(JSON)',
---   ADD COLUMN new_request_params LONGTEXT DEFAULT NULL COMMENT '新接口请求入参(JSON)',
---   ADD COLUMN migration_status INT DEFAULT NULL COMMENT '当前迁移阶段(1-7)',
---   ADD COLUMN grayscale_rules LONGTEXT DEFAULT NULL COMMENT '灰度规则(JSON)',
---   ADD COLUMN grayscale_hit TINYINT DEFAULT NULL COMMENT '是否命中灰度规则(0-否/1-是)',
---   ADD COLUMN fallback_triggered TINYINT DEFAULT NULL COMMENT '是否触发降级(0-否/1-是)';
+#
+# -- 增量迁移语句(已有表执行)
+# ALTER TABLE diff_record
+#   ADD COLUMN old_success TINYINT DEFAULT NULL COMMENT '旧接口是否调用成功(0-否/1-是)',
+#   ADD COLUMN new_success TINYINT DEFAULT NULL COMMENT '新接口是否调用成功(0-否/1-是)',
+#   ADD COLUMN old_error_message TEXT DEFAULT NULL COMMENT '旧接口异常信息',
+#   ADD COLUMN new_error_message TEXT DEFAULT NULL COMMENT '新接口异常信息',
+#   ADD COLUMN old_request_params LONGTEXT DEFAULT NULL COMMENT '旧接口请求入参(JSON)',
+#   ADD COLUMN new_request_params LONGTEXT DEFAULT NULL COMMENT '新接口请求入参(JSON)',
+#   ADD COLUMN migration_status INT DEFAULT NULL COMMENT '当前迁移阶段(1-7)',
+#   ADD COLUMN grayscale_rules LONGTEXT DEFAULT NULL COMMENT '灰度规则(JSON)',
+#   ADD COLUMN grayscale_hit TINYINT DEFAULT NULL COMMENT '是否命中灰度规则(0-否/1-是)',
+#   ADD COLUMN fallback_triggered TINYINT DEFAULT NULL COMMENT '是否触发降级(0-否/1-是)';

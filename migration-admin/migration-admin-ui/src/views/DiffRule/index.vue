@@ -4,7 +4,7 @@ import { Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDiffRuleList, deleteDiffRule, updateDiffRuleEnable, type DiffRule } from '@/api/diffRule'
 import { getMigrationTaskList } from '@/api/migrationTask'
-import { getMigrationStatusMeta } from '@/constants'
+import { getMigrationTaskStatusMeta } from '@/constants'
 import type { MigrationTask } from '@/types'
 import EditDialog from './EditDialog.vue'
 
@@ -141,7 +141,7 @@ onMounted(async () => {
             <el-option
               v-for="task in tasks"
               :key="task.migration_key"
-              :label="`${task.migration_key}（${getMigrationStatusMeta(task.status).label}）`"
+              :label="`${task.migration_key}（${getMigrationTaskStatusMeta(task.status).label}）`"
               :value="task.migration_key"
             />
           </el-select>

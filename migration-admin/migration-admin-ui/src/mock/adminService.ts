@@ -365,7 +365,7 @@ export function deleteMigrationTask(payload: { migration_key: string }): Promise
   })
 }
 
-export function updateMigrationStatus(payload: {
+export function updateMigrationTaskStatus(payload: {
   migration_key: string
   target_status: number
 }): Promise<void> {

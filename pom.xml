@@ -15,8 +15,8 @@
     <modules>
         <module>migration-sdk</module>
         <module>migration-admin</module>
-        <module>migration-admin/migration-admin-api</module>
         <module>migration-diff-service</module>
+        <module>migration-config-common</module>
     </modules>
 
     <properties>
@@ -33,10 +33,37 @@
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <zjsonpatch.version>0.4.16</zjsonpatch.version>
         <jsonpath.version>2.9.0</jsonpath.version>
+        <common.version>1.0.0</common.version>
+        <nacos.version>2.2.0</nacos.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-client</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.bulgat</groupId>
+                <artifactId>common-base</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.bulgat</groupId>
+                <artifactId>common-springboot-middleware</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.bulgat</groupId>
+                <artifactId>common-notice</artifactId>
+                <version>${common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.bulgat</groupId>
+                <artifactId>migration-config-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- Spring Boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>

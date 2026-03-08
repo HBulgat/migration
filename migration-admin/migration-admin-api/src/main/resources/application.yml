@@ -7,15 +7,14 @@ spring:
   profiles:
     active: local
 
-migration:
-  admin:
-    internal-token: "MIGRATION_DEFAULT_SDK_TOKEN"
+migration-admin:
   auth:
     username: ${MIGRATION_AUTH_USERNAME:}
     password: ${MIGRATION_AUTH_PASSWORD:}
     display-name: ${MIGRATION_AUTH_DISPLAY_NAME:System Administrator}
     jwt-secret: ${MIGRATION_AUTH_JWT_SECRET:}
     jwt-expiration-ms: ${MIGRATION_AUTH_JWT_EXPIRATION_MS:86400000}
+    internal-token: "MIGRATION_DEFAULT_SDK_TOKEN"
 
 mybatis-plus:
   configuration:

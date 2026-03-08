@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/migration-admin/migration-admin-ui/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/migration-admin/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/migration-admin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/migration-config-common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/migration-config-common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/migration-contract/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/migration-contract/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/migration-diff-service/src/main/java" charset="UTF-8" />

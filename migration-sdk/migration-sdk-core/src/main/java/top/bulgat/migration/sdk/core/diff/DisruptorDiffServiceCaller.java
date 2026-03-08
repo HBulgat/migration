@@ -126,7 +126,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
         payload.put("new_error_message", request.getNewErrorMessage());
         payload.put("old_request_params", request.getOldRequestParams());
         payload.put("new_request_params", request.getNewRequestParams());
-        payload.put("migration_status", request.getMigrationStatus());
+        payload.put("migration_status", request.getMigrationTaskStatus());
         payload.put("grayscale_rules", request.getGrayscaleRules());
         payload.put("grayscale_hit", request.getGrayscaleHit());
         payload.put("fallback_triggered", request.getFallbackTriggered());

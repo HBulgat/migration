@@ -1,7 +1,7 @@
 package top.bulgat.migration.sdk.core.strategy;
 
 import java.util.Map;
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 
 /**
  * 第2阶段（验证-灰度）：并发调用新旧接口，执行Diff比对，但始终返回旧接口结果。
@@ -14,8 +14,8 @@ public class ValidationGrayStrategy extends AbstractMigrationStrategy {
      * @return 目标迁移状态
      */
     @Override
-    public MigrationStatus getStatus() {
-        return MigrationStatus.VALIDATION_GRAY;
+    public MigrationTaskStatus getStatus() {
+        return MigrationTaskStatus.VALIDATION_GRAY;
     }
 
     /**

@@ -14,9 +14,9 @@ public class InternalTokenInterceptor implements HandlerInterceptor {
 
     private static final String INTERNAL_TOKEN_HEADER = "X-Internal-Token";
 
-    private final InternalTokenProperties properties;
+    private final AuthProperties properties;
 
-    public InternalTokenInterceptor(InternalTokenProperties properties) {
+    public InternalTokenInterceptor(AuthProperties properties) {
         this.properties = properties;
     }
 

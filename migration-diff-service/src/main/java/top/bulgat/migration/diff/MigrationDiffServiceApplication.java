@@ -1,0 +1,22 @@
+package top.bulgat.migration.diff;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.mybatis.spring.annotation.MapperScan;
+
+/**
+ * Diff 服务启动类。
+ */
+@MapperScan("top.bulgat.migration.config.common.dal")
+@SpringBootApplication
+public class MigrationDiffServiceApplication {
+
+    /**
+     * 应用启动入口。
+     *
+     * @param args 启动参数
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(MigrationDiffServiceApplication.class, args);
+    }
+}

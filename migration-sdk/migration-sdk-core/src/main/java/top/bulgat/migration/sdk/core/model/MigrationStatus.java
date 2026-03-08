@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum MigrationStatus {
+public enum MigrationTaskStatus {
 
     OLD(1, "单旧"),
     VALIDATION_GRAY(2, "验证-灰度"),
@@ -27,8 +27,8 @@ public enum MigrationStatus {
      * @param code 状态码
      * @return 迁移状态
      */
-    public static MigrationStatus fromCode(int code) {
-        for (MigrationStatus status : values()) {
+    public static MigrationTaskStatus fromCode(int code) {
+        for (MigrationTaskStatus status : values()) {
             if (status.code == code) {
                 return status;
             }

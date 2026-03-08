@@ -1,6 +1,6 @@
 package top.bulgat.migration.sdk.core.strategy;
 
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 import top.bulgat.migration.sdk.core.support.InvocationResult;
 
 /**
@@ -14,8 +14,8 @@ public class OldOnlyStrategy extends AbstractMigrationStrategy {
      * @return 目标迁移状态
      */
     @Override
-    public MigrationStatus getStatus() {
-        return MigrationStatus.OLD;
+    public MigrationTaskStatus getStatus() {
+        return MigrationTaskStatus.OLD;
     }
 
     /**

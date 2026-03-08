@@ -272,12 +272,11 @@ public Result login(@RequestBody LoginReq req) { return null; }`)
 const codeGoClient = ref(`go get github.com/HBulgat/migration-sdk-go`)
 
 const codeGoWrap = ref(`config := &migration.Config{
-  MigrationKey:   "user-getUser-api",
   AdminUrl:       "https://migration.bulgat.top",
   DiffServiceUrl: "https://diff-migration.bulgat.top",
 }
 client := migration.NewClient(config)
-executeFn := client.Wrap(targetOld, targetNew, targetFallback, userParamHandler)
+executeFn := client.Wrap("user-getUser-api", targetOld, targetNew, targetFallback, userParamHandler)
 res, err := executeFn.Execute("1001", 5)`)
 
 const editorOptions: any = {

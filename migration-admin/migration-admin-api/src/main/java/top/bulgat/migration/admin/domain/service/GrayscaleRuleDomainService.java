@@ -2,7 +2,7 @@ package top.bulgat.migration.admin.domain.service;
 
 import org.springframework.stereotype.Component;
 import top.bulgat.migration.admin.domain.model.GrayscaleRule;
-import top.bulgat.migration.admin.domain.model.GrayscaleRuleType;
+import top.bulgat.migration.config.common.model.enums.GrayscaleRuleType;
 
 /**
  * 灰度规则领域服务。

@@ -3,14 +3,14 @@ package top.bulgat.migration.sdk.core.strategy;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 
 /**
  * 迁移策略注册表：维护状态到策略实现的映射。
  */
 public class MigrationStrategyRegistry {
 
-    private final Map<MigrationStatus, MigrationStrategy> strategies = new EnumMap<>(MigrationStatus.class);
+    private final Map<MigrationTaskStatus, MigrationStrategy> strategies = new EnumMap<>(MigrationTaskStatus.class);
 
     /**
      * 构造策略注册表。
@@ -45,7 +45,7 @@ public class MigrationStrategyRegistry {
      * @param status 迁移状态
      * @return 策略；不存在时返回 null
      */
-    public MigrationStrategy getStrategy(MigrationStatus status) {
+    public MigrationStrategy getStrategy(MigrationTaskStatus status) {
         return strategies.get(status);
     }
 }

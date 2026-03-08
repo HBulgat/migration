@@ -1,6 +1,6 @@
 ﻿import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getMigrationStatusMeta } from '@/constants'
+import { getMigrationTaskStatusMeta } from '@/constants'
 import { getMigrationTaskList } from '@/api/migrationTask'
 import type { TaskOption } from '@/types'
 
@@ -23,7 +23,7 @@ export const useMigrationTaskStore = defineStore('migration-task', () => {
       })
       taskOptions.value = pageResult.list.map((task) => ({
         value: task.migration_key,
-        label: `${task.migration_key}（${getMigrationStatusMeta(task.status).label}）`,
+        label: `${task.migration_key}（${getMigrationTaskStatusMeta(task.status).label}）`,
         status: task.status,
       }))
       return taskOptions.value

@@ -145,7 +145,7 @@ function getTrendClass(delta: number): string {
   return 'trend-flat'
 }
 
-async function handleMigrationStatusChange(): Promise<void> {
+async function handleMigrationTaskStatusChange(): Promise<void> {
   const matched = filteredTaskOptions.value.some((item) => item.value === filterForm.migration_key)
   if (filterForm.migration_key && !matched) {
     filterForm.migration_key = ''
@@ -432,7 +432,7 @@ onBeforeUnmount(() => {
         filterable
         :placeholder="UI_TEXT.statusPlaceholder"
         style="width: 220px"
-        @change="handleMigrationStatusChange"
+        @change="handleMigrationTaskStatusChange"
       >
         <el-option
           v-for="status in MIGRATION_STATUS_OPTIONS"

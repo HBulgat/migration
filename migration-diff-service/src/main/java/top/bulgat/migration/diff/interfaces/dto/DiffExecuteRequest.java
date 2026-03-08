@@ -23,7 +23,7 @@ public record DiffExecuteRequest(
         @JsonProperty("new_error_message") String newErrorMessage,
         @JsonProperty("old_request_params") String oldRequestParams,
         @JsonProperty("new_request_params") String newRequestParams,
-        @JsonProperty("migration_status") Integer migrationStatus,
+        @JsonProperty("migration_status") Integer MigrationTaskStatus,
         @JsonProperty("grayscale_rules") String grayscaleRules,
         @JsonProperty("grayscale_hit") Boolean grayscaleHit,
         @JsonProperty("fallback_triggered") Boolean fallbackTriggered) {

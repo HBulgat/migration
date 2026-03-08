@@ -14,10 +14,10 @@ import top.bulgat.migration.admin.application.command.QueryMigrationTaskCommand;
 import top.bulgat.migration.admin.application.command.UpdateGrayscaleRuleCommand;
 import top.bulgat.migration.admin.application.command.UpdateGrayscaleRuleEnableCommand;
 import top.bulgat.migration.admin.domain.model.GrayscaleRule;
-import top.bulgat.migration.admin.domain.model.GrayscaleRuleType;
 import top.bulgat.migration.admin.domain.repository.GrayscaleRuleRepository;
 import top.bulgat.migration.admin.domain.service.GrayscaleRuleDomainService;
 import top.bulgat.migration.admin.domain.service.MigrationTaskDomainService;
+import top.bulgat.migration.config.common.model.enums.GrayscaleRuleType;
 
 /**
  * 灰度规则应用服务。

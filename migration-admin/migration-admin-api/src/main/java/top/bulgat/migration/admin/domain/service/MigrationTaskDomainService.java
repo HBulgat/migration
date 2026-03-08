@@ -2,9 +2,9 @@ package top.bulgat.migration.admin.domain.service;
 
 import java.util.Objects;
 import org.springframework.stereotype.Component;
-import top.bulgat.migration.admin.domain.model.MigrationStatus;
 import top.bulgat.migration.admin.domain.model.MigrationTask;
 import top.bulgat.migration.admin.domain.repository.MigrationTaskRepository;
+import top.bulgat.migration.config.common.model.enums.MigrationTaskStatus;
 
 /**
  * 迁移任务领域服务。
@@ -31,7 +31,7 @@ public class MigrationTaskDomainService {
      * @param current 当前状态
      * @param target 目标状态
      */
-    public void validateStatusSwitch(MigrationStatus current, MigrationStatus target) {
+    public void validateStatusSwitch(MigrationTaskStatus current, MigrationTaskStatus target) {
         if (!current.canSwitchTo(target)) {
             throw new IllegalArgumentException(
                     "invalid status switch, current=" + current.getCode() + ", target=" + target.getCode());

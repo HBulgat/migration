@@ -1,6 +1,6 @@
 package top.bulgat.migration.sdk.core.strategy;
 
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 
 /**
  * 迁移策略接口：每个迁移状态对应一个策略实现。
@@ -12,7 +12,7 @@ public interface MigrationStrategy {
      *
      * @return 迁移状态
      */
-    MigrationStatus getStatus();
+    MigrationTaskStatus getStatus();
 
     /**
      * 执行迁移策略。

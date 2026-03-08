@@ -12,6 +12,7 @@ import top.bulgat.migration.diff.domain.model.DiffResult;
 import top.bulgat.migration.diff.domain.model.DiffRule;
 import top.bulgat.migration.diff.domain.repository.DiffRecordRepository;
 import top.bulgat.migration.diff.domain.repository.DiffRuleRepository;
+import top.bulgat.migration.diff.domain.service.AlertService;
 import top.bulgat.migration.diff.domain.service.DiffDomainService;
 
 /**
@@ -25,14 +26,17 @@ public class DiffApplicationService {
     private final DiffDomainService domainService;
     private final DiffRecordRepository diffRecordRepository;
     private final DiffRuleRepository diffRuleRepository;
+    private final AlertService alertService;
 
     public DiffApplicationService(
             DiffDomainService domainService,
             DiffRecordRepository diffRecordRepository,
-            DiffRuleRepository diffRuleRepository) {
+            DiffRuleRepository diffRuleRepository,
+            AlertService alertService) {
         this.domainService = domainService;
         this.diffRecordRepository = diffRecordRepository;
         this.diffRuleRepository = diffRuleRepository;
+        this.alertService = alertService;
     }
 
     /**
@@ -61,7 +65,7 @@ public class DiffApplicationService {
                 command.newErrorMessage(),
                 command.oldRequestParams(),
                 command.newRequestParams(),
-                command.migrationStatus(),
+                command.MigrationTaskStatus(),
                 command.grayscaleRules(),
                 command.grayscaleHit(),
                 command.fallbackTriggered());
@@ -69,6 +73,7 @@ public class DiffApplicationService {
         log.info("diff.execute rulesLoaded migrationKey={}, ruleCount={}", command.migrationKey(), rules.size());
         DiffResult result = domainService.execute(request, rules);
         diffRecordRepository.save(request, result);
+        alertService.alertIfNeeded(request, result);
         log.info("diff.execute done migrationKey={}, hasDiff={}, diffItemCount={}, costTimeMs={}",
                 command.migrationKey(), result.hasDiff(), result.getDiffItems().size(), result.getCostTimeMs());
         return result;

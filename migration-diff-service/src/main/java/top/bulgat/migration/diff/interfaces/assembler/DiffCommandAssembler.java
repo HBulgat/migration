@@ -35,7 +35,7 @@ public class DiffCommandAssembler {
                 request.newErrorMessage(),
                 request.oldRequestParams(),
                 request.newRequestParams(),
-                request.migrationStatus(),
+                request.MigrationTaskStatus(),
                 request.grayscaleRules(),
                 request.grayscaleHit(),
                 request.fallbackTriggered());
@@ -48,12 +48,12 @@ public class DiffCommandAssembler {
      * @return 返回结果。
      */
     public DiffExecuteResponse toResponse(DiffResult result) {
-        List<DiffExecuteResponse.DiffItemResponse> items = result.getDiffItems().stream()
-                .map(item -> new DiffExecuteResponse.DiffItemResponse(
-                        item.getFieldPath(),
-                        item.getOldValue(),
-                        item.getNewValue(),
-                        item.getDiffType().name()))
+        List<DiffExecuteResponse.DiffResultItem> items = result.getDiffItems().stream()
+                .map(item -> new DiffExecuteResponse.DiffResultItem(
+                        item.fieldPath(),
+                        item.oldValue(),
+                        item.newValue(),
+                        item.diffType().name()))
                 .collect(Collectors.toList());
         return new DiffExecuteResponse(result.hasDiff(), items, result.getCostTimeMs());
     }

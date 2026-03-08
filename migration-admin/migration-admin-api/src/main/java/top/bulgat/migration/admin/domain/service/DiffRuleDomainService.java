@@ -1,7 +1,7 @@
 package top.bulgat.migration.admin.domain.service;
 
 import org.springframework.stereotype.Service;
-import top.bulgat.migration.admin.domain.model.DiffRuleType;
+import top.bulgat.migration.config.common.model.enums.DiffRuleType;
 
 /**
  * Diff规则领域服务

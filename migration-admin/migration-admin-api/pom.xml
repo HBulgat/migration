@@ -17,13 +17,15 @@
     <dependencies>
         <dependency>
             <groupId>top.bulgat</groupId>
+            <artifactId>migration-config-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.bulgat</groupId>
             <artifactId>common-base</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>top.bulgat</groupId>
             <artifactId>common-springboot-middleware</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -58,7 +60,6 @@
         <dependency>
             <groupId>com.alibaba.nacos</groupId>
             <artifactId>nacos-client</artifactId>
-            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
@@ -100,7 +101,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>top.bulgat.migration.admin.AdminApiApplication</mainClass>
+                    <mainClass>top.bulgat.migration.admin.MigrationAdminApiApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

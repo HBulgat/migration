@@ -7,10 +7,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.burt.jmespath.Expression;
+import io.burt.jmespath.JmesPath;
+import io.burt.jmespath.jackson.JacksonRuntime;
 import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
 import top.bulgat.migration.sdk.core.model.GrayscaleRuleType;
 import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
@@ -21,14 +22,15 @@ import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
 public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultGrayscaleMatcher.class);
-    private static final ExpressionParser PARSER = new SpelExpressionParser();
-    private static final Map<String, Expression> EXPRESSION_CACHE = new ConcurrentHashMap<>();
+    private static final JmesPath<JsonNode> PARSER = new JacksonRuntime();
+    private static final Map<String, Expression<JsonNode>> EXPRESSION_CACHE = new ConcurrentHashMap<>();
     private static final Map<String, JSONArray> JSON_ARRAY_CACHE = new ConcurrentHashMap<>();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     /**
      * 按顺序评估灰度规则，并在首次命中时返回结果。
      *
-     * @param rules 灰度规则
+     * @param rules  灰度规则
      * @param params 灰度参数
      * @return 命中灰度时返回 true
      */
@@ -71,7 +73,7 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
      * 通过哈希稳定主体值到 [0, 99] 区间来匹配百分比规则。
      *
      * @param ruleValue 百分比文本
-     * @param params 灰度参数
+     * @param params    灰度参数
      * @return 匹配结果
      */
     private boolean matchPercentage(String ruleValue, Map<String, Object> params) {
@@ -98,7 +100,7 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
      * 匹配由 JSON 数组表示的白名单或黑名单规则。
      *
      * @param ruleValue JSON 数组文本
-     * @param params 灰度参数
+     * @param params    灰度参数
      * @return 主体存在于集合中时返回 true
      */
     private boolean matchCollection(String ruleValue, Map<String, Object> params) {
@@ -115,25 +117,25 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     }
 
     /**
-     * 使用 SpEL 计算表达式规则。
+     * 使用 JMESPath 计算表达式规则。
      *
      * @param expressionText 表达式文本
-     * @param params 灰度参数
+     * @param params         灰度参数
      * @return 表达式结果
      */
     private boolean matchExpression(String expressionText, Map<String, Object> params) {
         try {
-            // 从缓存中获取表达式，避免重复解析
-            Expression expression = EXPRESSION_CACHE.computeIfAbsent(expressionText, PARSER::parseExpression);
-            
-            StandardEvaluationContext context = new StandardEvaluationContext();
-            params.forEach(context::setVariable);
-            context.setVariable("param", params);
-            
-            Boolean matched = expression.getValue(context, Boolean.class);
-            return Boolean.TRUE.equals(matched);
+            // 从缓存中获取预编译的 JMESPath 表达式，避免重复编译
+            Expression<JsonNode> expression = EXPRESSION_CACHE.computeIfAbsent(expressionText, PARSER::compile);
+
+            // 将入参 Map 转换为 Jackson JsonNode
+            JsonNode input = OBJECT_MAPPER.valueToTree(params);
+
+            // 执行 JMESPath 搜索并转换为 boolean 结果
+            JsonNode result = expression.search(input);
+            return result != null && result.asBoolean();
         } catch (Exception ex) {
-            log.warn("expression rule evaluate failed, expression={}", expressionText, ex);
+            log.warn("JMESPath rule evaluate failed, expression={}", expressionText, ex);
             return false;
         }
     }
@@ -147,10 +149,13 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
     private String extractSubject(Map<String, Object> params) {
         // 按优先级顺序查找主题ID
         Object subject = params.get("userId");
-        if (subject == null) subject = params.get("user_id");
-        if (subject == null) subject = params.get("uid");
-        if (subject == null) subject = params.get("id");
-        
+        if (subject == null)
+            subject = params.get("user_id");
+        if (subject == null)
+            subject = params.get("uid");
+        if (subject == null)
+            subject = params.get("id");
+
         return subject != null ? String.valueOf(subject) : params.toString();
     }
 }

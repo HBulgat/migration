@@ -12,12 +12,12 @@ import top.bulgat.migration.admin.application.command.ListMigrationTaskCommand;
 import top.bulgat.migration.admin.application.command.QueryMigrationTaskCommand;
 import top.bulgat.migration.admin.application.command.UpdateMigrationTaskCommand;
 import top.bulgat.migration.admin.application.command.UpdateMigrationTaskStatusCommand;
-import top.bulgat.migration.admin.domain.model.MigrationStatus;
 import top.bulgat.migration.admin.domain.model.MigrationTask;
 import top.bulgat.migration.admin.domain.repository.DiffRuleRepository;
 import top.bulgat.migration.admin.domain.repository.GrayscaleRuleRepository;
 import top.bulgat.migration.admin.domain.repository.MigrationTaskRepository;
 import top.bulgat.migration.admin.domain.service.MigrationTaskDomainService;
+import top.bulgat.migration.config.common.model.enums.MigrationTaskStatus;
 
 /**
  * 迁移任务应用服务。
@@ -55,13 +55,13 @@ public class MigrationTaskApplicationService {
         try {
             domainService.validateMigrationKey(command.migrationKey());
             domainService.validateDescription(command.description());
-            if (command.status() != MigrationStatus.OLD.getCode()) {
+            if (command.status() != MigrationTaskStatus.OLD.getCode()) {
                 throw new BizException(ErrorCode.PARAM_ERROR,
                         "初始状态必须为单旧(OLD)，不允许创建时指定其他状态");
             }
             MigrationTask task = new MigrationTask(
                     command.migrationKey(),
-                    MigrationStatus.OLD,
+                    MigrationTaskStatus.OLD,
                     command.description());
             domainService.validateForCreation(task, repository);
             return repository.save(task);
@@ -171,7 +171,7 @@ public class MigrationTaskApplicationService {
                 task.updateDescription(description);
             }
             if (targetStatus != null) {
-                MigrationStatus target = MigrationStatus.fromCode(targetStatus);
+                MigrationTaskStatus target = MigrationTaskStatus.fromCode(targetStatus);
                 domainService.validateStatusSwitch(task.getStatus(), target);
                 task.changeStatus(target);
             }
@@ -184,7 +184,7 @@ public class MigrationTaskApplicationService {
     private MigrationTask doUpdateStatus(String migrationKey, int targetStatus) {
         try {
             MigrationTask task = doGetByMigrationKey(migrationKey);
-            MigrationStatus target = MigrationStatus.fromCode(targetStatus);
+            MigrationTaskStatus target = MigrationTaskStatus.fromCode(targetStatus);
             domainService.validateStatusSwitch(task.getStatus(), target);
             task.changeStatus(target);
             return repository.save(task);

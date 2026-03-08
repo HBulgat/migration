@@ -1,6 +1,8 @@
 package top.bulgat.migration.admin.domain.model;
 
 import lombok.Getter;
+import top.bulgat.migration.config.common.model.enums.DiffRuleType;
+
 import java.time.LocalDateTime;
 
 /**

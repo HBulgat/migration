@@ -16,7 +16,7 @@ import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
 import top.bulgat.migration.sdk.core.model.DiffRequest;
 import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
 import top.bulgat.migration.sdk.core.strategy.MigrationStrategyRegistry;
@@ -32,7 +32,7 @@ class MigrationClientTest {
 
     @Test
     void wrap_shouldCallOldOnlyWhenStatusOld() {
-        FakeConfigClient configClient = new FakeConfigClient(MigrationStatus.OLD.getCode(), List.of());
+        FakeConfigClient configClient = new FakeConfigClient(MigrationTaskStatus.OLD.getCode(), List.of());
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
 
@@ -65,7 +65,7 @@ class MigrationClientTest {
                 .enable(true)
                 .build();
         FakeConfigClient configClient = new FakeConfigClient(
-                MigrationStatus.VALIDATION_GRAY.getCode(),
+                MigrationTaskStatus.VALIDATION_GRAY.getCode(),
                 List.of(whitelistRule));
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
@@ -93,7 +93,7 @@ class MigrationClientTest {
 
     @Test
     void wrap_shouldReturnNewAndSendDiffWhenGoLiveAll() {
-        FakeConfigClient configClient = new FakeConfigClient(MigrationStatus.GO_LIVE_ALL.getCode(), List.of());
+        FakeConfigClient configClient = new FakeConfigClient(MigrationTaskStatus.GO_LIVE_ALL.getCode(), List.of());
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
 
@@ -126,7 +126,7 @@ class MigrationClientTest {
                 .enable(true)
                 .build();
         FakeConfigClient configClient = new FakeConfigClient(
-                MigrationStatus.GO_LIVE_GRAY.getCode(),
+                MigrationTaskStatus.GO_LIVE_GRAY.getCode(),
                 List.of(whitelistRule));
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
@@ -160,7 +160,7 @@ class MigrationClientTest {
                 .enable(true)
                 .build();
         FakeConfigClient configClient = new FakeConfigClient(
-                MigrationStatus.GO_LIVE_GRAY.getCode(),
+                MigrationTaskStatus.GO_LIVE_GRAY.getCode(),
                 List.of(whitelistRule));
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
@@ -188,7 +188,7 @@ class MigrationClientTest {
 
     @Test
     void wrap_shouldNotInvokeOldTwiceWhenOldOnlyOldFails() {
-        FakeConfigClient configClient = new FakeConfigClient(MigrationStatus.OLD.getCode(), List.of());
+        FakeConfigClient configClient = new FakeConfigClient(MigrationTaskStatus.OLD.getCode(), List.of());
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
 
@@ -208,7 +208,7 @@ class MigrationClientTest {
 
     @Test
     void wrap_shouldNotInvokeOldTwiceWhenValidationGrayOldFails() {
-        FakeConfigClient configClient = new FakeConfigClient(MigrationStatus.VALIDATION_GRAY.getCode(), List.of());
+        FakeConfigClient configClient = new FakeConfigClient(MigrationTaskStatus.VALIDATION_GRAY.getCode(), List.of());
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
 
@@ -239,7 +239,7 @@ class MigrationClientTest {
                 .enable(true)
                 .build();
         FakeConfigClient configClient = new FakeConfigClient(
-                MigrationStatus.GO_LIVE_GRAY.getCode(),
+                MigrationTaskStatus.GO_LIVE_GRAY.getCode(),
                 List.of(whitelistRule));
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
@@ -271,7 +271,7 @@ class MigrationClientTest {
                 .enable(true)
                 .build();
         FakeConfigClient configClient = new FakeConfigClient(
-                MigrationStatus.DECOMMISSIONING_GRAY.getCode(),
+                MigrationTaskStatus.DECOMMISSIONING_GRAY.getCode(),
                 List.of(whitelistRule));
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
@@ -299,7 +299,7 @@ class MigrationClientTest {
 
     @Test
     void wrap_shouldNotInvokeOldTwiceWhenGoLiveAllBothBranchesFail() {
-        FakeConfigClient configClient = new FakeConfigClient(MigrationStatus.GO_LIVE_ALL.getCode(), List.of());
+        FakeConfigClient configClient = new FakeConfigClient(MigrationTaskStatus.GO_LIVE_ALL.getCode(), List.of());
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
 
@@ -330,7 +330,7 @@ class MigrationClientTest {
                 .enable(true)
                 .build();
         FakeConfigClient configClient = new FakeConfigClient(
-                MigrationStatus.DECOMMISSIONING_GRAY.getCode(),
+                MigrationTaskStatus.DECOMMISSIONING_GRAY.getCode(),
                 List.of(whitelistRule));
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);
@@ -362,7 +362,7 @@ class MigrationClientTest {
                 .enable(true)
                 .build();
         FakeConfigClient configClient = new FakeConfigClient(
-                MigrationStatus.DECOMMISSIONING_GRAY.getCode(),
+                MigrationTaskStatus.DECOMMISSIONING_GRAY.getCode(),
                 List.of(whitelistRule));
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationClient client = buildClient(configClient, diffServiceCaller);

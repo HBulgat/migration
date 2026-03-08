@@ -1,0 +1,12 @@
+{
+    "template_feishu_key": {
+        "chanel": "FEISHU",
+        "name": "",
+        "template": "🚨 迁移告警 [${migrationKey}]\nTraceID: ${traceId}\n差异项数: ${diffItemCount}\n旧接口: ${oldSuccess} (${oldCostTimeMs}ms)\n新接口: ${newSuccess} (${newCostTimeMs}ms)\n${errorSummary}"
+    },
+    "template_email_key": {
+        "chanel": "EMAIL",
+        "name": "",
+        "template": "🚨 迁移告警 [${migrationKey}]\nTraceID: ${traceId}\n差异项数: ${diffItemCount}\n旧接口: ${oldSuccess} (${oldCostTimeMs}ms)\n新接口: ${newSuccess} (${newCostTimeMs}ms)\n${errorSummary}"
+    }
+}

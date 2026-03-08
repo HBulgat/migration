@@ -1,12 +1,12 @@
 ﻿<script setup lang="ts">
 import { computed } from 'vue'
-import { getMigrationStatusMeta } from '@/constants'
+import { getMigrationTaskStatusMeta } from '@/constants'
 
 const props = defineProps<{
   status: number
 }>()
 
-const meta = computed(() => getMigrationStatusMeta(props.status))
+const meta = computed(() => getMigrationTaskStatusMeta(props.status))
 </script>
 
 <template>

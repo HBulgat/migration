@@ -17,7 +17,7 @@ public record ExecuteDiffCommand(
                 String newErrorMessage,
                 String oldRequestParams,
                 String newRequestParams,
-                Integer migrationStatus,
+                Integer MigrationTaskStatus,
                 String grayscaleRules,
                 Boolean grayscaleHit,
                 Boolean fallbackTriggered) {

@@ -8,7 +8,8 @@ spring:
     password: ${MIGRATION_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-migration:
+migration-admin:
+
   admin:
     internal-token: ${MIGRATION_ADMIN_INTERNAL_TOKEN}
   auth:

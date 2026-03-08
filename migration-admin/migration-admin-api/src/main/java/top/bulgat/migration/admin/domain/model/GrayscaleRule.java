@@ -2,6 +2,7 @@ package top.bulgat.migration.admin.domain.model;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
+import top.bulgat.migration.config.common.model.enums.GrayscaleRuleType;
 
 /**
  * 灰度规则实体。

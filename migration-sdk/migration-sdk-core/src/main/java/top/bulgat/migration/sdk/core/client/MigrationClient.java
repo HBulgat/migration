@@ -9,6 +9,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.bulgat.migration.sdk.core.config.CachedConfigClient;
 import top.bulgat.migration.sdk.core.config.HttpConfigClient;
 import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
 import top.bulgat.migration.sdk.core.diff.DisruptorDiffServiceCaller;
@@ -17,7 +18,7 @@ import top.bulgat.migration.sdk.core.function.ParamHandler;
 import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
 import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
 import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
@@ -62,9 +63,9 @@ public class MigrationClient implements AutoCloseable {
     public MigrationClient(MigrationConfig config, MigrationSdkProperties properties, ExecutorService executorService) {
         this(
                 config,
-                new HttpConfigClient(properties),
+                new CachedConfigClient(new HttpConfigClient(properties), properties.getCacheRefreshIntervalSeconds()),
                 new DisruptorDiffServiceCaller(properties),
-                new DefaultGrayscaleMatcher(),
+                new DefaultGrayscaleMatcher(properties.getPercentageRoutingStrategy()),
                 MigrationStrategyRegistry.defaultRegistry(),
                 executorService,
                 true);
@@ -182,7 +183,7 @@ public class MigrationClient implements AutoCloseable {
         try {
             // 从配置中心拉取最新配置和灰度规则
             MigrationConfig latestConfig = loadLatestConfig();
-            MigrationStatus status = resolveStatus(latestConfig.getStatus());
+            MigrationTaskStatus status = resolveStatus(latestConfig.getStatus());
             List<GrayscaleConfig> grayscaleRules = loadGrayscaleRules();
 
             // 根据状态获取对应的策略
@@ -191,7 +192,7 @@ public class MigrationClient implements AutoCloseable {
                 log.warn("无法找到对应的迁移策略, 降级为 OLD, migrationKey={}, status={}",
                         config.getMigrationKey(),
                         status);
-                strategy = strategyRegistry.getStrategy(MigrationStatus.OLD);
+                strategy = strategyRegistry.getStrategy(MigrationTaskStatus.OLD);
             }
 
             // 构建执行上下文
@@ -227,21 +228,21 @@ public class MigrationClient implements AutoCloseable {
             if (latestConfig == null) {
                 return MigrationConfig.builder()
                         .migrationKey(config.getMigrationKey())
-                        .status(MigrationStatus.OLD.getCode())
+                        .status(MigrationTaskStatus.OLD.getCode())
                         .build();
             }
             if (latestConfig.getMigrationKey() == null || latestConfig.getMigrationKey().isBlank()) {
                 latestConfig.setMigrationKey(config.getMigrationKey());
             }
             if (latestConfig.getStatus() == null) {
-                latestConfig.setStatus(MigrationStatus.OLD.getCode());
+                latestConfig.setStatus(MigrationTaskStatus.OLD.getCode());
             }
             return latestConfig;
         } catch (Exception ex) {
             log.warn("load 迁移配置 failed, fallback to OLD, migrationKey={}", config.getMigrationKey(), ex);
             return MigrationConfig.builder()
                     .migrationKey(config.getMigrationKey())
-                    .status(MigrationStatus.OLD.getCode())
+                    .status(MigrationTaskStatus.OLD.getCode())
                     .build();
         }
     }
@@ -267,17 +268,17 @@ public class MigrationClient implements AutoCloseable {
      * @param statusCode 状态码
      * @return 解析后的迁移状态
      */
-    private MigrationStatus resolveStatus(Integer statusCode) {
+    private MigrationTaskStatus resolveStatus(Integer statusCode) {
         if (statusCode == null) {
-            return MigrationStatus.OLD;
+            return MigrationTaskStatus.OLD;
         }
         try {
-            return MigrationStatus.fromCode(statusCode);
+            return MigrationTaskStatus.fromCode(statusCode);
         } catch (Exception ex) {
             log.warn("invalid migration status code, migrationKey={}, statusCode={}",
                     config.getMigrationKey(),
                     statusCode);
-            return MigrationStatus.OLD;
+            return MigrationTaskStatus.OLD;
         }
     }
 

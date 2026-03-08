@@ -1,0 +1,35 @@
+[
+    {
+        "migration_key": "test_migration",
+        "name": "飞书告警配置1",
+        "enable": true,
+        "channel": "FEISHU",
+        "template_key": "template_feishu_key",
+        "receivers": [
+            "webhook1",
+            "webhook2"
+        ]
+    },
+    {
+        "migration_key": "test_migration",
+        "name": "飞书告警配置2",
+        "enable": true,
+        "channel": "FEISHU",
+        "template_key": "template_feishu_key",
+        "receivers": [
+            "webhook2",
+            "webhook3"
+        ]
+    },
+    {
+        "migration_key": "test_migration",
+        "name": "邮件告警配置2",
+        "enable": true,
+        "channel": "EMAIL",
+        "template_key": "template_email_key",
+        "receivers": [
+            "email1",
+            "email2"
+        ]
+    }
+]

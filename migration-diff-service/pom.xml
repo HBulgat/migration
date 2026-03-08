@@ -75,6 +75,20 @@
             <version>0.4.16</version>
         </dependency>
         <dependency>
+            <groupId>top.bulgat</groupId>
+            <artifactId>common-notice</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
@@ -84,6 +98,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>top.bulgat</groupId>
+            <artifactId>migration-config-common</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -92,7 +110,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>top.bulgat.migration.diff.DiffApplication</mainClass>
+                    <mainClass>top.bulgat.migration.diff.MigrationDiffServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

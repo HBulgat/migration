@@ -8,14 +8,22 @@ spring:
     password: ${MIGRATION_DB_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-migration:
-  diff:
-    internal-token: ${MIGRATION_DIFF_INTERNAL_TOKEN}
-  nacos:
+#migration:
+#  nacos:
+#    server-addr:
+#    namespace: ${MIGRATION_NACOS_NAMESPACE:}
+#    username: ${MIGRATION_NACOS_USERNAME:}
+#    password: ${MIGRATION_NACOS_PASSWORD:}
+migration-diff:
+  auth:
+    internal-token: ${DIFF_INTERNAL_TOKEN}
+  config-center:
+    type: nacos
     server-addr: ${MIGRATION_NACOS_SERVER_ADDR:}
-    namespace: ${MIGRATION_NACOS_NAMESPACE:}
-    username: ${MIGRATION_NACOS_USERNAME:}
-    password: ${MIGRATION_NACOS_PASSWORD:}
+    username: nacos
+    password: nacos
+    meta-info:
+      namespace: namespace
 
 logging:
   level:

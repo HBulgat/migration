@@ -106,7 +106,7 @@ class DiffDomainServiceTest {
 
         assertTrue(result.hasDiff());
         assertEquals(1, result.getDiffItems().size());
-        assertEquals("ab.name", result.getDiffItems().get(0).getFieldPath());
+        assertEquals("ab.name", result.getDiffItems().get(0).fieldPath());
     }
 
     @Test
@@ -143,7 +143,7 @@ class DiffDomainServiceTest {
         DiffResult result = service.execute(request, List.of(ignoreRule));
 
         assertFalse(result.hasDiff(), "unexpected diff paths: "
-                + result.getDiffItems().stream().map(item -> item.getFieldPath()).toList());
+                + result.getDiffItems().stream().map(item -> item.fieldPath()).toList());
         assertEquals(0, result.getDiffItems().size());
     }
 
@@ -164,7 +164,7 @@ class DiffDomainServiceTest {
 
         assertTrue(result.hasDiff());
         assertEquals(1, result.getDiffItems().size());
-        assertEquals("items[0].nickname", result.getDiffItems().get(0).getFieldPath());
+        assertEquals("items[0].nickname", result.getDiffItems().get(0).fieldPath());
     }
 
     @Test

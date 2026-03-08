@@ -13,7 +13,7 @@ import top.bulgat.migration.sdk.core.function.ParamHandler;
 import top.bulgat.migration.sdk.core.model.DiffRequest;
 import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
-import top.bulgat.migration.sdk.core.model.MigrationStatus;
+import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
 import top.bulgat.migration.sdk.core.strategy.MigrationStrategyRegistry;
@@ -42,11 +42,11 @@ class MigrationInterceptorTest {
         factory.addAdvisor(advisor);
         DemoService proxy = (DemoService) factory.getProxy();
 
-        configClient.status = MigrationStatus.OLD.getCode();
+        configClient.status = MigrationTaskStatus.OLD.getCode();
         String oldResult = proxy.query("1001");
         assertEquals("old:1001", oldResult);
 
-        configClient.status = MigrationStatus.GO_LIVE_ALL.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_ALL.getCode();
         String newResult = proxy.query("1001");
         assertEquals("new:1001", newResult);
 
@@ -67,7 +67,7 @@ class MigrationInterceptorTest {
                 .build();
 
         FakeConfigClient configClient = new FakeConfigClient();
-        configClient.status = MigrationStatus.GO_LIVE_GRAY.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_GRAY.getCode();
         configClient.rules = List.of(whitelistRule);
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationInterceptor interceptor = new MigrationInterceptor(
@@ -121,11 +121,11 @@ class MigrationInterceptorTest {
         factory.addAdvisor(advisor);
         CrossBeanDotDemoService proxy = (CrossBeanDotDemoService) factory.getProxy();
 
-        configClient.status = MigrationStatus.OLD.getCode();
+        configClient.status = MigrationTaskStatus.OLD.getCode();
         String oldResult = proxy.query("2101");
         assertEquals("external-old:2101", oldResult);
 
-        configClient.status = MigrationStatus.GO_LIVE_ALL.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_ALL.getCode();
         String newResult = proxy.query("2101");
         assertEquals("external-new:2101", newResult);
 
@@ -161,11 +161,11 @@ class MigrationInterceptorTest {
         factory.addAdvisor(advisor);
         CrossBeanDemoService proxy = (CrossBeanDemoService) factory.getProxy();
 
-        configClient.status = MigrationStatus.OLD.getCode();
+        configClient.status = MigrationTaskStatus.OLD.getCode();
         String oldResult = proxy.query("2001");
         assertEquals("external-old:2001", oldResult);
 
-        configClient.status = MigrationStatus.GO_LIVE_ALL.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_ALL.getCode();
         String newResult = proxy.query("2001");
         assertEquals("external-new:2001", newResult);
 
@@ -182,7 +182,7 @@ class MigrationInterceptorTest {
         NewFailNoFallbackDemoService.NEW_FAIL_COUNT.set(0);
 
         FakeConfigClient configClient = new FakeConfigClient();
-        configClient.status = MigrationStatus.GO_LIVE_ALL.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_ALL.getCode();
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationInterceptor interceptor = new MigrationInterceptor(
                 configClient,
@@ -212,7 +212,7 @@ class MigrationInterceptorTest {
         ThrowableFallbackService.COUNT.set(0);
 
         FakeConfigClient configClient = new FakeConfigClient();
-        configClient.status = MigrationStatus.GO_LIVE_ALL.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_ALL.getCode();
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationInterceptor interceptor = new MigrationInterceptor(
                 configClient,
@@ -251,7 +251,7 @@ class MigrationInterceptorTest {
         PrivateFallbackDemoService.FALLBACK_COUNT.set(0);
 
         FakeConfigClient configClient = new FakeConfigClient();
-        configClient.status = MigrationStatus.GO_LIVE_ALL.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_ALL.getCode();
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationInterceptor interceptor = new MigrationInterceptor(
                 configClient,
@@ -282,7 +282,7 @@ class MigrationInterceptorTest {
         FallbackService.COUNT.set(0);
 
         FakeConfigClient configClient = new FakeConfigClient();
-        configClient.status = MigrationStatus.GO_LIVE_ALL.getCode();
+        configClient.status = MigrationTaskStatus.GO_LIVE_ALL.getCode();
         FakeDiffServiceCaller diffServiceCaller = new FakeDiffServiceCaller();
         MigrationInterceptor interceptor = new MigrationInterceptor(
                 configClient,
@@ -315,7 +315,7 @@ class MigrationInterceptorTest {
     }
 
     private static final class FakeConfigClient implements ConfigClient {
-        private int status = MigrationStatus.OLD.getCode();
+        private int status = MigrationTaskStatus.OLD.getCode();
         private List<GrayscaleConfig> rules = List.of();
 
         @Override
