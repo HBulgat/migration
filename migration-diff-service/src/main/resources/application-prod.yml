@@ -3,27 +3,21 @@ server:
 
 spring:
   datasource:
-    url: ${MIGRATION_DB_URL:jdbc:mysql://localhost:3306/migration?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8}
-    username: ${MIGRATION_DB_USERNAME:}
-    password: ${MIGRATION_DB_PASSWORD:}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/migration?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8}
+    username: ${SPRING_DATASOURCE_USERNAME:}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-#migration:
-#  nacos:
-#    server-addr:
-#    namespace: ${MIGRATION_NACOS_NAMESPACE:}
-#    username: ${MIGRATION_NACOS_USERNAME:}
-#    password: ${MIGRATION_NACOS_PASSWORD:}
 migration-diff:
   auth:
-    internal-token: ${DIFF_INTERNAL_TOKEN}
+    internal-token: ${MIGRATION_DIFF_AUTH_INTERNAL_TOKEN}
   config-center:
     type: nacos
-    server-addr: ${MIGRATION_NACOS_SERVER_ADDR:}
-    username: nacos
-    password: nacos
+    server-addr: ${MIGRATION_DIFF_CONFIG_CENTER_SERVER_ADDR}
+    username: ${MIGRATION_DIFF_CONFIG_CENTER_USERNAME}
+    password: ${MIGRATION_DIFF_CONFIG_CENTER_PASSWORD}
     meta-info:
-      namespace: namespace
+      namespace: ${MIGRATION_DIFF_CONFIG_CENTER_META_INFO_NAMESPACE:}
 
 logging:
   level:

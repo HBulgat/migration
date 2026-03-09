@@ -3,26 +3,26 @@ server:
 
 spring:
   datasource:
-    url: ${MIGRATION_DB_URL}
-    username: ${MIGRATION_DB_USERNAME}
-    password: ${MIGRATION_DB_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 migration-admin:
-
-  admin:
-    internal-token: ${MIGRATION_ADMIN_INTERNAL_TOKEN}
   auth:
-    username: ${MIGRATION_AUTH_USERNAME}
-    password: ${MIGRATION_AUTH_PASSWORD}
-    display-name: ${MIGRATION_AUTH_DISPLAY_NAME:System Administrator}
-    jwt-secret: ${MIGRATION_AUTH_JWT_SECRET}
-    jwt-expiration-ms: ${MIGRATION_AUTH_JWT_EXPIRATION_MS:86400000}
-  nacos:
-    server-addr: ${MIGRATION_NACOS_SERVER_ADDR}
-    namespace: ${MIGRATION_NACOS_NAMESPACE:}
-    username: ${MIGRATION_NACOS_USERNAME:}
-    password: ${MIGRATION_NACOS_PASSWORD:}
+    username: ${MIGRATION_ADMIN_AUTH_USERNAME}
+    password: ${MIGRATION_ADMIN_AUTH_PASSWORD}
+    display-name: ${MIGRATION_ADMIN_AUTH_DISPLAY_NAME:System Administrator}
+    jwt-secret: ${MIGRATION_ADMIN_AUTH_JWT_SECRET}
+    jwt-expiration-ms: ${MIGRATION_ADMIN_AUTH_JWT_EXPIRATION_MS:86400000}
+    internal-token: ${MIGRATION_ADMIN_AUTH_INTERNAL_TOKEN}
+  config-center:
+    type: nacos
+    server-addr: ${MIGRATION_ADMIN_CONFIG_CENTER_SERVER_ADDR}
+    username: ${MIGRATION_ADMIN_CONFIG_CENTER_USERNAME}
+    password: ${MIGRATION_ADMIN_CONFIG_CENTER_PASSWORD}
+    meta-info:
+      namespace: ${MIGRATION_ADMIN_CONFIG_CENTER_META_INFO_NAMESPACE:}
 
 logging:
   level:

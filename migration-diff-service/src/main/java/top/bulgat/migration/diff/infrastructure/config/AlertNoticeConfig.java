@@ -14,6 +14,7 @@ import top.bulgat.common.notice.NoticeSender;
 import top.bulgat.common.notice.NoticeService;
 import top.bulgat.common.notice.email.EmailNoticeSender;
 import top.bulgat.common.notice.feishu.FeishuNoticeSender;
+import top.bulgat.migration.config.common.config.ConfigCenterProperties;
 
 /**
  * 告警通知基础设施自动装配。
@@ -29,19 +30,20 @@ public class AlertNoticeConfig {
      * 提供全局共享的 Nacos ConfigService Bean。
      */
     @Bean
-    public ConfigService nacosConfigService(
-            @Value("${migration.nacos.server-addr:localhost:8848}") String serverAddr,
-            @Value("${migration.nacos.namespace:}") String namespace,
-            @Value("${migration.nacos.username:}") String username,
-            @Value("${migration.nacos.password:}") String password) throws Exception {
+    public ConfigService nacosConfigService(ConfigCenterProperties configCenterProperties) throws Exception {
         Properties properties = new Properties();
-        properties.setProperty("serverAddr", serverAddr);
+        properties.setProperty("serverAddr", configCenterProperties.getServerAddr());
+        String namespace = configCenterProperties.getMetaInfo() != null
+                ? configCenterProperties.getMetaInfo().get("namespace")
+                : null;
         if (namespace != null && !namespace.isBlank()) {
             properties.setProperty("namespace", namespace);
         }
+        String username = configCenterProperties.getUsername();
         if (username != null && !username.isBlank()) {
             properties.setProperty("username", username);
         }
+        String password = configCenterProperties.getPassword();
         if (password != null && !password.isBlank()) {
             properties.setProperty("password", password);
         }
