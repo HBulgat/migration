@@ -7,5 +7,12 @@ public enum DiffType {
     ADD,
     REMOVE,
     MODIFY
+    ;
+    public static DiffType fromValue(String value) {
+        if (value == null) {
+            throw new IllegalArgumentException("diff type cannot be null");
+        }
+        return valueOf(value.toUpperCase());
+    }
 }
 

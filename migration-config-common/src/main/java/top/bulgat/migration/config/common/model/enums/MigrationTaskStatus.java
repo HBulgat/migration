@@ -9,16 +9,15 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MigrationTaskStatus {
-    OLD(1, "OLD"),
-    VALIDATION_GRAY(2, "VALIDATION_GRAY"),
-    VALIDATION_ALL(3, "VALIDATION_ALL"),
-    GO_LIVE_GRAY(4, "GO_LIVE_GRAY"),
-    GO_LIVE_ALL(5, "GO_LIVE_ALL"),
-    DECOMMISSIONING_GRAY(6, "DECOMMISSIONING_GRAY"),
-    DECOMMISSIONING_ALL(7, "DECOMMISSIONING_ALL");
+    OLD(1),
+    VALIDATION_GRAY(2),
+    VALIDATION_ALL(3),
+    GO_LIVE_GRAY(4),
+    GO_LIVE_ALL(5),
+    DECOMMISSIONING_GRAY(6),
+    DECOMMISSIONING_ALL(7);
 
     private final int code;
-    private final String desc;
 
     /**
      * 根据数值编码解析状态。
