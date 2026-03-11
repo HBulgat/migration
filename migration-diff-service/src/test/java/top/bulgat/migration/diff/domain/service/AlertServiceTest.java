@@ -42,7 +42,8 @@ class AlertServiceTest {
                 alertTemplateRepository = Mockito.mock(AlertTemplateRepository.class);
                 noticeService = Mockito.mock(NoticeService.class);
                 objectMapper = new ObjectMapper();
-                alertService = new AlertService(alertRuleRepository, alertTemplateRepository, noticeService, objectMapper);
+                alertService = new AlertService(alertRuleRepository, alertTemplateRepository, noticeService,
+                                objectMapper);
         }
 
         @Test
@@ -62,11 +63,13 @@ class AlertServiceTest {
                 DiffResult result = new DiffResult(true, List.of(
                                 new DiffItem("$.price", "100", "200", DiffType.MODIFY)), 5L);
 
-                AlertRule feishuRule = new AlertRule("key1", "飞书告警", true, NoticeChannel.FEISHU,
-                                "tpl1", List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
+                AlertRule feishuRule = new AlertRule("key1", "rule1", "飞书告警", true, NoticeChannel.FEISHU,
+                                "tpl1",
+                                List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(feishuRule));
 
-                JsonNode templateNode = objectMapper.readTree("{\"msg_type\":\"text\",\"text\":\"Alert: ${migrationKey} diff=${hasDiff}\"}");
+                JsonNode templateNode = objectMapper.readTree(
+                                "{\"msg_type\":\"text\",\"text\":\"Alert: ${migrationKey} diff=${hasDiff}\"}");
                 AlertTemplate template = new AlertTemplate(NoticeChannel.FEISHU, "test", templateNode);
                 when(alertTemplateRepository.findByTemplateKey("tpl1")).thenReturn(template);
                 when(noticeService.send(any())).thenReturn(true);
@@ -82,8 +85,9 @@ class AlertServiceTest {
                 DiffRequest request = createRequest("key1", false, true);
                 DiffResult result = new DiffResult(false, List.of(), 5L);
 
-                AlertRule rule = new AlertRule("key1", "飞书告警", true, NoticeChannel.FEISHU,
-                                "tpl1", List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
+                AlertRule rule = new AlertRule("key1", "rule1", "飞书告警", true, NoticeChannel.FEISHU,
+                                "tpl1",
+                                List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(rule));
                 when(alertTemplateRepository.findByTemplateKey("tpl1")).thenReturn(null);
                 when(noticeService.send(any())).thenReturn(true);
@@ -99,7 +103,7 @@ class AlertServiceTest {
                 DiffRequest request = createRequest("key1", true, false);
                 DiffResult result = new DiffResult(false, List.of(), 5L);
 
-                AlertRule rule = new AlertRule("key1", "邮件告警", true, NoticeChannel.EMAIL,
+                AlertRule rule = new AlertRule("key1", "rule1", "邮件告警", true, NoticeChannel.EMAIL,
                                 "tpl_email", List.of("a@test.com", "b@test.com"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(rule));
                 when(alertTemplateRepository.findByTemplateKey("tpl_email")).thenReturn(null);
@@ -116,8 +120,9 @@ class AlertServiceTest {
                 DiffRequest request = createRequest("key1", true, true);
                 DiffResult result = new DiffResult(true, List.of(), 5L);
 
-                AlertRule rule = new AlertRule("key1", "飞书告警", true, NoticeChannel.FEISHU,
-                                "tpl1", List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
+                AlertRule rule = new AlertRule("key1", "rule1", "飞书告警", true, NoticeChannel.FEISHU,
+                                "tpl1",
+                                List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(rule));
                 when(alertTemplateRepository.findByTemplateKey("tpl1")).thenReturn(null);
                 when(noticeService.send(any())).thenThrow(new RuntimeException("send error"));
@@ -140,24 +145,28 @@ class AlertServiceTest {
 
         @Test
         void alertIfNeeded_shouldUseCustomTemplate() throws Exception {
-                // IMPORTANT: Replace mock with real FeishuNoticeSender to actually trigger a test message
+                // IMPORTANT: Replace mock with real FeishuNoticeSender to actually trigger a
+                // test message
                 NoticeService realNoticeService = new NoticeService(List.of(new FeishuNoticeSender()));
-                alertService = new AlertService(alertRuleRepository, alertTemplateRepository, realNoticeService, objectMapper);
+                alertService = new AlertService(alertRuleRepository, alertTemplateRepository, realNoticeService,
+                                objectMapper);
                 DiffRequest request = createRequest("key1", true, true);
                 DiffResult result = new DiffResult(true,
                                 List.of(new DiffItem("$.name", "old", "new", DiffType.MODIFY)), 5L);
 
-                AlertRule rule = new AlertRule("key1", "飞书", true, NoticeChannel.FEISHU,
-                                "custom_tpl", List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
+                AlertRule rule = new AlertRule("key1", "rule1", "飞书", true, NoticeChannel.FEISHU,
+                                "custom_tpl",
+                                List.of("https://open.feishu.cn/open-apis/bot/v2/hook/e3fe05da-fba0-4abe-8fea-2def5f2ae8fd"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(rule));
 
-                JsonNode customTemplateNode = objectMapper.readTree("{\"msg_type\":\"t666ext\",\"text\":\"MK=${migrationKey} ITEMS=${diffItemCount}\"}");
+                JsonNode customTemplateNode = objectMapper.readTree(
+                                "{\"msg_type\":\"t666ext\",\"text\":\"MK=${migrationKey} ITEMS=${diffItemCount}\"}");
                 AlertTemplate customTemplate = new AlertTemplate(NoticeChannel.FEISHU, "自定义", customTemplateNode);
                 when(alertTemplateRepository.findByTemplateKey("custom_tpl")).thenReturn(customTemplate);
                 when(noticeService.send(any())).thenReturn(true);
 
                 alertService.alertIfNeeded(request, result);
-                
+
                 // Allow some time for HTTP request to be completely dispatched
                 Thread.sleep(2000);
         }

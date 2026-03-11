@@ -18,8 +18,8 @@ import top.bulgat.common.notice.NoticeChannel;
  *                     <p>
  *                     飞书渠道是 webhook URL，邮件渠道是邮箱地址。
  */
-public record AlertRule(String migrationKey, String name, boolean enable,
-                        NoticeChannel channel, String templateKey,
-                        List<String> receivers) {
+public record AlertRule(String migrationKey, String ruleId, String name, boolean enable,
+        NoticeChannel channel, String templateKey,
+        List<String> receivers) {
 
 }

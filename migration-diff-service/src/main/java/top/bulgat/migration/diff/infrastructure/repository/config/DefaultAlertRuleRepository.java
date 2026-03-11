@@ -22,8 +22,8 @@ public class DefaultAlertRuleRepository implements AlertRuleRepository {
 
     private final AlertRuleConfigDAO alertRuleConfigDAO;
 
-    public DefaultAlertRuleRepository(AlertRuleConfigDAO alertRuleConfigDAO){
-        this.alertRuleConfigDAO=alertRuleConfigDAO;
+    public DefaultAlertRuleRepository(AlertRuleConfigDAO alertRuleConfigDAO) {
+        this.alertRuleConfigDAO = alertRuleConfigDAO;
     }
 
     @Override
@@ -47,12 +47,12 @@ public class DefaultAlertRuleRepository implements AlertRuleRepository {
     private AlertRule toEntity(AlertRuleConfig config) {
         return new AlertRule(
                 config.migrationKey(),
+                config.ruleId(),
                 config.name(),
                 config.enable(),
                 NoticeChannel.fromValue(config.channel()),
                 config.templateKey(),
-                config.receivers()
-        );
+                config.receivers());
     }
 
     private String sanitizeReason(Exception ex) {
