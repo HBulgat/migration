@@ -93,6 +93,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>top.bulgat</groupId>
+            <artifactId>common-notice</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,4 +1,4 @@
-package top.bulgat.migration.diff.infrastructure.repository.diffrecord;
+package top.bulgat.migration.diff.infrastructure.repository.db;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

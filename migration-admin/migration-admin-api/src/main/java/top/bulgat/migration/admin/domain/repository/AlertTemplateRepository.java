@@ -1,9 +1,9 @@
-package top.bulgat.migration.diff.domain.repository;
+package top.bulgat.migration.admin.domain.repository;
 
-import top.bulgat.migration.diff.domain.model.AlertTemplate;
+import top.bulgat.migration.admin.domain.model.AlertTemplate;
 
 /**
- * 告警模板仓储接口。
+ * AlertTemplateRepository 定义持久化访问能力。
  */
 public interface AlertTemplateRepository {
 

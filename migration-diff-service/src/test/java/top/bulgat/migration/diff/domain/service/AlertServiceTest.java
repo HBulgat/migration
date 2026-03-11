@@ -60,7 +60,7 @@ class AlertServiceTest {
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(feishuRule));
 
                 AlertTemplate template = new AlertTemplate("FEISHU", "test", "Alert: ${migrationKey} diff=${hasDiff}");
-                when(alertTemplateRepository.findByKey("tpl1")).thenReturn(template);
+                when(alertTemplateRepository.findByTemplateKey("tpl1")).thenReturn(template);
                 when(noticeService.send(any())).thenReturn(true);
 
                 alertService.alertIfNeeded(request, result);
@@ -77,7 +77,7 @@ class AlertServiceTest {
                 AlertRule rule = new AlertRule("key1", "飞书告警", true, "FEISHU",
                                 "tpl1", List.of("https://hook1"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(rule));
-                when(alertTemplateRepository.findByKey("tpl1")).thenReturn(null);
+                when(alertTemplateRepository.findByTemplateKey("tpl1")).thenReturn(null);
                 when(noticeService.send(any())).thenReturn(true);
 
                 alertService.alertIfNeeded(request, result);
@@ -93,7 +93,7 @@ class AlertServiceTest {
                 AlertRule rule = new AlertRule("key1", "邮件告警", true, "EMAIL",
                                 "tpl_email", List.of("a@test.com", "b@test.com"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(rule));
-                when(alertTemplateRepository.findByKey("tpl_email")).thenReturn(null);
+                when(alertTemplateRepository.findByTemplateKey("tpl_email")).thenReturn(null);
                 when(noticeService.send(any())).thenReturn(true);
 
                 alertService.alertIfNeeded(request, result);
@@ -110,7 +110,7 @@ class AlertServiceTest {
                 AlertRule rule = new AlertRule("key1", "飞书告警", true, "FEISHU",
                                 "tpl1", List.of("https://hook1"));
                 when(alertRuleRepository.findEnabledRules("key1")).thenReturn(List.of(rule));
-                when(alertTemplateRepository.findByKey("tpl1")).thenReturn(null);
+                when(alertTemplateRepository.findByTemplateKey("tpl1")).thenReturn(null);
                 when(noticeService.send(any())).thenThrow(new RuntimeException("send error"));
 
                 // Should not throw
@@ -141,7 +141,7 @@ class AlertServiceTest {
 
                 AlertTemplate customTemplate = new AlertTemplate("FEISHU", "自定义",
                                 "MK=${migrationKey} ITEMS=${diffItemCount}");
-                when(alertTemplateRepository.findByKey("custom_tpl")).thenReturn(customTemplate);
+                when(alertTemplateRepository.findByTemplateKey("custom_tpl")).thenReturn(customTemplate);
                 when(noticeService.send(any())).thenReturn(true);
 
                 alertService.alertIfNeeded(request, result);

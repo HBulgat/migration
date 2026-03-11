@@ -1,4 +1,4 @@
-package top.bulgat.migration.diff.domain.model;
+package top.bulgat.migration.admin.domain.model;
 
 import top.bulgat.common.notice.NoticeChannel;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  *
  * @param channel  渠道类型：FEISHU / EMAIL。
  * @param name     模板名称。
- * @param template 模板本身作为 JsonNode 存储。
+ * @param template 模板内容。
  */
 public record AlertTemplate(NoticeChannel channel, String name, JsonNode template) {
 }

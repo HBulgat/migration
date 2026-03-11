@@ -1,8 +1,8 @@
-package top.bulgat.migration.diff.domain.model;
+package top.bulgat.migration.admin.domain.model;
+
+import top.bulgat.common.notice.NoticeChannel;
 
 import java.util.List;
-import lombok.AllArgsConstructor;
-import top.bulgat.common.notice.NoticeChannel;
 
 /**
  * 告警规则模型。
@@ -21,5 +21,4 @@ import top.bulgat.common.notice.NoticeChannel;
 public record AlertRule(String migrationKey, String name, boolean enable,
                         NoticeChannel channel, String templateKey,
                         List<String> receivers) {
-
 }
