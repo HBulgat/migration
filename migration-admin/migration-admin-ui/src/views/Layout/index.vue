@@ -65,9 +65,22 @@ const menuItems: MenuItem[] = [
 const activeMenu = computed(() => route.path)
 
 const breadcrumbs = computed(() => {
-  return route.matched
-    .map((item) => item.meta?.title as string | undefined)
-    .filter((item): item is string => Boolean(item))
+  const result: string[] = []
+  for (const item of menuItems) {
+    if (item.path === route.path) {
+      result.push(item.title)
+      break
+    }
+    if (item.children) {
+      const child = item.children.find((c) => c.path === route.path)
+      if (child) {
+        result.push(item.title)
+        result.push(child.title)
+        break
+      }
+    }
+  }
+  return result
 })
 
 const username = computed(() => authStore.displayName)
