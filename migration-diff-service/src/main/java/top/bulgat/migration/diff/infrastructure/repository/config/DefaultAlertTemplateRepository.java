@@ -1,13 +1,9 @@
 package top.bulgat.migration.diff.infrastructure.repository.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import top.bulgat.common.notice.NoticeChannel;
-import top.bulgat.migration.config.common.dal.AlertRuleConfigDAO;
 import top.bulgat.migration.config.common.dal.AlertTemplateConfigDAO;
 import top.bulgat.migration.config.common.model.dataobject.AlertTemplateConfig;
-import top.bulgat.migration.diff.domain.model.AlertRule;
 import top.bulgat.migration.diff.domain.model.AlertTemplate;
 import top.bulgat.migration.diff.domain.repository.AlertTemplateRepository;
 

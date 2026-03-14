@@ -9,7 +9,7 @@ import org.mybatis.spring.annotation.MapperScan;
  */
 @MapperScan("top.bulgat.migration.config.common.dal")
 @SpringBootApplication
-public class MigrationDiffServiceApplication {
+public class Application {
 
     /**
      * 应用启动入口。
@@ -17,6 +17,6 @@ public class MigrationDiffServiceApplication {
      * @param args 启动参数
      */
     public static void main(String[] args) {
-        SpringApplication.run(MigrationDiffServiceApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }

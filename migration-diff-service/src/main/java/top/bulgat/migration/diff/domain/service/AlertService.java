@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import top.bulgat.common.notice.NoticeService;
 import top.bulgat.common.notice.feishu.FeishuMessage;

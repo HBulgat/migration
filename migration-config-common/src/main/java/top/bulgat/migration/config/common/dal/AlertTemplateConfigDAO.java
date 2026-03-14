@@ -26,58 +26,35 @@ public class AlertTemplateConfigDAO {
         this.objectMapper = objectMapper;
     }
 
-//    /**
-//     * 读取指定 templateKey 下的 Alert 规则。
-//     *
-//     * @param templateKey 迁移标识
-//     * @return 规则 DO 列表，异常时返回null
-//     */
-//    public AlertTemplateConfig findByTemplateKey(String templateKey) {
-//        try {
-//            var content = configCenterGateway.getConfig(DATA_ID, GROUP);
-//            if (content.isEmpty() || content.get().isBlank()) {
-//                return null;
-//            }
-//            Map<String,AlertTemplateConfig> configMap = objectMapper.readValue(content.get(), new TypeReference<>() {});
-//            return configMap == null ? null : configMap.getOrDefault(templateKey,null);
-//        } catch (Exception ex) {
-//            log.warn("failed to load alert templates from config center, templateKey={}, reason={}",
-//                    templateKey, sanitizeReason(ex));
-//            log.debug("failed to load alert templates detail, templateKey={}", templateKey, ex);
-//            return null;
-//        }
-//    }
-
     /**
-     * 读取指定 所有的 Alert 规则。
+     * 读取所有的 Alert 模板规则映射。
      *
-     * @return 规则 DO map，异常时返回空map
+     * @return 规则 DO map，若不存在则返回空 map
      */
-    public Map<String,AlertTemplateConfig> findAll() {
+    public Map<String, AlertTemplateConfig> findAll() {
         try {
             var content = configCenterGateway.getConfig(DATA_ID, GROUP);
             if (content.isEmpty() || content.get().isBlank()) {
-                return null;
+                return new HashMap<>();
             }
             Map<String,AlertTemplateConfig> configMap = objectMapper.readValue(content.get(), new TypeReference<>() {});
             return configMap == null ? new HashMap<>() : configMap;
         } catch (Exception ex) {
             log.warn("failed to load alert templates from config center, reason={}", sanitizeReason(ex));
             log.debug("failed to load alert template detail", ex);
-            return null;
+            return new HashMap<>();
         }
     }
 
     /**
-     * 保存 Alert 规则列表到配置中心。
+     * 保存 Alert 模板列表到配置中心。
      *
-     * @param migrationKey 迁移标识
-     * @param configs      规则 DO 列表
+     * @param configs 模板规则 DO 映射
      */
-    public void save(String migrationKey, Map<String,AlertTemplateConfig> configs) {
+    public void save(Map<String,AlertTemplateConfig> configs) {
         try {
             String content = objectMapper.writeValueAsString(configs);
-            configCenterGateway.publish(DATA_ID + migrationKey, GROUP, content);
+            configCenterGateway.publish(DATA_ID, GROUP, content);
         } catch (Exception ex) {
             throw new IllegalStateException("failed to publish alert templates", ex);
         }

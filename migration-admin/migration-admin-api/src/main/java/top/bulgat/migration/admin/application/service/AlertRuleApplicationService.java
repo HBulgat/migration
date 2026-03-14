@@ -68,7 +68,13 @@ public class AlertRuleApplicationService {
     }
 
     public List<AlertRule> listAlertRules(ListAlertRuleCommand cmd) {
-        return alertRuleRepository.findByMigrationKey(cmd.getMigrationKey());
+        List<AlertRule> rules = alertRuleRepository.findByMigrationKey(cmd.getMigrationKey());
+        if (cmd.getChannel() != null && !cmd.getChannel().isEmpty()) {
+            return rules.stream()
+                    .filter(r -> r.getChannel().name().equalsIgnoreCase(cmd.getChannel()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        return rules;
     }
 
     private NoticeChannel validateChannel(String channelStr) {

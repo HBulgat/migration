@@ -56,6 +56,13 @@ public class AlertRuleAssembler {
         return cmd;
     }
 
+    public ListAlertRuleCommand toCommand(AlertRuleListRequest request) {
+        ListAlertRuleCommand cmd = new ListAlertRuleCommand();
+        cmd.setMigrationKey(request.getMigration_key());
+        cmd.setChannel(request.getChannel());
+        return cmd;
+    }
+
     public AlertRuleListResponse toDto(AlertRule rule) {
         AlertRuleListResponse dto = new AlertRuleListResponse();
         dto.setMigrationKey(rule.getMigrationKey());

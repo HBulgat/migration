@@ -6,8 +6,11 @@ import top.bulgat.migration.admin.domain.repository.AlertTemplateRepository;
 import top.bulgat.migration.config.common.dal.AlertTemplateConfigDAO;
 import top.bulgat.migration.config.common.model.dataobject.AlertTemplateConfig;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Map;
 
+@Repository
 public class DefaultAlertTemplateRepository implements AlertTemplateRepository {
 
     private final AlertTemplateConfigDAO alertTemplateConfigDAO;
@@ -25,11 +28,42 @@ public class DefaultAlertTemplateRepository implements AlertTemplateRepository {
         return null;
     }
 
+    @Override
+    public void save(AlertTemplate template) {
+        Map<String, AlertTemplateConfig> templateConfigMap = alertTemplateConfigDAO.findAll();
+        templateConfigMap.put(template.getTemplateKey(), this.toConfig(template));
+        alertTemplateConfigDAO.save(templateConfigMap);
+    }
+
+    @Override
+    public java.util.List<AlertTemplate> findAll() {
+        return alertTemplateConfigDAO.findAll().entrySet().stream()
+                .map(entry -> {
+                    AlertTemplate template = this.toEntity(entry.getValue());
+                    template.initTemplateKey(entry.getKey());
+                    return template;
+                })
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private AlertTemplate toEntity(AlertTemplateConfig config) {
         return new AlertTemplate(
+                null, // Key will be populated separately if needed, though DAO maps this 
                 NoticeChannel.fromValue(config.channel()),
                 config.name(),
-                config.template()
+                config.template(),
+                config.createTime(),
+                config.updateTime()
+        );
+    }
+
+    private AlertTemplateConfig toConfig(AlertTemplate entity) {
+        return new AlertTemplateConfig(
+                entity.getChannel().name(),
+                entity.getName(),
+                entity.getTemplate(),
+                entity.getCreateTime(),
+                entity.getUpdateTime()
         );
     }
 }

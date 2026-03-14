@@ -1,4 +1,4 @@
-package top.bulgat.migration.admin.interfaces.rest;
+package top.bulgat.migration.admin.interfaces.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.bulgat.common.base.model.Result;
+import top.bulgat.migration.admin.application.command.ListAlertRuleCommand;
 import top.bulgat.migration.admin.application.service.AlertRuleApplicationService;
 import top.bulgat.migration.admin.domain.model.AlertRule;
 import top.bulgat.migration.admin.interfaces.assembler.AlertRuleAssembler;
@@ -56,10 +57,11 @@ public class AlertRuleController {
         return Result.success(true);
     }
 
-    @GetMapping("/list")
+    @PostMapping("/list")
     @Operation(summary = "获取告警规则列表")
-    public Result<List<AlertRuleListResponse>> listAlertRules(@RequestParam("migration_key") String migrationKey) {
-        List<AlertRule> rules = alertRuleApplicationService.listAlertRules(assembler.toCommand(migrationKey));
+    public Result<List<AlertRuleListResponse>> listAlertRules(@Validated @RequestBody AlertRuleListRequest request) {
+        ListAlertRuleCommand cmd = assembler.toCommand(request);
+        List<AlertRule> rules = alertRuleApplicationService.listAlertRules(cmd);
         return Result.success(assembler.toDtoList(rules));
     }
 }

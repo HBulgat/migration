@@ -1,8 +1,12 @@
-﻿<template>
+<template>
   <div class="intro-container">
     <div class="header-section">
       <div class="header-content">
-        <h1 class="title">后端接口迁移平台 <el-tag type="success" effect="dark" round class="version-badge">v1.0.0</el-tag></h1>
+        <h1 class="title">
+          <img :src="logoImg" class="title-logo" />
+          后端接口迁移平台
+          <el-tag type="success" effect="dark" round class="version-badge">v1.0.0</el-tag>
+        </h1>
         <p class="feature-desc">通过 Nacos 实时分发全网配置，借助 Web 前端应用管理迁移任务，实时直观观察大盘统计数据、接口耗时分布、错误率图表及精细入微的 JSON-Patch 等级的差异分析记录。</p>
         <p class="desc">
           在业务底层接口从旧版本迁移到新版本的场景中，直接切换往往伴随着极大风险。本平台通过<strong>渐进式迁移</strong>、<strong>多维灰度验证</strong>、<strong>实时并行比对（Diff）</strong>等核心机制，提供了一套开箱即用的闭环解决方案。它不仅能确保迁移过程的安全可控，更能最大程度降低因新接口Bug或不兼容导致的线上事故。
@@ -245,6 +249,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import VueMonacoEditor from '@guolao/vue-monaco-editor'
+import logoImg from '@/assets/logo.png'
 
 const codeSpringBoot = ref(`<dependency>
     <groupId>top.bulgat.migration</groupId>
@@ -328,17 +333,24 @@ const activeTab = ref('value')
 
 .title {
   margin: 0;
-  font-size: 32px;
-  font-weight: 600;
-  color: #1f2f3d;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
+}
+
+.title-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 
 .version-badge {
   font-family: monospace;
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  margin-left: 8px;
 }
 
 .subtitle {

@@ -1,4 +1,4 @@
-package top.bulgat.migration.admin.interfaces.rest;
+package top.bulgat.migration.admin.interfaces.api;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

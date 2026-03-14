@@ -14,4 +14,18 @@ public interface AlertTemplateRepository {
      * @return 对应的模板，未找到时返回 null
      */
     AlertTemplate findByTemplateKey(String templateKey);
+    
+    /**
+     * 保存（新增或更新）告警模板。
+     *
+     * @param template 告警模板
+     */
+    void save(AlertTemplate template);
+
+    /**
+     * 获取所有告警模板。
+     *
+     * @return 模板列表
+     */
+    java.util.List<AlertTemplate> findAll();
 }

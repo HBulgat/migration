@@ -10,14 +10,17 @@ import {
   List,
   Operation,
   Tickets,
+  Bell,
   UserFilled,
 } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/store'
+import logoImg from '@/assets/logo.png'
 
 interface MenuItem {
   path: string
   title: string
   icon: object
+  children?: MenuItem[]
 }
 
 type UserCommand = 'profile' | 'logout'
@@ -29,11 +32,34 @@ const isCollapse = ref(false)
 
 const menuItems: MenuItem[] = [
   { path: '/introduction', title: '系统简介', icon: Document },
-  { path: '/diff-dashboard', title: 'Diff大盘', icon: DataAnalysis },
-  { path: '/migration-task', title: '迁移任务', icon: List },
-  { path: '/grayscale-rule', title: '灰度规则', icon: Operation },
-  { path: '/diff-rule', title: 'Diff规则', icon: Operation },
-  { path: '/diff-record', title: 'Diff记录', icon: Tickets },
+  {
+    path: '/migration-manage',
+    title: '迁移管理',
+    icon: List,
+    children: [
+      { path: '/migration-task', title: '迁移任务', icon: List },
+      { path: '/grayscale-rule', title: '灰度规则', icon: Operation },
+    ],
+  },
+  {
+    path: '/diff-manage',
+    title: 'Diff管理',
+    icon: DataAnalysis,
+    children: [
+      { path: '/diff-dashboard', title: 'Diff大盘', icon: DataAnalysis },
+      { path: '/diff-rule', title: 'Diff规则', icon: Operation },
+      { path: '/diff-record', title: 'Diff记录', icon: Tickets },
+    ],
+  },
+  {
+    path: '/alert-manage',
+    title: '告警管理',
+    icon: Bell,
+    children: [
+      { path: '/alert-rule', title: '告警规则', icon: Bell },
+      { path: '/alert-template', title: '告警模板', icon: Document },
+    ],
+  },
 ]
 
 const activeMenu = computed(() => route.path)
@@ -69,19 +95,42 @@ async function handleUserCommand(command: UserCommand): Promise<void> {
 <template>
   <el-container class="layout-shell">
     <el-aside class="layout-aside" :width="isCollapse ? '64px' : '220px'">
+      <div class="sidebar-logo">
+        <img :src="logoImg" class="logo-image" />
+        <span v-if="!isCollapse" class="logo-text">MIGRATION</span>
+      </div>
+
       <el-menu
         class="side-menu"
         :collapse="isCollapse"
         :default-active="activeMenu"
         router
-        unique-opened
       >
-        <el-menu-item v-for="item in menuItems" :key="item.path" :index="item.path">
-          <el-icon>
-            <component :is="item.icon" />
-          </el-icon>
-          <template #title>{{ item.title }}</template>
-        </el-menu-item>
+        <template v-for="item in menuItems" :key="item.path">
+          <!-- 有子菜单 -->
+          <el-sub-menu v-if="item.children" :index="item.path">
+            <template #title>
+              <el-icon>
+                <component :is="item.icon" />
+              </el-icon>
+              <span>{{ item.title }}</span>
+            </template>
+            <el-menu-item v-for="child in item.children" :key="child.path" :index="child.path">
+              <el-icon>
+                <component :is="child.icon" />
+              </el-icon>
+              <template #title>{{ child.title }}</template>
+            </el-menu-item>
+          </el-sub-menu>
+
+          <!-- 无子菜单 -->
+          <el-menu-item v-else :index="item.path">
+            <el-icon>
+              <component :is="item.icon" />
+            </el-icon>
+            <template #title>{{ item.title }}</template>
+          </el-menu-item>
+        </template>
       </el-menu>
     </el-aside>
 
@@ -133,25 +182,76 @@ async function handleUserCommand(command: UserCommand): Promise<void> {
 .layout-aside {
   background: #001529;
   transition: width 0.2s ease;
+  border-right: none;
 }
 
 .side-menu {
   border-right: none;
   background: transparent;
-  padding-top: 8px;
 }
 
+.sidebar-logo {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo-image {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* 统一深色主题样式 */
 :deep(.el-menu) {
   border-right: none;
+  background-color: transparent !important;
+}
+
+:deep(.el-sub-menu__title) {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+:deep(.el-sub-menu__title:hover) {
+  background-color: transparent !important;
+  color: #fff !important;
 }
 
 :deep(.el-menu-item) {
-  color: rgb(255 255 255 / 78%);
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
+:deep(.el-menu-item:hover) {
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
+/* 子菜单背景颜色 */
+:deep(.el-menu--inline) {
+  background-color: #000c17 !important;
+}
+
+/* 激活状态 */
 :deep(.el-menu-item.is-active) {
-  color: #fff;
-  background: rgb(24 144 255 / 20%);
+  color: #fff !important;
+  background-color: #1890ff !important;
+}
+
+:deep(.el-sub-menu.is-active > .el-sub-menu__title) {
+  color: #fff !important;
 }
 
 .layout-header {

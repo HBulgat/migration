@@ -1,4 +1,4 @@
-package top.bulgat.migration.admin.interfaces.rest;
+package top.bulgat.migration.admin.interfaces.api;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;

@@ -105,7 +105,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>top.bulgat.migration.admin.MigrationAdminApiApplication</mainClass>
+                    <mainClass>top.bulgat.migration.admin.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

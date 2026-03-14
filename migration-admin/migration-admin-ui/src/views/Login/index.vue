@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
 import { useAuthStore } from '@/store'
+import logoImg from '@/assets/logo.png'
 
 const router = useRouter()
 const route = useRoute()
@@ -58,6 +59,7 @@ async function handleLogin(): Promise<void> {
   <div class="login-page">
     <el-card class="login-card" shadow="hover">
       <div class="login-header">
+        <img :src="logoImg" class="login-logo" />
         <h1>后端接口迁移平台</h1>
         <p>Admin Console</p>
       </div>
@@ -99,9 +101,15 @@ async function handleLogin(): Promise<void> {
 }
 
 .login-header h1 {
-  margin: 0;
+  margin: 12px 0 0;
   font-size: 24px;
   color: #1f2d3d;
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
 }
 
 .login-header p {

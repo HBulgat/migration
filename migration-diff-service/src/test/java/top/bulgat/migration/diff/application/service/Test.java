@@ -24,7 +24,7 @@ import top.bulgat.migration.diff.domain.repository.DiffRuleRepository;
 import top.bulgat.migration.diff.domain.service.AlertService;
 import top.bulgat.migration.diff.domain.service.DiffDomainService;
 
-class MigrationDiffServiceApplicationServiceTest {
+class Test {
 
     private DiffDomainService diffDomainService;
     private DiffRecordRepository diffRecordRepository;
@@ -41,7 +41,7 @@ class MigrationDiffServiceApplicationServiceTest {
         service = new DiffApplicationService(diffDomainService, diffRecordRepository, diffRuleRepository, alertService);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldThrowWhenMigrationKeyMissing() {
         ExecuteDiffCommand command = createCommand(
                 " ",
@@ -57,13 +57,13 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldThrowWhenCommandNull() {
         BizException exception = assertThrows(BizException.class, () -> service.executeDiff(null));
         assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldAllowBlankOldJson() {
         ExecuteDiffCommand command = createCommand(
                 "user.query",
@@ -82,7 +82,7 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(result, actual);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldAllowBlankNewJson() {
         ExecuteDiffCommand command = createCommand(
                 "user.query",
@@ -101,7 +101,7 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(result, actual);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldThrowWhenMigrationKeyTooLong() {
         String longMigrationKey = "x".repeat(129);
         ExecuteDiffCommand command = createCommand(
@@ -118,7 +118,7 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldThrowWhenMigrationKeyContainsSpace() {
         ExecuteDiffCommand command = createCommand(
                 "user query",
@@ -134,7 +134,7 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldThrowWhenMigrationKeyContainsTab() {
         ExecuteDiffCommand command = createCommand(
                 "user	query",
@@ -150,7 +150,7 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldThrowWhenCostTimeNegative() {
         ExecuteDiffCommand command = createCommand(
                 "user.query",
@@ -166,7 +166,7 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldThrowWhenNewCostTimeNegative() {
         ExecuteDiffCommand command = createCommand(
                 "user.query",
@@ -182,7 +182,7 @@ class MigrationDiffServiceApplicationServiceTest {
         assertEquals(ErrorCode.PARAM_ERROR.getCode(), exception.getCode());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     void executeDiff_shouldLoadRulesAndPersistRecord() {
         ExecuteDiffCommand command = createCommand(
                 "user.query",

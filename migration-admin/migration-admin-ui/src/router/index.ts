@@ -47,6 +47,18 @@ const router = createRouter({
           meta: { title: 'Diff规则', requiresAuth: true },
         },
         {
+          path: '/alert-rule',
+          name: 'alert-rule',
+          component: () => import('@/views/AlertRule/index.vue'),
+          meta: { title: '告警规则', requiresAuth: true },
+        },
+        {
+          path: '/alert-template',
+          name: 'alert-template',
+          component: () => import('@/views/alertTemplate/index.vue'),
+          meta: { title: '告警模板', requiresAuth: true },
+        },
+        {
           path: '/diff-record',
           name: 'diff-record',
           component: () => import('@/views/DiffRecord/index.vue'),

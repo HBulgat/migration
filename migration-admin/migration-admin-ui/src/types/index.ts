@@ -1,4 +1,4 @@
-﻿export interface ApiResult<T> {
+export interface ApiResult<T> {
   code: number
   message: string
   data: T
@@ -74,5 +74,28 @@ export interface AuthUserInfo {
 export interface LoginResponse {
   access_token: string
   user_info: AuthUserInfo
+}
+
+export interface AlertTemplate {
+  template_key: string
+  channel: 'FEISHU' | 'EMAIL'
+  name: string
+  template: Record<string, any>
+  create_time: string
+  update_time: string
+}
+
+export interface CreateAlertTemplateRequest {
+  template_key: string
+  channel: 'FEISHU' | 'EMAIL'
+  name: string
+  template: Record<string, any>
+}
+
+export interface UpdateAlertTemplateRequest {
+  template_key: string
+  channel: 'FEISHU' | 'EMAIL'
+  name: string
+  template: Record<string, any>
 }
 

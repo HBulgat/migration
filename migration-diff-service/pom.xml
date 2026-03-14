@@ -110,7 +110,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>top.bulgat.migration.diff.MigrationDiffServiceApplication</mainClass>
+                    <mainClass>top.bulgat.migration.diff.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>
