@@ -4,10 +4,7 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -41,12 +38,9 @@ build/
 application-dev.yml
 application-local.yml
 /migration-diff/logs/
-/.idea/
 /logs/
 .env.local
 .env.server
 /migration-admin/migration-admin-ui/node_modules/
-
-# Docker config
-.env
 /migration-admin/migration-admin-ui/dist/
+.env
