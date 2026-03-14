@@ -15,6 +15,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -114,7 +115,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
         Function<Object[], Object> newInvoker = invokeFunction(newMethod.target(), newMethod.method());
         BiFunction<Object[], Exception, Object> fallbackInvoker = fallbackMethod == null
                 ? null
-                : invokeFallbackFunction(fallbackMethod.target(), fallbackMethod.method());
+                : invokeFallbackFunction(fallbackMethod.target(), fallbackMethod.method(), entryMethod.getParameterCount());
 
         return client.wrap(oldInvoker, newInvoker, fallbackInvoker, paramHandler).apply(args);
     }
@@ -137,12 +138,16 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
      * @param method 降级方法
      * @return 降级调用函数
      */
-    private BiFunction<Object[], Exception, Object> invokeFallbackFunction(Object target, Method method) {
+    private BiFunction<Object[], Exception, Object> invokeFallbackFunction(Object target, Method method, int entryParamCount) {
         return (invocationArgs, ex) -> {
-            Object[] finalArgs = new Object[invocationArgs.length + 1];
-            System.arraycopy(invocationArgs, 0, finalArgs, 0, invocationArgs.length);
-            finalArgs[finalArgs.length - 1] = ex;
-            return invoke(target, method, finalArgs);
+            if (method.getParameterCount() == entryParamCount + 1) {
+                Object[] finalArgs = new Object[invocationArgs.length + 1];
+                System.arraycopy(invocationArgs, 0, finalArgs, 0, invocationArgs.length);
+                finalArgs[finalArgs.length - 1] = ex;
+                return invoke(target, method, finalArgs);
+            }
+            // 如果降级方法没有异常参数，则直接使用原参数调用。
+            return invoke(target, method, invocationArgs);
         };
     }
 
@@ -187,8 +192,9 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
             splitIndex = descriptor.lastIndexOf('.');
         }
 
+        Class<?> actualTargetClass = AopUtils.getTargetClass(defaultTarget);
         if (splitIndex < 0) {
-            Method method = resolveMethod(defaultTarget.getClass(), descriptor, entryTypes, fallbackMethod);
+            Method method = resolveMethod(actualTargetClass, descriptor, entryTypes, fallbackMethod);
             return new ResolvedMethod(defaultTarget, method);
         }
 
@@ -212,7 +218,8 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
             throw new IllegalStateException("bean not found: " + beanName, ex);
         }
 
-        Method method = resolveMethod(bean.getClass(), methodName, entryTypes, fallbackMethod);
+        Class<?> beanClass = AopUtils.getTargetClass(bean);
+        Method method = resolveMethod(beanClass, methodName, entryTypes, fallbackMethod);
         return new ResolvedMethod(bean, method);
     }
 
@@ -224,34 +231,42 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
             String methodName,
             Class<?>[] entryTypes,
             boolean fallbackMethod) {
-        if (!fallbackMethod) {
-            Method method = ReflectionUtils.findMethod(targetClass, methodName, entryTypes);
-            if (method != null) {
-                return method;
-            }
-        }
-
         Method[] methods = ReflectionUtils.getAllDeclaredMethods(targetClass);
-        int expectedLength = fallbackMethod ? entryTypes.length + 1 : entryTypes.length;
+        // 首先尝试精确匹配签名（不带异常参数）。
         for (Method candidate : methods) {
             if (!Objects.equals(candidate.getName(), methodName)) {
                 continue;
             }
-            if (candidate.getParameterCount() != expectedLength) {
+            if (candidate.getParameterCount() != entryTypes.length) {
                 continue;
             }
-            if (!matchEntryParams(candidate.getParameterTypes(), entryTypes)) {
-                continue;
+            if (matchEntryParams(candidate.getParameterTypes(), entryTypes)) {
+                return candidate;
             }
-            if (fallbackMethod) {
-                Class<?> tailType = candidate.getParameterTypes()[expectedLength - 1];
-                if (!Exception.class.isAssignableFrom(tailType) && !Throwable.class.isAssignableFrom(tailType)) {
+        }
+
+        // 如果没有精确匹配到原签名且是降级方法，尝试查找带异常参数的签名。
+        if (fallbackMethod) {
+            for (Method candidate : methods) {
+                if (!Objects.equals(candidate.getName(), methodName)) {
                     continue;
                 }
+                if (candidate.getParameterCount() != entryTypes.length + 1) {
+                    continue;
+                }
+                if (!matchEntryParams(candidate.getParameterTypes(), entryTypes)) {
+                    continue;
+                }
+                Class<?> tailType = candidate.getParameterTypes()[entryTypes.length];
+                if (Throwable.class.isAssignableFrom(tailType)) {
+                    return candidate;
+                }
             }
-            return candidate;
         }
-        throw new IllegalStateException("method not found: " + methodName + " in " + targetClass.getName());
+
+        throw new IllegalStateException(String.format(
+                "method not found: %s with params %s in %s (fallbackMode=%b)",
+                methodName, java.util.Arrays.toString(entryTypes), targetClass.getName(), fallbackMethod));
     }
 
     /**

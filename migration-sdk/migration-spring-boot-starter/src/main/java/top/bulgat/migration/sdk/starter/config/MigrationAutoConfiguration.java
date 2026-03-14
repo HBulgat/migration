@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.bulgat.migration.sdk.core.config.CachedConfigClient;
 import top.bulgat.migration.sdk.core.config.HttpConfigClient;
 import top.bulgat.migration.sdk.core.diff.DisruptorDiffServiceCaller;
 import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
@@ -29,7 +30,7 @@ public class MigrationAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ConfigClient configClient(MigrationProperties properties) {
-        return new HttpConfigClient(properties.toSdkProperties());
+        return new CachedConfigClient(new HttpConfigClient(properties.toSdkProperties()),5);
     }
 
     /**
