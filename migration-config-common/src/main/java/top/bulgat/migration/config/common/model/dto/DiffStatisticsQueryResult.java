@@ -1,4 +1,4 @@
-package top.bulgat.migration.config.common.dal;
+package top.bulgat.migration.config.common.model.dto;
 
 import lombok.Data;
 import java.time.LocalDateTime;

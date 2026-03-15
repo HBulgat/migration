@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import top.bulgat.common.base.util.JsonUtils;
 import top.bulgat.migration.admin.domain.model.DiffItem;
 import top.bulgat.migration.admin.domain.model.DiffRecord;
 import top.bulgat.migration.admin.domain.model.DiffStatisticsPoint;
@@ -21,7 +20,7 @@ import top.bulgat.migration.admin.domain.repository.DiffRecordRepository;
 import top.bulgat.migration.config.common.model.dataobject.DiffRecordDO;
 import top.bulgat.migration.config.common.model.enums.DiffType;
 import top.bulgat.migration.config.common.dal.DiffRecordDAO;
-import top.bulgat.migration.config.common.dal.DiffStatisticsQueryResult;
+import top.bulgat.migration.config.common.model.dto.DiffStatisticsQueryResult;
 
 /**
  * MybatisDiffRecordRepository 定义持久化访问能力。
