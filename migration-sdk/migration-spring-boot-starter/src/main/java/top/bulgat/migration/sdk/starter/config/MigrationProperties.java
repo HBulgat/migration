@@ -23,16 +23,16 @@ public class MigrationProperties {
                 private boolean enable=true;
                 private String address;
                 private String internalToken;
-                private Integer timeout;
-                private Boolean cacheEnable=false;
-                private Integer cacheRefreshIntervalSeconds;
+                private int timeout=5000;
+                private boolean cacheEnable=false;
+                private int cacheRefreshIntervalSeconds=30;
         }
         @Data
         @ConfigurationProperties(prefix = "migration.diff-service-client")
         public static class DiffServiceClientProperties {
                 private boolean enable=true;
                 private String address;
-//                private Integer timeout;
+                private int timeout=5000;
                 private String internalToken;
         }
 
@@ -53,14 +53,13 @@ public class MigrationProperties {
                         .configCenterInternalToken(configCenterClient ==null||StringUtils.isBlank(configCenterClient.internalToken)
                                         ?fromEnv.getConfigCenterInternalToken()
                                         : configCenterClient.internalToken)
-                        .configCenterTimeout(configCenterClient ==null|| configCenterClient.timeout==null|| configCenterClient.timeout<=0
+                        .configCenterTimeout(configCenterClient ==null||  configCenterClient.timeout<=0
                                         ? fromEnv.getConfigCenterTimeout()
                                         : configCenterClient.timeout)
                         .configCenterCacheEnable(configCenterClient==null
                                         ?fromEnv.getConfigCenterCacheEnable()
                                         :configCenterClient.cacheEnable)
-                        .configCenterCacheRefreshIntervalSeconds(configCenterClient ==null|| configCenterClient.cacheRefreshIntervalSeconds==null
-                                || configCenterClient.cacheRefreshIntervalSeconds<=0
+                        .configCenterCacheRefreshIntervalSeconds(configCenterClient ==null || configCenterClient.cacheRefreshIntervalSeconds<=0
                                         ?fromEnv.getConfigCenterCacheRefreshIntervalSeconds()
                                         : configCenterClient.cacheRefreshIntervalSeconds)
                         .diffServiceEnable(configCenterClient == null
@@ -72,6 +71,9 @@ public class MigrationProperties {
                         .diffServiceInternalToken(diffServiceClient == null || StringUtils.isBlank(diffServiceClient.internalToken)
                                         ? fromEnv.getDiffServiceInternalToken()
                                         : diffServiceClient.internalToken)
+                        .diffServiceTimeout(diffServiceClient==null||diffServiceClient.timeout<=0
+                                        ? fromEnv.getDiffServiceTimeout()
+                                        : diffServiceClient.timeout)
                         .build();
         }
 }

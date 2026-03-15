@@ -1,4 +1,4 @@
-package top.bulgat.migration.diff.interfaces.rest;
+package top.bulgat.migration.diff.interfaces.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

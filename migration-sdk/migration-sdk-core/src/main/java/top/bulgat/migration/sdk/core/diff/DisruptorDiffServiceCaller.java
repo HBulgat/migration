@@ -31,6 +31,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     private static final int RING_BUFFER_SIZE = 1024 * 1024;
 
     private final String diffServiceUrl;
+    private final String internalToken;
     private final CloseableHttpClient httpClient;
     private final Disruptor<DiffEvent> disruptor;
     private final RingBuffer<DiffEvent> ringBuffer;
@@ -41,7 +42,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
      * @param properties SDK 运行时配置
      */
     public DisruptorDiffServiceCaller(MigrationSdkProperties properties) {
-        this(trimTrailingSlash(properties.getDiffServiceAddress()), createHttpClient(properties.getConfigCenterCacheRefreshIntervalSeconds()));
+        this(trimTrailingSlash(properties.getDiffServiceAddress()), createHttpClient(properties.getDiffServiceTimeout()),properties.getDiffServiceInternalToken());
     }
 
     /**
@@ -50,10 +51,10 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
      * @param diffServiceUrl Diff 服务地址
      * @param httpClient     HTTP 客户端
      */
-    DisruptorDiffServiceCaller(String diffServiceUrl, CloseableHttpClient httpClient) {
+    DisruptorDiffServiceCaller(String diffServiceUrl, CloseableHttpClient httpClient,String internalToken) {
         this.diffServiceUrl = trimTrailingSlash(diffServiceUrl);
         this.httpClient = httpClient;
-
+        this.internalToken=internalToken;
         this.disruptor = new Disruptor<>(
                 DiffEvent::new,
                 RING_BUFFER_SIZE,
@@ -134,7 +135,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
         HttpPost post = new HttpPost(diffServiceUrl + "/api/v1/diff");
         post.setEntity(new StringEntity(payload.toJSONString(), StandardCharsets.UTF_8));
         post.setHeader("Content-Type", "application/json");
-
+        post.setHeader("X-Internal-Token", internalToken);
         try (CloseableHttpResponse response = httpClient.execute(post)) {
             int status = response.getStatusLine().getStatusCode();
             if (status >= 400) {

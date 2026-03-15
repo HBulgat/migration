@@ -39,17 +39,20 @@ public class MigrationSdkProperties {
     public static final String ENV_DIFF_SERVICE_ADDRESS = "ENV_DIFF_SERVICE_ADDRESS";
     /** Diff 服务内部令牌环境变量。 */
     public static final String ENV_DIFF_SERVICE_INTERNAL_TOKEN = "ENV_DIFF_SERVICE_INTERNAL_TOKEN";
+    /** Diff 服务超时时间*/
+    public static final String ENV_DIFF_SERVICE_TIMEOUT="ENV_DIFF_SERVICE_TIMEOUT";
 
     private Boolean configCenterEnable;
     private String configCenterAddress;
     private String configCenterInternalToken;
     private Boolean configCenterCacheEnable;
-    private int configCenterCacheRefreshIntervalSeconds;
-    private int configCenterTimeout;
+    private Integer configCenterCacheRefreshIntervalSeconds;
+    private Integer configCenterTimeout;
 
     private Boolean diffServiceEnable=true;
     private String diffServiceAddress;
     private String diffServiceInternalToken;
+    private Integer diffServiceTimeout;
 
     /**
      * 从环境变量构建配置。
@@ -67,6 +70,7 @@ public class MigrationSdkProperties {
                 .diffServiceAddress(resolve(ENV_DIFF_SERVICE_ADDRESS, "http://localhost:8081"))
                 .diffServiceInternalToken(resolve(ENV_DIFF_SERVICE_INTERNAL_TOKEN, "ENV_DIFF_SERVICE_INTERNAL_TOKEN"))
                 .diffServiceEnable(resolveBoolean(ENV_DIFF_SERVICE_ENABLE,null))
+                .diffServiceTimeout(resolveInteger(ENV_DIFF_SERVICE_TIMEOUT,null))
                 .build();
     }
 

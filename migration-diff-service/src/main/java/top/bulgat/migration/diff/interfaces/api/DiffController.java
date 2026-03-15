@@ -1,4 +1,4 @@
-package top.bulgat.migration.diff.interfaces.rest;
+package top.bulgat.migration.diff.interfaces.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
