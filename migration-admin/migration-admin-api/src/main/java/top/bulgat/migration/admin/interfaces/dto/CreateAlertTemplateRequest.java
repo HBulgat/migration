@@ -1,5 +1,6 @@
 package top.bulgat.migration.admin.interfaces.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import top.bulgat.common.notice.NoticeChannel;
 public class CreateAlertTemplateRequest {
 
     @NotBlank(message = "templateKey cannot be black")
+    @JsonProperty("template_key")
     private String templateKey;
 
     @NotNull(message = "channel cannot be null")

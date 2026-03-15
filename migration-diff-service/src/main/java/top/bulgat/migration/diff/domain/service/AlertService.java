@@ -109,6 +109,7 @@ public class AlertService {
             }
 
             String renderedJsonStr = renderTemplate(rawJsonStr, variables);
+            log.info("[AlertService::sendFeishu] renderedJsonStr={}",renderedJsonStr);
             FeishuMessage feishuMsg = objectMapper.readValue(renderedJsonStr, FeishuMessage.class);
 
             for (String webhookUrl : rule.receivers()) {

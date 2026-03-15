@@ -55,14 +55,22 @@ public class DiffDomainService {
     public DiffResult execute(DiffRequest request, List<DiffRule> rules) {
         long start = System.currentTimeMillis();
         log.info("diff.domain start migrationKey={}, ruleCount={}", request.getMigrationKey(), rules.size());
+
+        List<DiffRule> sortedRules = rules;
+        if (rules != null && !rules.isEmpty()) {
+            sortedRules = new ArrayList<>(rules);
+            sortedRules.sort(Comparator.comparing(DiffRule::weight, Comparator.nullsLast(Comparator.reverseOrder())));
+        }
+
         JsonNode oldNode = readJson(request.getOldJson());
+
         JsonNode newNode = readJson(request.getNewJson());
 
-        applySortRules(oldNode, rules);
-        applySortRules(newNode, rules);
+        applySortRules(oldNode, sortedRules);
+        applySortRules(newNode, sortedRules);
 
         List<DiffItem> rawDiffItems = createPatchDiff(oldNode, newNode);
-        List<DiffItem> filteredItems = applyRules(rawDiffItems, rules);
+        List<DiffItem> filteredItems = applyRules(rawDiffItems, sortedRules);
         long costTimeMs = System.currentTimeMillis() - start;
         log.info("diff.domain done migrationKey={}, rawDiffCount={}, filteredDiffCount={}, costTimeMs={}",
                 request.getMigrationKey(), rawDiffItems.size(), filteredItems.size(), costTimeMs);

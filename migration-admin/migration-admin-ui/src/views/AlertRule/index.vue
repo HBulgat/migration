@@ -131,7 +131,7 @@ onMounted(async () => {
             @change="fetchData"
           >
             <el-option label="飞书" value="FEISHU" />
-            <el-option label="邮件" value="EMAIL" />
+            <el-option label="邮件" value="EMAIL" disabled />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -164,9 +164,11 @@ onMounted(async () => {
         <template #default="{ row }">
           <div class="receivers-wrap">
             <template v-for="(receiver, idx) in row.receivers" :key="idx">
-              <el-tag v-if="idx < 2" size="small" class="receiver-tag" type="info">
-                {{ receiver }}
-              </el-tag>
+              <el-tooltip v-if="idx < 2" :content="receiver" placement="top" effect="dark">
+                <el-tag size="small" class="receiver-tag" type="info">
+                  {{ receiver }}
+                </el-tag>
+              </el-tooltip>
             </template>
             <el-tooltip v-if="row.receivers && row.receivers.length > 2" effect="dark" placement="top">
               <template #content>
@@ -224,9 +226,16 @@ onMounted(async () => {
 }
 
 .receiver-tag {
-  max-width: 140px;
+  max-width: 260px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+:deep(.receiver-tag .el-tag__content) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
 }
 </style>

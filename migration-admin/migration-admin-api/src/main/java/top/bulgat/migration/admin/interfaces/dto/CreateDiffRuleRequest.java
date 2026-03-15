@@ -25,4 +25,8 @@ public class CreateDiffRuleRequest {
     @NotNull
     @JsonProperty("enable")
     private Boolean enable;
+
+    @JsonProperty("weight")
+    private Integer weight;
 }
+

@@ -8,6 +8,8 @@ import java.time.LocalDate;
 public record CountDiffRecordCommand(
         String migrationKey,
         Integer hasDiff,
+        Integer migrationStatus,
+        String traceId,
         LocalDate startDate,
         LocalDate endDate) {
 }

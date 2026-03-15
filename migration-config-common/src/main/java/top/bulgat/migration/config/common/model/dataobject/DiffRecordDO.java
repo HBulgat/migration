@@ -53,7 +53,7 @@ public class DiffRecordDO {
     @TableField("new_request_params")
     private String newRequestParams;
     @TableField("migration_status")
-    private Integer MigrationTaskStatus;
+    private Integer migrationStatus;
     @TableField("grayscale_rules")
     private String grayscaleRules;
     @TableField("grayscale_hit")

@@ -52,6 +52,7 @@ public class DiffRuleApplicationService {
                 command.fieldPath(),
                 command.ruleValue(),
                 command.enable(),
+                command.weight(),
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
@@ -69,7 +70,7 @@ public class DiffRuleApplicationService {
         String newValue = command.ruleValue() != null ? command.ruleValue() : rule.getRuleValue();
         
         domainService.validateRule(newType, newPath, newValue);
-        rule.update(newType, newPath, newValue, command.enable());
+        rule.update(newType, newPath, newValue, command.enable(), command.weight());
         repository.save(rule);
     }
 
@@ -99,7 +100,8 @@ public class DiffRuleApplicationService {
 
         List<DiffRule> rules = repository.findByMigrationKey(command.migrationKey());
         return rules.stream()
-                .sorted(Comparator.comparing(DiffRule::getCreateTime).reversed())
+                .sorted(Comparator.comparing(DiffRule::getWeight, Comparator.nullsLast(Comparator.reverseOrder()))
+                        .thenComparing(Comparator.comparing(DiffRule::getCreateTime).reversed()))
                 .skip((long) (command.page() - 1) * command.pageSize())
                 .limit(command.pageSize())
                 .collect(Collectors.toList());

@@ -19,19 +19,21 @@ public class DiffRule {
     private boolean enable;
     private final LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private Integer weight;
 
-    public DiffRule(String migrationKey, String ruleId, DiffRuleType ruleType, String fieldPath, String ruleValue, boolean enable, LocalDateTime createTime, LocalDateTime updateTime) {
+    public DiffRule(String migrationKey, String ruleId, DiffRuleType ruleType, String fieldPath, String ruleValue, boolean enable, Integer weight, LocalDateTime createTime, LocalDateTime updateTime) {
         this.migrationKey = migrationKey;
         this.ruleId = ruleId;
         this.ruleType = ruleType;
         this.fieldPath = fieldPath;
         this.ruleValue = ruleValue;
         this.enable = enable;
+        this.weight = weight;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
 
-    public void update(DiffRuleType ruleType, String fieldPath, String ruleValue, Boolean enable) {
+    public void update(DiffRuleType ruleType, String fieldPath, String ruleValue, Boolean enable, Integer weight) {
         boolean changed = false;
         if (ruleType != null && this.ruleType != ruleType) {
             this.ruleType = ruleType;
@@ -47,6 +49,10 @@ public class DiffRule {
         }
         if (enable != null && this.enable != enable) {
             this.enable = enable;
+            changed = true;
+        }
+        if (weight != null && !weight.equals(this.weight)) {
+            this.weight = weight;
             changed = true;
         }
         if (changed) {

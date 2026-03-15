@@ -20,18 +20,19 @@ public class NoticeConfig {
         return new FeishuNoticeSender(new OkHttpClient(),objectMapper);
     }
 
-    @Bean
-    @ConfigurationProperties(prefix = "migration-diff.notice.email")
-    public EmailSenderMeta emailSenderMeta(){
-        return new EmailSenderMeta();
-    }
-    @Bean
-    public EmailNoticeSender emailNoticeSender(EmailSenderMeta emailSenderMeta){
-        return new EmailNoticeSender(emailSenderMeta);
-    }
+//    @Bean
+//    @ConfigurationProperties(prefix = "migration-diff.notice.email")
+//    public EmailSenderMeta emailSenderMeta(){
+//        return new EmailSenderMeta();
+//    }
+
+//    @Bean
+//    public EmailNoticeSender emailNoticeSender(EmailSenderMeta emailSenderMeta){
+//        return new EmailNoticeSender(emailSenderMeta);
+//    }
 
     @Bean
-    public NoticeService noticeService(EmailNoticeSender emailNoticeSender,FeishuNoticeSender feishuNoticeSender){
-        return new NoticeService(List.of(emailNoticeSender,feishuNoticeSender));
+    public NoticeService noticeService(FeishuNoticeSender feishuNoticeSender){
+        return new NoticeService(List.of(feishuNoticeSender));
     }
 }

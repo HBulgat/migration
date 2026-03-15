@@ -55,7 +55,7 @@ const router = createRouter({
         {
           path: '/alert-template',
           name: 'alert-template',
-          component: () => import('@/views/alertTemplate/index.vue'),
+          component: () => import('@/views/AlertTemplate/index.vue'),
           meta: { title: '告警模板', requiresAuth: true },
         },
         {

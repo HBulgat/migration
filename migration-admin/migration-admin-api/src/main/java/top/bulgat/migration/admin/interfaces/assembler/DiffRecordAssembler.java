@@ -1,16 +1,19 @@
 package top.bulgat.migration.admin.interfaces.assembler;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 import top.bulgat.migration.admin.application.command.CountDiffRecordCommand;
 import top.bulgat.migration.admin.application.command.DetailDiffRecordCommand;
 import top.bulgat.migration.admin.application.command.ListDiffRecordCommand;
 import top.bulgat.migration.admin.application.command.StatisticsDiffRecordCommand;
-import top.bulgat.migration.admin.application.service.DiffRecordQueryApplicationService;
 import top.bulgat.migration.admin.domain.model.DiffItem;
 import top.bulgat.migration.admin.domain.model.DiffRecord;
+import top.bulgat.migration.admin.domain.model.DiffStatisticsPoint;
+import top.bulgat.migration.admin.domain.model.StatisticsGranularity;
 import top.bulgat.migration.admin.interfaces.dto.DiffItemResponse;
 import top.bulgat.migration.admin.interfaces.dto.DiffRecordResponse;
 import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
@@ -36,11 +39,13 @@ public class DiffRecordAssembler {
     public ListDiffRecordCommand toListCommand(
             String migrationKey,
             Integer hasDiff,
+            Integer migrationStatus,
+            String traceId,
             LocalDate startDate,
             LocalDate endDate,
             int page,
             int pageSize) {
-        return new ListDiffRecordCommand(migrationKey, hasDiff, startDate, endDate, page, pageSize);
+        return new ListDiffRecordCommand(migrationKey, hasDiff, migrationStatus, traceId, startDate, endDate, page, pageSize);
     }
 
     /**
@@ -54,9 +59,11 @@ public class DiffRecordAssembler {
     public CountDiffRecordCommand toCountCommand(
             String migrationKey,
             Integer hasDiff,
+            Integer migrationStatus,
+            String traceId,
             LocalDate startDate,
             LocalDate endDate) {
-        return new CountDiffRecordCommand(migrationKey, hasDiff, startDate, endDate);
+        return new CountDiffRecordCommand(migrationKey, hasDiff, migrationStatus, traceId, startDate, endDate);
     }
 
     /**
@@ -73,13 +80,11 @@ public class DiffRecordAssembler {
      * @param migrationKey 迁移标识。
      * @param startDate 开始时间。
      * @param endDate 结束时间。
+     * @param granularity 粒度。
      * @return 返回结果。
      */
-    public StatisticsDiffRecordCommand toStatisticsCommand(
-            String migrationKey,
-            LocalDate startDate,
-            LocalDate endDate) {
-        return new StatisticsDiffRecordCommand(migrationKey, startDate, endDate);
+    public StatisticsDiffRecordCommand toStatisticsCommand(String migrationKey, LocalDateTime startDate, LocalDateTime endDate, Integer migrationStatus, String granularity) {
+        return new StatisticsDiffRecordCommand(migrationKey, startDate, endDate, migrationStatus, StatisticsGranularity.of(granularity));
     }
 
     /**
@@ -101,6 +106,7 @@ public class DiffRecordAssembler {
                 record.getOldCostTimeMs(),
                 record.getNewCostTimeMs(),
                 record.getTotalCostTimeMs(),
+                record.getMigrationTaskStatus(),
                 record.getCreateTime());
     }
 
@@ -114,17 +120,22 @@ public class DiffRecordAssembler {
     }
 
     /**
-     * 执行 toStatisticsResponse 业务逻辑。
-     * @param statistics 方法参数。
-     * @return 返回结果。
+     * 将领域时序点列表转换为响应 DTO。
+     * @param points 统计点列表
+     * @return 响应 DTO
      */
-    public DiffStatisticsResponse toStatisticsResponse(DiffRecordQueryApplicationService.DiffStatistics statistics) {
-        return new DiffStatisticsResponse(
-                statistics.totalCount(),
-                statistics.diffCount(),
-                statistics.diffRate(),
-                statistics.avgOldCostTime(),
-                statistics.avgNewCostTime());
+    public DiffStatisticsResponse toStatisticsResponse(List<DiffStatisticsPoint> points, StatisticsGranularity granularity) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(granularity.getFormat());
+        List<DiffStatisticsResponse.DiffStatisticsPointResponse> itemResponses = points.stream()
+                .map(p -> new DiffStatisticsResponse.DiffStatisticsPointResponse(
+                        p.timePoint().format(formatter),
+                        p.totalCount(),
+                        p.diffCount(),
+                        p.diffRate(),
+                        p.avgOldCostTime(),
+                        p.avgNewCostTime()))
+                .collect(Collectors.toList());
+        return new DiffStatisticsResponse(itemResponses);
     }
 
     private List<DiffItemResponse> toItemResponse(List<DiffItem> items) {

@@ -25,7 +25,11 @@ public class DiffRuleResponse {
     @JsonProperty("enable")
     private boolean enable;
 
+    @JsonProperty("weight")
+    private Integer weight;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+
     @JsonProperty("create_time")
     private LocalDateTime createTime;
 

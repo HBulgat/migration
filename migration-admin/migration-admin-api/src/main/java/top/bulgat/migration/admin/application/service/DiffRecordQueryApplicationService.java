@@ -1,9 +1,9 @@
 package top.bulgat.migration.admin.application.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,8 @@ import top.bulgat.migration.admin.application.command.DetailDiffRecordCommand;
 import top.bulgat.migration.admin.application.command.ListDiffRecordCommand;
 import top.bulgat.migration.admin.application.command.StatisticsDiffRecordCommand;
 import top.bulgat.migration.admin.domain.model.DiffRecord;
+import top.bulgat.migration.admin.domain.model.DiffStatisticsPoint;
+import top.bulgat.migration.admin.domain.model.StatisticsGranularity;
 import top.bulgat.migration.admin.domain.repository.DiffRecordRepository;
 import top.bulgat.migration.admin.domain.service.MigrationTaskDomainService;
 
@@ -45,12 +47,14 @@ public class DiffRecordQueryApplicationService {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "list command is required");
         }
-        log.info("diff_record.list start migrationKey={}, hasDiff={}, startDate={}, endDate={}, page={}, pageSize={}",
-                command.migrationKey(), command.hasDiff(), command.startDate(), command.endDate(), command.page(),
+        log.info("diff_record.list start migrationKey={}, hasDiff={}, migrationStatus={}, startDate={}, endDate={}, page={}, pageSize={}",
+                command.migrationKey(), command.hasDiff(), command.migrationStatus(), command.startDate(), command.endDate(), command.page(),
                 command.pageSize());
         return doList(
                 command.migrationKey(),
                 command.hasDiff(),
+                command.migrationStatus(),
+                command.traceId(),
                 command.startDate(),
                 command.endDate(),
                 command.page(),
@@ -67,9 +71,9 @@ public class DiffRecordQueryApplicationService {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "count command is required");
         }
-        log.info("diff_record.count start migrationKey={}, hasDiff={}, startDate={}, endDate={}",
-                command.migrationKey(), command.hasDiff(), command.startDate(), command.endDate());
-        return doCount(command.migrationKey(), command.hasDiff(), command.startDate(), command.endDate());
+        log.info("diff_record.count start migrationKey={}, hasDiff={}, migrationStatus={}, traceId={}, startDate={}, endDate={}",
+                command.migrationKey(), command.hasDiff(), command.migrationStatus(), command.traceId(), command.startDate(), command.endDate());
+        return doCount(command.migrationKey(), command.hasDiff(), command.migrationStatus(), command.traceId(), command.startDate(), command.endDate());
     }
 
     /**
@@ -87,23 +91,25 @@ public class DiffRecordQueryApplicationService {
     }
 
     /**
-     * 统计Diff概览数据。
+     * 统计Diff时序数据。
      *
      * @param command 统计查询命令
-     * @return 统计结果
+     * @return 统计结果列表
      */
-    public DiffStatistics statistics(StatisticsDiffRecordCommand command) {
+    public List<DiffStatisticsPoint> statistics(StatisticsDiffRecordCommand command) {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "statistics command is required");
         }
-        log.info("diff_record.statistics start migrationKey={}, startDate={}, endDate={}",
-                command.migrationKey(), command.startDate(), command.endDate());
-        return doStatistics(command.migrationKey(), command.startDate(), command.endDate());
+        log.info("diff_record.statistics start migrationKey={}, startDate={}, endDate={}, status={}, granularity={}",
+                command.migrationKey(), command.startDate(), command.endDate(), command.migrationStatus(), command.granularity());
+        return doStatistics(command.migrationKey(), command.startDate(), command.endDate(), command.migrationStatus(), command.granularity());
     }
 
     private List<DiffRecord> doList(
             String migrationKey,
             Integer hasDiff,
+            Integer migrationStatus,
+            String traceId,
             LocalDate startDate,
             LocalDate endDate,
             int page,
@@ -112,30 +118,34 @@ public class DiffRecordQueryApplicationService {
         validatePagination(page, pageSize);
         validateHasDiffFilter(hasDiff);
         validateDateRange(startDate, endDate);
+        
         List<DiffRecord> records = repository.findByCondition(
                         migrationKey,
                         hasDiff,
+                        migrationStatus,
+                        traceId,
                         startDate == null ? null : startDate.atStartOfDay(),
-                        endDate == null ? null : endDate.atTime(LocalTime.MAX))
-                .stream()
-                .skip((long) (page - 1) * pageSize)
-                .limit(pageSize)
-                .collect(Collectors.toList());
+                        endDate == null ? null : endDate.atTime(LocalTime.MAX),
+                        page,
+                        pageSize,
+                        false); // 列表查询不含大字段
+        
         log.info("diff_record.list done migrationKey={}, page={}, pageSize={}, resultSize={}",
                 migrationKey, page, pageSize, records.size());
         return records;
     }
 
-    private long doCount(String migrationKey, Integer hasDiff, LocalDate startDate, LocalDate endDate) {
+    private long doCount(String migrationKey, Integer hasDiff, Integer migrationStatus, String traceId, LocalDate startDate, LocalDate endDate) {
         validateMigrationKey(migrationKey);
         validateHasDiffFilter(hasDiff);
         validateDateRange(startDate, endDate);
-        long total = repository.findByCondition(
+        long total = repository.countByCondition(
                         migrationKey,
                         hasDiff,
+                        migrationStatus,
+                        traceId,
                         startDate == null ? null : startDate.atStartOfDay(),
-                        endDate == null ? null : endDate.atTime(LocalTime.MAX))
-                .size();
+                        endDate == null ? null : endDate.atTime(LocalTime.MAX));
         log.info("diff_record.count done migrationKey={}, total={}", migrationKey, total);
         return total;
     }
@@ -150,32 +160,18 @@ public class DiffRecordQueryApplicationService {
         return record;
     }
 
-    private DiffStatistics doStatistics(String migrationKey, LocalDate startDate, LocalDate endDate) {
+    private List<DiffStatisticsPoint> doStatistics(String migrationKey, LocalDateTime startDate, LocalDateTime endDate, Integer status, StatisticsGranularity granularity) {
         validateMigrationKey(migrationKey);
-        validateDateRange(startDate, endDate);
-        List<DiffRecord> records = repository.findByCondition(
+        StatisticsGranularity targetGranularity = granularity != null ? granularity : StatisticsGranularity.HOUR;
+        List<DiffStatisticsPoint> points = repository.calculateTrendStatistics(
                 migrationKey,
-                null,
-                startDate == null ? null : startDate.atStartOfDay(),
-                endDate == null ? null : endDate.atTime(LocalTime.MAX));
-        long total = records.size();
-        long diffCount = records.stream().filter(DiffRecord::isHasDiff).count();
-        double diffRate = total == 0 ? 0D : (double) diffCount / total;
-        int avgOld = average(records.stream().map(DiffRecord::getOldCostTimeMs).collect(Collectors.toList()));
-        int avgNew = average(records.stream().map(DiffRecord::getNewCostTimeMs).collect(Collectors.toList()));
-        log.info("diff_record.statistics done migrationKey={}, totalCount={}, diffCount={}, diffRate={}",
-                migrationKey, total, diffCount, diffRate);
-        return new DiffStatistics(total, diffCount, diffRate, avgOld, avgNew);
+                startDate,
+                endDate,
+                status,
+                targetGranularity.getSeconds());
+        return points;
     }
 
-    private int average(List<Integer> values) {
-        List<Integer> valid = values.stream().filter(v -> v != null).collect(Collectors.toList());
-        if (valid.isEmpty()) {
-            return 0;
-        }
-        int sum = valid.stream().mapToInt(Integer::intValue).sum();
-        return sum / valid.size();
-    }
 
     private void validateDateRange(LocalDate startDate, LocalDate endDate) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
@@ -209,14 +205,4 @@ public class DiffRecordQueryApplicationService {
         }
     }
 
-    /**
-     * Diff统计结果。
-     */
-    public record DiffStatistics(
-            long totalCount,
-            long diffCount,
-            double diffRate,
-            int avgOldCostTime,
-            int avgNewCostTime) {
-    }
 }

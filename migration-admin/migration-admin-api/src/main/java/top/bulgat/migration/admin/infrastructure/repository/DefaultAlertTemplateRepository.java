@@ -23,7 +23,7 @@ public class DefaultAlertTemplateRepository implements AlertTemplateRepository {
     public AlertTemplate findByTemplateKey(String templateKey) {
         Map<String, AlertTemplateConfig> templateConfigMap = alertTemplateConfigDAO.findAll();
         if (templateConfigMap.containsKey(templateKey)){
-            return this.toEntity(templateConfigMap.get(templateKey));
+            return this.toEntity(templateKey,templateConfigMap.get(templateKey));
         }
         return null;
     }
@@ -39,16 +39,16 @@ public class DefaultAlertTemplateRepository implements AlertTemplateRepository {
     public java.util.List<AlertTemplate> findAll() {
         return alertTemplateConfigDAO.findAll().entrySet().stream()
                 .map(entry -> {
-                    AlertTemplate template = this.toEntity(entry.getValue());
+                    AlertTemplate template = this.toEntity(entry.getKey(),entry.getValue());
                     template.initTemplateKey(entry.getKey());
                     return template;
                 })
                 .collect(java.util.stream.Collectors.toList());
     }
 
-    private AlertTemplate toEntity(AlertTemplateConfig config) {
+    private AlertTemplate toEntity(String templateKey,AlertTemplateConfig config) {
         return new AlertTemplate(
-                null, // Key will be populated separately if needed, though DAO maps this 
+                templateKey, // Key will be populated separately if needed, though DAO maps this
                 NoticeChannel.fromValue(config.channel()),
                 config.name(),
                 config.template(),

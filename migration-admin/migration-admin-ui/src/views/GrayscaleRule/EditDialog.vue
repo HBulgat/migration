@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
@@ -33,6 +33,7 @@ const formModel = reactive<CreateGrayscaleRulePayload & { rule_id: string }>({
   rule_type: 'PERCENTAGE',
   rule_value: '',
   enable: true,
+  weight: 0,
   rule_id: '',
 })
 
@@ -90,6 +91,7 @@ function resetForm(): void {
   formModel.rule_type = 'PERCENTAGE'
   formModel.rule_value = ''
   formModel.enable = true
+  formModel.weight = 0
 }
 
 watch(
@@ -105,6 +107,7 @@ watch(
       formModel.rule_type = props.rule.rule_type
       formModel.rule_value = props.rule.rule_value
       formModel.enable = props.rule.enable
+      formModel.weight = props.rule.weight || 0
       return
     }
 
@@ -130,6 +133,7 @@ async function handleSubmit(): Promise<void> {
         rule_type: formModel.rule_type,
         rule_value: formModel.rule_value.trim(),
         enable: formModel.enable,
+        weight: formModel.weight,
       })
       ElMessage.success('灰度规则创建成功')
     } else {
@@ -139,6 +143,7 @@ async function handleSubmit(): Promise<void> {
         rule_type: formModel.rule_type,
         rule_value: formModel.rule_value.trim(),
         enable: formModel.enable,
+        weight: formModel.weight,
       })
       ElMessage.success('灰度规则更新成功')
     }
@@ -196,6 +201,11 @@ async function handleSubmit(): Promise<void> {
 
       <el-form-item label="启用状态">
         <el-switch v-model="formModel.enable" />
+      </el-form-item>
+
+      <el-form-item label="规则权重">
+        <el-input-number v-model="formModel.weight" :min="0" :max="9999" style="width: 100%" />
+        <div class="tip">数值越大优先级越高，相同权重按创建时间倒序。</div>
       </el-form-item>
 
       <el-alert

@@ -8,5 +8,7 @@ public record UpdateGrayscaleRuleCommand(
         String ruleId,
         String ruleType,
         String ruleValue,
-        Boolean enable) {
+        Boolean enable,
+        Integer weight) {
 }
+

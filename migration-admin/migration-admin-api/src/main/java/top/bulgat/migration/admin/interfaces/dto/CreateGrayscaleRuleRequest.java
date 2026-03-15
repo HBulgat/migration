@@ -16,6 +16,8 @@ public record CreateGrayscaleRuleRequest(
         @Pattern(regexp = "^\\S+$") String migrationKey,
         @JsonProperty("rule_type") @NotBlank String ruleType,
         @JsonProperty("rule_value") @NotBlank String ruleValue,
-        @JsonProperty("enable") @NotNull Boolean enable) {
+        @JsonProperty("enable") @NotNull Boolean enable,
+        @JsonProperty("weight") Integer weight) {
 }
+
 

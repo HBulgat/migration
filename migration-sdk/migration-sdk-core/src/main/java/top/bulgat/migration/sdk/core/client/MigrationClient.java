@@ -201,6 +201,7 @@ public class MigrationClient implements AutoCloseable {
                     .grayscaleRules(grayscaleRules)
                     .oldMethod(oldMethod)
                     .newMethod(newMethod)
+                    .migrationTaskStatus(status.getCode())
                     .fallbackMethod(fallbackMethod)
                     .paramHandler(paramHandler)
                     .args(args)

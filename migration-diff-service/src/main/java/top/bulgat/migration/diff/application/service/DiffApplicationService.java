@@ -65,7 +65,7 @@ public class DiffApplicationService {
                 command.newErrorMessage(),
                 command.oldRequestParams(),
                 command.newRequestParams(),
-                command.MigrationTaskStatus(),
+                command.migrationTaskStatus(),
                 command.grayscaleRules(),
                 command.grayscaleHit(),
                 command.fallbackTriggered());
@@ -73,6 +73,7 @@ public class DiffApplicationService {
         log.info("diff.execute rulesLoaded migrationKey={}, ruleCount={}", command.migrationKey(), rules.size());
         DiffResult result = domainService.execute(request, rules);
         diffRecordRepository.save(request, result);
+        log.info("request={}, result={}",request,result);
         alertService.alertIfNeeded(request, result);
         log.info("diff.execute done migrationKey={}, hasDiff={}, diffItemCount={}, costTimeMs={}",
                 command.migrationKey(), result.hasDiff(), result.getDiffItems().size(), result.getCostTimeMs());

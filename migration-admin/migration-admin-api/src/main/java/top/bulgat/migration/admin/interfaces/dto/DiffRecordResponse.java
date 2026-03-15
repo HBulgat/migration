@@ -20,6 +20,7 @@ public record DiffRecordResponse(
         @JsonProperty("old_cost_time_ms") Integer oldCostTimeMs,
         @JsonProperty("new_cost_time_ms") Integer newCostTimeMs,
         @JsonProperty("total_cost_time_ms") Integer totalCostTimeMs,
+        @JsonProperty("migration_status") Integer migrationStatus,
         @JsonProperty("create_time") LocalDateTime createTime) {
 }
 

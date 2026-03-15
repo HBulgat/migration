@@ -8,5 +8,7 @@ public record DiffRule(String migrationKey,
                        DiffRuleType ruleType,
                        String fieldPath,
                        String ruleValue,
-                       boolean enable) {
+                       boolean enable,
+                       Integer weight) {
 }
+

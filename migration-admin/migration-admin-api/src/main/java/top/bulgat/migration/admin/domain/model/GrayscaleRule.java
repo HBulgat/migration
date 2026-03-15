@@ -17,6 +17,7 @@ public class GrayscaleRule {
     private boolean enable;
     private final LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private Integer weight;
 
     /**
      * 使用当前时间创建规则。
@@ -26,8 +27,9 @@ public class GrayscaleRule {
             String migrationKey,
             GrayscaleRuleType ruleType,
             String ruleValue,
-            boolean enable) {
-        this(ruleId, migrationKey, ruleType, ruleValue, enable, LocalDateTime.now(), LocalDateTime.now());
+            boolean enable,
+            Integer weight) {
+        this(ruleId, migrationKey, ruleType, ruleValue, enable, weight, LocalDateTime.now(), LocalDateTime.now());
     }
 
     /**
@@ -39,6 +41,7 @@ public class GrayscaleRule {
             GrayscaleRuleType ruleType,
             String ruleValue,
             boolean enable,
+            Integer weight,
             LocalDateTime createTime,
             LocalDateTime updateTime) {
         this.ruleId = ruleId;
@@ -46,6 +49,7 @@ public class GrayscaleRule {
         this.ruleType = ruleType;
         this.ruleValue = ruleValue;
         this.enable = enable;
+        this.weight = weight;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
@@ -53,7 +57,7 @@ public class GrayscaleRule {
     /**
      * 部分更新规则字段。
      */
-    public void update(GrayscaleRuleType targetType, String targetValue, Boolean targetEnable) {
+    public void update(GrayscaleRuleType targetType, String targetValue, Boolean targetEnable, Integer targetWeight) {
         if (targetType != null) {
             this.ruleType = targetType;
         }
@@ -62,6 +66,9 @@ public class GrayscaleRule {
         }
         if (targetEnable != null) {
             this.enable = targetEnable;
+        }
+        if (targetWeight != null) {
+            this.weight = targetWeight;
         }
         this.updateTime = LocalDateTime.now();
     }

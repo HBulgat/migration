@@ -1,7 +1,8 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { getDiffTypeLabel, getDiffTypeTagType } from '@/constants'
 import { getDiffRecordDetail } from '@/api/diffRecord'
+import StatusTag from '@/components/StatusTag.vue'
 import DiffViewer from '@/components/DiffViewer.vue'
 import { formatCost, formatDateTime } from '@/utils/format'
 import type { DiffRecord } from '@/types'
@@ -70,6 +71,9 @@ watch(
               {{ detail.has_diff ? '有差异' : '无差异' }}
             </el-tag>
           </el-descriptions-item>
+          <el-descriptions-item label="迁移状态">
+            <StatusTag v-if="detail" :status="detail.migration_status" />
+          </el-descriptions-item>
           <el-descriptions-item label="差异数">{{ diffCount }}</el-descriptions-item>
           <el-descriptions-item label="旧接口耗时">{{ formatCost(detail.old_cost_time_ms) }}</el-descriptions-item>
           <el-descriptions-item label="新接口耗时">{{ formatCost(detail.new_cost_time_ms) }}</el-descriptions-item>
@@ -84,17 +88,17 @@ watch(
         </template>
 
         <el-table :data="detail.diff_results" border max-height="260">
-          <el-table-column prop="field_path" label="字段路径" min-width="200" />
-          <el-table-column label="差异类型" width="120">
+          <el-table-column prop="field_path" label="字段路径" min-width="180" />
+          <el-table-column label="差异类型" width="100">
             <template #default="scope">
               <el-tag :type="getDiffTypeTagType(scope.row.diff_type)" effect="light">
                 {{ getDiffTypeLabel(scope.row.diff_type) }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="old_value" label="旧值" min-width="160" show-overflow-tooltip />
-          <el-table-column prop="new_value" label="新值" min-width="160" show-overflow-tooltip />
-          <el-table-column label="操作" width="90" fixed="right">
+          <el-table-column prop="old_value" label="旧值" min-width="250" show-overflow-tooltip />
+          <el-table-column prop="new_value" label="新值" min-width="250" show-overflow-tooltip />
+          <el-table-column label="操作" width="80" fixed="right">
             <template #default="scope">
               <el-button link type="primary" @click="activePath = scope.row.field_path">定位</el-button>
             </template>

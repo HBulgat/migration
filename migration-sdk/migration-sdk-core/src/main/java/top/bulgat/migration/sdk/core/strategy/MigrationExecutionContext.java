@@ -33,7 +33,7 @@ public class MigrationExecutionContext<T> {
     private final DiffServiceCaller diffServiceCaller;
     private final GrayscaleMatcher grayscaleMatcher;
     private final ExecutorService executorService;
-    private final int MigrationTaskStatus;
+    private final int migrationTaskStatus;
 
     /**
      * 通过 ParamHandler 构建灰度匹配参数。

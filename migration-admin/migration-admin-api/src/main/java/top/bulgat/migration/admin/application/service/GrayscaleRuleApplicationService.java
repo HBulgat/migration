@@ -52,7 +52,7 @@ public class GrayscaleRuleApplicationService {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "create command is required");
         }
-        return doCreate(command.migrationKey(), command.ruleType(), command.ruleValue(), command.enable());
+        return doCreate(command.migrationKey(), command.ruleType(), command.ruleValue(), command.enable(), command.weight());
     }
 
     /**
@@ -70,7 +70,8 @@ public class GrayscaleRuleApplicationService {
                 command.ruleId(),
                 command.ruleType(),
                 command.ruleValue(),
-                command.enable());
+                command.enable(),
+                command.weight());
     }
 
     /**
@@ -134,7 +135,7 @@ public class GrayscaleRuleApplicationService {
         return doCount(command.migrationKey());
     }
 
-    private GrayscaleRule doCreate(String migrationKey, String ruleType, String ruleValue, boolean enable) {
+    private GrayscaleRule doCreate(String migrationKey, String ruleType, String ruleValue, boolean enable, Integer weight) {
         try {
             validateMigrationKey(migrationKey);
             migrationTaskApplicationService.getByMigrationKey(new QueryMigrationTaskCommand(migrationKey));
@@ -143,7 +144,8 @@ public class GrayscaleRuleApplicationService {
                     migrationKey,
                     GrayscaleRuleType.fromValue(ruleType),
                     ruleValue,
-                    enable);
+                    enable,
+                    weight);
             domainService.validateRule(rule);
             return repository.save(rule);
         } catch (IllegalArgumentException ex) {
@@ -151,7 +153,7 @@ public class GrayscaleRuleApplicationService {
         }
     }
 
-    private void doUpdate(String migrationKey, String ruleId, String ruleType, String ruleValue, Boolean enable) {
+    private void doUpdate(String migrationKey, String ruleId, String ruleType, String ruleValue, Boolean enable, Integer weight) {
         validateMigrationKey(migrationKey);
         if (ruleType == null && ruleValue == null && enable == null) {
             throw new BizException(
@@ -166,7 +168,7 @@ public class GrayscaleRuleApplicationService {
                         targetType == null ? existing.getRuleType() : targetType,
                         ruleValue == null ? existing.getRuleValue() : ruleValue);
             }
-            existing.update(targetType, ruleValue, enable);
+            existing.update(targetType, ruleValue, enable, weight);
             repository.save(existing);
         } catch (IllegalArgumentException ex) {
             throw new BizException(ErrorCode.PARAM_ERROR, ex.getMessage());
@@ -202,7 +204,8 @@ public class GrayscaleRuleApplicationService {
 
     private List<GrayscaleRule> doListAll(String migrationKey) {
         return repository.findByMigrationKey(migrationKey).stream()
-                .sorted(Comparator.comparing(GrayscaleRule::getUpdateTime).reversed())
+                .sorted(Comparator.comparing(GrayscaleRule::getWeight, Comparator.nullsLast(Comparator.reverseOrder()))
+                        .thenComparing(Comparator.comparing(GrayscaleRule::getUpdateTime).reversed()))
                 .collect(Collectors.toList());
     }
 

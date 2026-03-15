@@ -4,6 +4,7 @@ import { ElMessage, type FormInstance } from 'element-plus'
 import { createAlertRule, updateAlertRule, type AlertRule, type CreateAlertRuleRequest, type UpdateAlertRuleRequest } from '@/api/alertRule'
 import { alertTemplateApi } from '@/api/alertTemplate'
 import type { AlertTemplate } from '@/types'
+import VueMonacoEditor from '@guolao/vue-monaco-editor'
 
 const emit = defineEmits(['success'])
 
@@ -59,11 +60,25 @@ const receiverLabel = computed(() => {
   return formData.channel === 'FEISHU' ? 'Webhook URL' : '接收邮箱'
 })
 
-const receiverPlaceholder = computed(() => {
-  return formData.channel === 'FEISHU' 
-    ? '请输入完整的Webhook URL，多个地址请换行输入' 
-    : '请输入邮箱地址，多个地址请换行输入'
-})
+const editorOptions: any = {
+  theme: 'vs-light',
+  language: 'text', // URL/Email is plain text
+  minimap: { enabled: false },
+  lineNumbersMinChars: 3,
+  glyphMargin: false,
+  lineDecorationsWidth: 0,
+  scrollBeyondLastLine: false,
+  wordWrap: 'on',
+  fontSize: 13,
+  fontFamily: "'JetBrains Mono', Consolas, Monaco, monospace",
+  renderLineHighlight: 'all',
+  scrollbar: {
+    vertical: 'visible',
+    horizontal: 'visible',
+  },
+  tabSize: 2,
+  automaticLayout: true,
+}
 
 const open = async (migrationKey: string, row?: AlertRule) => {
   currentMigrationKey.value = migrationKey
@@ -210,12 +225,14 @@ watch(() => formData.channel, (newChannel) => {
       </el-form-item>
 
       <el-form-item :label="receiverLabel" prop="receivers">
-        <el-input
-          v-model="formData.receivers"
-          type="textarea"
-          :rows="4"
-          :placeholder="receiverPlaceholder"
-        />
+        <div class="editor-wrapper">
+          <vue-monaco-editor
+            v-model:value="formData.receivers"
+            theme="vs-light"
+            :options="editorOptions"
+            class="monaco-container"
+          />
+        </div>
         <div class="tip" v-if="formData.channel === 'FEISHU'">可以输入多个Webhook URL，每一行代表一个地址。</div>
         <div class="tip" v-else>可以输入多个邮箱地址，每一行代表一个地址。</div>
       </el-form-item>
@@ -239,6 +256,23 @@ watch(() => formData.channel, (newChannel) => {
 <style scoped>
 .edit-form {
   padding: 10px 20px 0 0;
+}
+.editor-wrapper {
+  width: 100%;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  resize: vertical;
+  height: 200px; /* Use fixed height for resizability and child filling */
+  min-height: 120px;
+}
+.editor-wrapper:hover {
+  border-color: #c0c4cc;
+}
+.monaco-container {
+  height: 100%;
+  width: 100%;
 }
 .tip {
   font-size: 12px;

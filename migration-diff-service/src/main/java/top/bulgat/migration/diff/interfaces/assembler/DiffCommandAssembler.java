@@ -35,7 +35,7 @@ public class DiffCommandAssembler {
                 request.newErrorMessage(),
                 request.oldRequestParams(),
                 request.newRequestParams(),
-                request.MigrationTaskStatus(),
+                request.migrationTaskStatus(),
                 request.grayscaleRules(),
                 request.grayscaleHit(),
                 request.fallbackTriggered());

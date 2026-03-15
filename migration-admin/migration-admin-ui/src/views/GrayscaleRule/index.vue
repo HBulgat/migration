@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { deleteGrayscaleRule, getGrayscaleRuleList, updateGrayscaleRuleEnable } from '@/api/grayscaleRule'
@@ -161,7 +161,11 @@ onMounted(async () => {
             {{ getGrayscaleRuleTypeLabel(scope.row.rule_type) }}
           </template>
         </el-table-column>
-        <el-table-column prop="rule_value" label="规则值" min-width="240" show-overflow-tooltip />
+        <el-table-column prop="weight" label="权重" width="80" align="center">
+          <template #default="{ row }">
+            <el-tag size="small" effect="plain">{{ row.weight || 0 }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="启用状态" width="120">
           <template #default="scope">
             <el-switch

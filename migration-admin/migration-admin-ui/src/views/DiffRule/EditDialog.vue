@@ -17,6 +17,7 @@ const formData = reactive({
   field_path: '',
   rule_value: '',
   enable: true,
+  weight: 0,
 })
 
 const rules = {
@@ -69,12 +70,14 @@ const open = (migrationKey: string, row?: DiffRule) => {
       formData.field_path = row.field_path
       formData.rule_value = row.rule_value || ''
       formData.enable = row.enable
+      formData.weight = row.weight || 0
     } else {
       formData.rule_id = ''
       formData.rule_type = 'IGNORE'
       formData.field_path = ''
       formData.rule_value = ''
       formData.enable = true
+      formData.weight = 0
     }
   })
 }
@@ -112,6 +115,7 @@ const handleSubmit = async () => {
             field_path: formData.field_path,
             rule_value: formData.rule_value,
             enable: formData.enable,
+            weight: formData.weight,
           }
           await updateDiffRule(req)
         } else {
@@ -121,6 +125,7 @@ const handleSubmit = async () => {
             field_path: formData.field_path,
             rule_value: formData.rule_value,
             enable: formData.enable,
+            weight: formData.weight,
           }
           await createDiffRule(req)
         }
@@ -196,6 +201,11 @@ defineExpose({
 
       <el-form-item label="是否启用" prop="enable">
         <el-switch v-model="formData.enable" />
+      </el-form-item>
+
+      <el-form-item label="规则权重" prop="weight">
+        <el-input-number v-model="formData.weight" :min="0" :max="9999" style="width: 100%" />
+        <div class="tip">数值越大优先级越高，相同权重按创建时间倒序。</div>
       </el-form-item>
     </el-form>
     

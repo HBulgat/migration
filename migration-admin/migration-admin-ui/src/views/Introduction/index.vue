@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="intro-container">
     <div class="header-section">
       <div class="header-content">
@@ -153,7 +153,7 @@
                 <p>在项目中引入 <code>migration-spring-boot-starter</code> 的 Maven 坐标，并在启动类增加 <code>@EnableMigration</code> 注解开启扫描：</p>
                 <vue-monaco-editor
                   v-model:value="codeSpringBoot"
-                  theme="vs-dark"
+                  theme="vs-light"
                   language="xml"
                   :options="editorOptions"
                   class="monaco-container"
@@ -169,7 +169,7 @@
                 <p>由于注解拦截在不同方法的参数结构各异，实现该接口可以告诉平台该取哪些参数做“灰度路由匹配”：</p>
 <vue-monaco-editor
                   v-model:value="codeParamHandler"
-                  theme="vs-dark"
+                  theme="vs-light"
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
@@ -185,7 +185,7 @@
                 <p>只需一个注解完成流量劫持。原先的方法体留空，将请求转交给实际的旧逻辑与新逻辑函数。</p>
 <vue-monaco-editor
                   v-model:value="codeMigration"
-                  theme="vs-dark"
+                  theme="vs-light"
                   language="java"
                   :options="editorOptions"
                   class="monaco-container"
@@ -198,7 +198,8 @@
               <div class="step-num">4</div>
               <div class="step-body">
                 <strong>享受控制台指点江山</strong>
-                <p>此时应用会定期从配置中心拉取 <code>user-login-api</code> 任务的状态。你现在可以通过左侧菜单，新建该任务，调整它在1至7的阶段流转，按需配置灰度和Diff规则。大盘与明细尽收眼底。</p>
+                <p>此时应用会
+                  从配置中心拉取 <code>user-login-api</code> 任务的状态。你现在可以通过左侧菜单，新建该任务，调整它在1至7的阶段流转，按需配置灰度和Diff规则。大盘与明细尽收眼底。</p>
               </div>
             </div>
           </div>
@@ -215,7 +216,7 @@
                 <p>在你的 Go 项目中获取 SDK 包：</p>
                 <vue-monaco-editor
                   v-model:value="codeGoClient"
-                  theme="vs-dark"
+                  theme="vs-light"
                   language="shell"
                   :options="editorOptions"
                   class="monaco-container"
@@ -231,7 +232,7 @@
                 <p>配置 Nacos 地址并初始化客户端，随后即可使用 <code>migration.Wrap</code> 封装你的新旧函数及提取规则。</p>
 <vue-monaco-editor
                   v-model:value="codeGoWrap"
-                  theme="vs-dark"
+                  theme="vs-light"
                   language="go"
                   :options="editorOptions"
                   class="monaco-container"
@@ -516,7 +517,7 @@ const activeTab = ref('value')
 }
 
 .monaco-container {
-  border-radius: 6px;
+  border-radius: 3px;
   overflow: hidden;
   box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
 }

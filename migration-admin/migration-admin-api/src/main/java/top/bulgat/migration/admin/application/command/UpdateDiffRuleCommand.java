@@ -6,5 +6,7 @@ public record UpdateDiffRuleCommand(
         String ruleType,
         String fieldPath,
         String ruleValue,
-        Boolean enable
+        Boolean enable,
+        Integer weight
 ) {}
+

@@ -19,4 +19,6 @@ public class GrayscaleConfig {
     private String ruleType;
     private String ruleValue;
     private Boolean enable;
+    private Integer weight;
 }
+

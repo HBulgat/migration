@@ -1,4 +1,4 @@
-﻿import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import type { DiffItem, DiffRecord, DiffStatistics, GrayscaleRule, MigrationTask, PageResult } from '@/types'
 
 interface MigrationTaskListParams {
@@ -147,6 +147,7 @@ function buildMockDiffRecords(): DiffRecord[] {
           new_cost_time_ms: newCost,
           total_cost_time_ms: oldCost + newCost,
           create_time: createTime.format('YYYY-MM-DDTHH:mm:ss'),
+          migration_status: (id % 7) + 1,
         })
 
         id += 1
@@ -493,12 +494,13 @@ export function statisticsDiffRecord(params: DiffStatisticsParams): Promise<Diff
     const avgNewCostTime =
       totalCount === 0 ? 0 : Math.round(list.reduce((sum, item) => sum + (item.new_cost_time_ms ?? 0), 0) / totalCount)
 
-    return {
-      total_count: totalCount,
-      diff_count: diffCount,
-      diff_rate: diffRate,
-      avg_old_cost_time: avgOldCostTime,
-      avg_new_cost_time: avgNewCostTime,
-    }
+      return {
+        total_count: totalCount,
+        diff_count: diffCount,
+        diff_rate: diffRate,
+        avg_old_cost_time: avgOldCostTime,
+        avg_new_cost_time: avgNewCostTime,
+        points: [],
+      }
   })
 }

@@ -50,8 +50,10 @@ public class DefaultDiffRuleRepository implements DiffRuleRepository {
                 DiffRuleType.fromValue(config.ruleType()),
                 config.fieldPath(),
                 config.ruleValue(),
-                true);
+                config.enable(),
+                config.weight() == null ? 0 : config.weight());
     }
+
 
     private String sanitizeReason(Exception ex) {
         if (ex == null || ex.getMessage() == null) {

@@ -79,6 +79,7 @@ public class DefaultGrayscaleRuleRepository implements GrayscaleRuleRepository {
                 GrayscaleRuleType.fromValue(config.ruleType()),
                 config.ruleValue(),
                 config.enable(),
+                config.weight() != null ? config.weight() : 0,
                 config.createTime() == null ? LocalDateTime.now() : config.createTime(),
                 config.updateTime() == null ? LocalDateTime.now() : config.updateTime());
     }
@@ -90,6 +91,7 @@ public class DefaultGrayscaleRuleRepository implements GrayscaleRuleRepository {
                 rule.getRuleType().name(),
                 rule.getRuleValue(),
                 rule.isEnable(),
+                rule.getWeight() != null ? rule.getWeight() : 0,
                 rule.getCreateTime() == null ? LocalDateTime.now() : rule.getCreateTime(),
                 rule.getUpdateTime() == null ? LocalDateTime.now() : rule.getUpdateTime());
     }

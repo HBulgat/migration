@@ -10,6 +10,7 @@ export interface DiffRule {
     field_path: string
     rule_value: string
     enable: boolean
+    weight: number
     create_time: string
     update_time: string
 }
@@ -20,7 +21,9 @@ export interface CreateDiffRuleRequest {
     field_path: string
     rule_value: string
     enable: boolean
+    weight: number
 }
+
 
 export interface UpdateDiffRuleRequest {
     migration_key: string
@@ -29,6 +32,7 @@ export interface UpdateDiffRuleRequest {
     field_path: string
     rule_value: string
     enable: boolean
+    weight: number
 }
 
 export interface UpdateDiffRuleEnableRequest {

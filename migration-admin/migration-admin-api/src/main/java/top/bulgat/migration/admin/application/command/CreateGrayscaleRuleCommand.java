@@ -7,5 +7,7 @@ public record CreateGrayscaleRuleCommand(
         String migrationKey,
         String ruleType,
         String ruleValue,
-        boolean enable) {
+        boolean enable,
+        Integer weight) {
 }
+

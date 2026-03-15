@@ -3,6 +3,8 @@ package top.bulgat.migration.admin.interfaces.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -10,13 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.bulgat.common.base.model.PageResult;
 import top.bulgat.common.base.model.Result;
+import top.bulgat.migration.admin.application.command.StatisticsDiffRecordCommand;
 import top.bulgat.migration.admin.application.service.DiffRecordQueryApplicationService;
+import top.bulgat.migration.admin.domain.model.DiffStatisticsPoint;
 import top.bulgat.migration.admin.interfaces.assembler.DiffRecordAssembler;
 import top.bulgat.migration.admin.interfaces.dto.DiffRecordResponse;
 import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
@@ -46,16 +47,18 @@ public class DiffRecordController {
     public Result<PageResult<DiffRecordResponse>> list(
             @RequestParam("migration_key") @NotBlank String migrationKey,
             @RequestParam(value = "has_diff", required = false) @Min(0) @Max(1) Integer hasDiff,
+            @RequestParam(value = "migration_status", required = false) Integer migrationStatus,
             @RequestParam(value = "start_date", required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(value = "end_date", required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+            @RequestParam(value = "trace_id", required = false) String traceId,
             @RequestParam(value = "page", defaultValue = "1") @Min(1) int page,
             @RequestParam(value = "page_size", defaultValue = "10") @Min(1) @Max(200) int pageSize) {
-        log.info("diff_record.list request migrationKey={}, hasDiff={}, startDate={}, endDate={}, page={}, pageSize={}",
-                migrationKey, hasDiff, startDate, endDate, page, pageSize);
-        var listCommand = assembler.toListCommand(migrationKey, hasDiff, startDate, endDate, page, pageSize);
-        var countCommand = assembler.toCountCommand(migrationKey, hasDiff, startDate, endDate);
+        log.info("diff_record.list request migrationKey={}, hasDiff={}, status={}, traceId={}, startDate={}, endDate={}, page={}, pageSize={}",
+                migrationKey, hasDiff, migrationStatus, traceId, startDate, endDate, page, pageSize);
+        var listCommand = assembler.toListCommand(migrationKey, hasDiff, migrationStatus, traceId, startDate, endDate, page, pageSize);
+        var countCommand = assembler.toCountCommand(migrationKey, hasDiff, migrationStatus, traceId, startDate, endDate);
         var diffRecordResponses = assembler.toResponseList(queryApplicationService.list(listCommand));
         long total = queryApplicationService.count(countCommand);
         log.info("diff_record.list response migrationKey={}, page={}, pageSize={}, total={}, listSize={}",
@@ -82,14 +85,14 @@ public class DiffRecordController {
     public Result<DiffStatisticsResponse> statistics(
             @RequestParam("migration_key") @NotBlank String migrationKey,
             @RequestParam(value = "start_date", required = false)
-            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime startDate,
             @RequestParam(value = "end_date", required = false)
-            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
-        log.info("diff_record.statistics request migrationKey={}, startDate={}, endDate={}", migrationKey, startDate, endDate);
-        DiffStatisticsResponse response = assembler.toStatisticsResponse(
-                queryApplicationService.statistics(assembler.toStatisticsCommand(migrationKey, startDate, endDate)));
-        log.info("diff_record.statistics response migrationKey={}, totalCount={}, diffCount={}, diffRate={}",
-                migrationKey, response.totalCount(), response.diffCount(), response.diffRate());
+            @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endDate,
+            @RequestParam(value = "migration_status", required = false) Integer migrationStatus,
+            @RequestParam(value = "granularity", defaultValue = "HOUR") String granularity) {
+        StatisticsDiffRecordCommand command = assembler.toStatisticsCommand(migrationKey, startDate, endDate, migrationStatus, granularity);
+        List<DiffStatisticsPoint> points = queryApplicationService.statistics(command);
+        DiffStatisticsResponse response = assembler.toStatisticsResponse(points, command.granularity());
         return Result.success(response);
     }
 }

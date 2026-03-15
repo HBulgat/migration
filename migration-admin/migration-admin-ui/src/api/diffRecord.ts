@@ -6,6 +6,8 @@ const DIFF_RECORD_BASE_PATH = '/api/v1/diff_record'
 export interface DiffRecordListParams {
   migration_key: string
   has_diff?: number
+  migration_status?: number
+  trace_id?: string
   start_date?: string
   end_date?: string
   page: number
@@ -14,8 +16,10 @@ export interface DiffRecordListParams {
 
 export interface DiffStatisticsParams {
   migration_key: string
+  migration_status?: number
   start_date?: string
   end_date?: string
+  granularity?: 'MINUTE' | 'HOUR' | 'DAY'
 }
 
 export const getDiffRecordList = (params: DiffRecordListParams): Promise<PageResult<DiffRecord>> =>
@@ -23,6 +27,8 @@ export const getDiffRecordList = (params: DiffRecordListParams): Promise<PageRes
     params: {
       migration_key: params.migration_key,
       has_diff: params.has_diff,
+      migration_status: params.migration_status,
+      trace_id: params.trace_id,
       start_date: params.start_date,
       end_date: params.end_date,
       page: params.page,
@@ -37,7 +43,9 @@ export const getDiffStatistics = (params: DiffStatisticsParams): Promise<DiffSta
   get<DiffStatistics>(`${DIFF_RECORD_BASE_PATH}/statistics`, {
     params: {
       migration_key: params.migration_key,
+      migration_status: params.migration_status,
       start_date: params.start_date,
       end_date: params.end_date,
+      granularity: params.granularity || 'HOUR',
     },
   })

@@ -25,4 +25,8 @@ public class UpdateDiffRuleRequest {
 
     @JsonProperty("enable")
     private Boolean enable;
+
+    @JsonProperty("weight")
+    private Integer weight;
 }
+

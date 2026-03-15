@@ -14,7 +14,7 @@ class ScriptDiffRuleExecutorServiceTest {
     @Test
     void testShouldReport_WhenExpressionEvaluatesFalse_ShouldReturnFalse() {
         DiffItem item = new DiffItem("note", "OLD", "NEW", DiffType.MODIFY);
-        DiffRule rule = new DiffRule("demo_key", DiffRuleType.SCRIPT, "note", "false", true);
+        DiffRule rule = new DiffRule("demo_key", DiffRuleType.SCRIPT, "note", "false", true, 0);
 
         boolean shouldReport = scriptDiffRuleExecutor.shouldReport(item, rule);
 
@@ -24,7 +24,7 @@ class ScriptDiffRuleExecutorServiceTest {
     @Test
     void testShouldReport_WhenExpressionHasSyntaxError_ShouldReturnTrue() {
         DiffItem item = new DiffItem("note", "OLD", "NEW", DiffType.MODIFY);
-        DiffRule rule = new DiffRule("demo_key", DiffRuleType.SCRIPT, "note", "#oldValue !=", true);
+        DiffRule rule = new DiffRule("demo_key", DiffRuleType.SCRIPT, "note", "#oldValue !=", true, 0);
 
         boolean shouldReport = scriptDiffRuleExecutor.shouldReport(item, rule);
 

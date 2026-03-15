@@ -45,7 +45,7 @@ class DiffCommandAssemblerTest {
         assertEquals("{\"a\":2}", command.newJson());
         assertEquals(true, command.oldSuccess());
         assertEquals(false, command.newSuccess());
-        assertEquals(3, command.MigrationTaskStatus());
+        assertEquals(3, command.migrationTaskStatus());
         assertEquals("{\"rule\":\"gray\"}", command.grayscaleRules());
         assertEquals(false, command.fallbackTriggered());
     }

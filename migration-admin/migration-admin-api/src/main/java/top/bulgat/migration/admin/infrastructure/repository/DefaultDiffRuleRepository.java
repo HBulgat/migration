@@ -62,6 +62,7 @@ public class DefaultDiffRuleRepository implements DiffRuleRepository {
                 config.fieldPath(),
                 config.ruleValue(),
                 config.enable(),
+                config.weight() != null ? config.weight() : 0,
                 config.createTime() != null ? config.createTime() : LocalDateTime.now(),
                 config.updateTime() != null ? config.updateTime() : LocalDateTime.now());
     }
@@ -74,6 +75,7 @@ public class DefaultDiffRuleRepository implements DiffRuleRepository {
                 rule.getFieldPath(),
                 rule.getRuleValue(),
                 rule.isEnable(),
+                rule.getWeight() != null ? rule.getWeight() : 0,
                 rule.getCreateTime() != null ? rule.getCreateTime() : LocalDateTime.now(),
                 rule.getUpdateTime() != null ? rule.getUpdateTime() : LocalDateTime.now());
     }

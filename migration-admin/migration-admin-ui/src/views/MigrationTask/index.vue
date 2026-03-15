@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { deleteMigrationTask, getMigrationTaskList, queryMigrationTask } from '@/api/migrationTask'
@@ -142,21 +142,21 @@ onMounted(async () => {
       <el-table-column label="#" width="60" align="center">
         <template #default="scope">{{ tableIndex(scope.$index) }}</template>
       </el-table-column>
-      <el-table-column prop="migration_key" label="migration_key" min-width="220">
+      <el-table-column prop="migration_key" label="migration_key" min-width="300">
         <template #default="scope">
           <span class="mono-text">{{ scope.row.migration_key }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="140">
+      <el-table-column label="状态" width="120">
         <template #default="scope">
           <StatusTag :status="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column prop="description" label="描述" min-width="220" show-overflow-tooltip />
+      <el-table-column prop="description" label="描述" min-width="200" show-overflow-tooltip />
       <el-table-column prop="create_time" label="创建时间" width="180">
         <template #default="scope">{{ formatDateTime(scope.row.create_time) }}</template>
       </el-table-column>
-      <el-table-column label="操作" width="200" fixed="right">
+      <el-table-column label="操作" width="180" fixed="right">
         <template #default="scope">
           <el-space>
             <el-button link type="primary" @click="openDetail(scope.row)">详情</el-button>

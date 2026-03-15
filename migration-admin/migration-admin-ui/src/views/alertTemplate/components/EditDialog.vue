@@ -9,7 +9,7 @@
       ref="formRef"
       :model="formData"
       :rules="rules"
-      label-width="120px"
+      label-width="140px"
     >
       <el-form-item label="模板Key" prop="template_key">
         <el-input 
@@ -27,17 +27,20 @@
       <el-form-item label="通知渠道" prop="channel">
         <el-radio-group v-model="formData.channel">
           <el-radio label="FEISHU">飞书 (Feishu)</el-radio>
-          <el-radio label="EMAIL">邮件 (Email)</el-radio>
+          <el-radio label="EMAIL" disabled>邮件 (Email)</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-form-item label="模板内容 (JSON)" prop="templateStr">
-        <el-input
-          v-model="formData.templateStr"
-          type="textarea"
-          :rows="12"
-          placeholder="请输入 JSON 格式的模板内容"
-        />
+        <div class="editor-wrapper">
+          <vue-monaco-editor
+            v-model:value="formData.templateStr"
+            theme="vs-light"
+            language="json"
+            :options="editorOptions"
+            class="monaco-container"
+          />
+        </div>
         <div class="tip">支持 ${variable} 占位符。</div>
       </el-form-item>
 
@@ -56,6 +59,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import type { AlertTemplate, CreateAlertTemplateRequest, UpdateAlertTemplateRequest } from '@/types'
 import { alertTemplateApi } from '@/api/alertTemplate'
+import VueMonacoEditor from '@guolao/vue-monaco-editor'
 
 const emit = defineEmits(['success'])
 
@@ -75,8 +79,28 @@ const formData = reactive<FormData>({
   template_key: '',
   name: '',
   channel: 'FEISHU',
-  templateStr: '{\n  "msg_type": "text",\n  "content": {\n    "text": "告警: ${msg}"\n  }\n}'
+  templateStr: '{\n  "msg_type": "text",\n  "text": "告警: ${msg}"\n}'
 })
+
+const editorOptions: any = {
+  minimap: { enabled: false },
+  lineNumbersMinChars: 3,
+  glyphMargin: false,
+  lineDecorationsWidth: 0,
+  scrollBeyondLastLine: false,
+  wordWrap: 'on',
+  fontSize: 13,
+  fontFamily: "'Fira Code', Consolas, Monaco, monospace",
+  renderLineHighlight: 'all',
+  scrollbar: {
+    vertical: 'visible',
+    horizontal: 'visible'
+  },
+  tabSize: 2,
+  formatOnPaste: true,
+  formatOnType: true,
+  automaticLayout: true
+}
 
 // Custom validator for JSON string
 const validateJson = (_rule: any, value: string, callback: any) => {
@@ -96,8 +120,8 @@ const rules = reactive<FormRules>({
   name: [{ required: true, message: '请输入模板名称', trigger: 'blur' }],
   channel: [{ required: true, message: '请选择通知渠道', trigger: 'change' }],
   templateStr: [
-    { required: true, message: '请输入模板内容', trigger: 'blur' },
-    { validator: validateJson, trigger: 'blur' }
+    { required: true, message: '请输入模板内容', trigger: 'change' },
+    { validator: validateJson, trigger: 'change' }
   ]
 })
 
@@ -115,7 +139,7 @@ const open = (row?: AlertTemplate) => {
     formData.template_key = ''
     formData.name = ''
     formData.channel = 'FEISHU'
-    formData.templateStr = '{\n  "msg_type": "text",\n  "content": {\n    "text": "告警: ${msg}"\n  }\n}'
+    formData.templateStr = '{\n  "msg_type": "text",\n  "text": "告警: ${msg}"\n}'
   }
 }
 
@@ -172,5 +196,24 @@ defineExpose({
   color: #909399;
   line-height: 1.5;
   margin-top: 5px;
+}
+
+.editor-wrapper {
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 300px;
+  width: 100%;
+  resize: vertical;
+  min-height: 150px;
+}
+
+.monaco-container {
+  height: 100%;
+  width: 100%;
+}
+
+:deep(.el-form-item__content) {
+  display: block;
 }
 </style>

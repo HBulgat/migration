@@ -131,7 +131,7 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
                     .newErrorMessage(newResult.error() != null ? newResult.error().getMessage() : null)
                     .oldRequestParams(JSON.toJSONString(context.getArgs()))
                     .newRequestParams(JSON.toJSONString(context.getArgs()))
-                    .MigrationTaskStatus(context.getMigrationTaskStatus())
+                    .migrationTaskStatus(context.getMigrationTaskStatus())
                     .grayscaleRules(JSON.toJSONString(context.getGrayscaleRules()))
                     .grayscaleHit(grayscaleHit)
                     .fallbackTriggered(fallbackTriggered)

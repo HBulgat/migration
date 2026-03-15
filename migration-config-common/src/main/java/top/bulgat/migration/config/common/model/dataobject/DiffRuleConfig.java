@@ -11,6 +11,7 @@ public record DiffRuleConfig(
         @JsonProperty("field_path") String fieldPath,
         @JsonProperty("rule_value") String ruleValue,
         @JsonProperty("enable") boolean enable,
+        @JsonProperty("weight") Integer weight,
         @JsonProperty("create_time") LocalDateTime createTime,
         @JsonProperty("update_time") LocalDateTime updateTime) {
 }

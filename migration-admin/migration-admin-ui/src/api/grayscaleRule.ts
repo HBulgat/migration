@@ -14,7 +14,9 @@ export interface CreateGrayscaleRulePayload {
   rule_type: string
   rule_value: string
   enable: boolean
+  weight: number
 }
+
 
 export interface UpdateGrayscaleRulePayload {
   migration_key: string
@@ -22,6 +24,7 @@ export interface UpdateGrayscaleRulePayload {
   rule_type?: string
   rule_value?: string
   enable?: boolean
+  weight?: number
 }
 
 export interface UpdateGrayscaleRuleEnablePayload {

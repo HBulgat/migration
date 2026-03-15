@@ -63,7 +63,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         dataObject.setNewErrorMessage(request.getNewErrorMessage());
         dataObject.setOldRequestParams(request.getOldRequestParams());
         dataObject.setNewRequestParams(request.getNewRequestParams());
-        dataObject.setMigrationTaskStatus(request.getMigrationTaskStatus());
+        dataObject.setMigrationStatus(request.getMigrationTaskStatus());
         dataObject.setGrayscaleRules(request.getGrayscaleRules());
         dataObject.setGrayscaleHit(request.getGrayscaleHit() != null && request.getGrayscaleHit() ? 1 : 0);
         dataObject
@@ -128,7 +128,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                 dataObject.getNewErrorMessage(),
                 dataObject.getOldRequestParams(),
                 dataObject.getNewRequestParams(),
-                dataObject.getMigrationTaskStatus(),
+                dataObject.getMigrationStatus(),
                 dataObject.getGrayscaleRules(),
                 Integer.valueOf(1).equals(dataObject.getGrayscaleHit()),
                 Integer.valueOf(1).equals(dataObject.getFallbackTriggered()));

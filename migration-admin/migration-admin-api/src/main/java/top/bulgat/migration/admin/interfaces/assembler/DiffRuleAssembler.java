@@ -24,8 +24,10 @@ public class DiffRuleAssembler {
                 request.getRuleType(),
                 request.getFieldPath(),
                 request.getRuleValue(),
-                request.getEnable());
+                request.getEnable(),
+                request.getWeight());
     }
+
 
     public UpdateDiffRuleCommand toUpdateCommand(UpdateDiffRuleRequest request) {
         return new UpdateDiffRuleCommand(
@@ -34,8 +36,10 @@ public class DiffRuleAssembler {
                 request.getRuleType(),
                 request.getFieldPath(),
                 request.getRuleValue(),
-                request.getEnable());
+                request.getEnable(),
+                request.getWeight());
     }
+
 
     public UpdateDiffRuleEnableCommand toUpdateEnableCommand(UpdateDiffRuleEnableRequest request) {
         return new UpdateDiffRuleEnableCommand(
@@ -63,6 +67,7 @@ public class DiffRuleAssembler {
         resp.setFieldPath(rule.getFieldPath());
         resp.setRuleValue(rule.getRuleValue());
         resp.setEnable(rule.isEnable());
+        resp.setWeight(rule.getWeight());
         resp.setCreateTime(rule.getCreateTime());
         resp.setUpdateTime(rule.getUpdateTime());
         return resp;

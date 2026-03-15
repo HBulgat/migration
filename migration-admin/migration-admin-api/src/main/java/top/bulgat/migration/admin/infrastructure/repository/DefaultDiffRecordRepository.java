@@ -1,22 +1,27 @@
 package top.bulgat.migration.admin.infrastructure.repository;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import top.bulgat.common.base.util.JsonUtils;
 import top.bulgat.migration.admin.domain.model.DiffItem;
 import top.bulgat.migration.admin.domain.model.DiffRecord;
+import top.bulgat.migration.admin.domain.model.DiffStatisticsPoint;
 import top.bulgat.migration.admin.domain.repository.DiffRecordRepository;
 import top.bulgat.migration.config.common.model.dataobject.DiffRecordDO;
 import top.bulgat.migration.config.common.model.enums.DiffType;
 import top.bulgat.migration.config.common.dal.DiffRecordDAO;
+import top.bulgat.migration.config.common.dal.DiffStatisticsQueryResult;
 
 /**
  * MybatisDiffRecordRepository 定义持久化访问能力。
@@ -65,12 +70,23 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
     public List<DiffRecord> findByCondition(
             String migrationKey,
             Integer hasDiff,
+            Integer migrationStatus,
+            String traceId,
             LocalDateTime startDate,
-            LocalDateTime endDate) {
+            LocalDateTime endDate,
+            int page,
+            int pageSize,
+            boolean selectFull) {
         LambdaQueryWrapper<DiffRecordDO> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(DiffRecordDO::getMigrationKey, migrationKey);
         if (hasDiff != null) {
             wrapper.eq(DiffRecordDO::getHasDiff, hasDiff);
+        }
+        if (migrationStatus != null) {
+            wrapper.eq(DiffRecordDO::getMigrationStatus, migrationStatus);
+        }
+        if (traceId != null && !traceId.isBlank()) {
+            wrapper.eq(DiffRecordDO::getTraceId, traceId);
         }
         if (startDate != null) {
             wrapper.ge(DiffRecordDO::getCreateTime, startDate);
@@ -78,15 +94,85 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         if (endDate != null) {
             wrapper.le(DiffRecordDO::getCreateTime, endDate);
         }
-        wrapper.orderByDesc(DiffRecordDO::getCreateTime);
-        List<DiffRecordDO> rows = diffRecordDAO.selectList(wrapper);
-        log.info("diff_record.findByCondition migrationKey={}, hasDiff={}, startDate={}, endDate={}, rows={}",
-                migrationKey, hasDiff, startDate, endDate, rows.size());
-        List<DiffRecord> result = new ArrayList<>();
-        for (DiffRecordDO row : rows) {
-            result.add(toDomain(row));
+        
+        // 字段投影优化
+        if (!selectFull) {
+            wrapper.select(DiffRecordDO::getId, 
+                           DiffRecordDO::getMigrationKey, 
+                           DiffRecordDO::getTraceId,
+                           DiffRecordDO::getHasDiff, 
+                           DiffRecordDO::getDiffType, 
+                           DiffRecordDO::getGrayscaleParam,
+                           DiffRecordDO::getOldCostTimeMs, 
+                           DiffRecordDO::getNewCostTimeMs, 
+                           DiffRecordDO::getTotalCostTimeMs,
+                           DiffRecordDO::getCreateTime,
+                           DiffRecordDO::getOldErrorMessage,
+                           DiffRecordDO::getNewErrorMessage,
+                           DiffRecordDO::getMigrationStatus,
+                           DiffRecordDO::getGrayscaleHit,
+                           DiffRecordDO::getFallbackTriggered,
+                           DiffRecordDO::getDiffResults);
         }
-        return result;
+
+        wrapper.orderByDesc(DiffRecordDO::getCreateTime);
+
+        // 分页优化
+        Page<DiffRecordDO> pageParam =
+                new Page<>(page, pageSize);
+        List<DiffRecordDO> rows = diffRecordDAO.selectPage(pageParam, wrapper).getRecords();
+
+        log.info("diff_record.findByCondition migrationKey={}, hasDiff={}, status={}, rows={}, selectFull={}",
+                migrationKey, hasDiff, migrationStatus, rows.size(), selectFull);
+
+        return rows.stream().map(this::toDomain).collect(Collectors.toList());
+    }
+
+    @Override
+    public long countByCondition(
+            String migrationKey,
+            Integer hasDiff,
+            Integer migrationStatus,
+            String traceId,
+            LocalDateTime startDate,
+            LocalDateTime endDate) {
+        LambdaQueryWrapper<DiffRecordDO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(DiffRecordDO::getMigrationKey, migrationKey);
+        if (hasDiff != null) {
+            wrapper.eq(DiffRecordDO::getHasDiff, hasDiff);
+        }
+        if (migrationStatus != null) {
+            wrapper.eq(DiffRecordDO::getMigrationStatus, migrationStatus);
+        }
+        if (traceId != null && !traceId.isBlank()) {
+            wrapper.eq(DiffRecordDO::getTraceId, traceId);
+        }
+        if (startDate != null) {
+            wrapper.ge(DiffRecordDO::getCreateTime, startDate);
+        }
+        if (endDate != null) {
+            wrapper.le(DiffRecordDO::getCreateTime, endDate);
+        }
+        return diffRecordDAO.selectCount(wrapper);
+    }
+
+    @Override
+    public List<DiffStatisticsPoint> calculateTrendStatistics(
+            String migrationKey,
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            Integer status,
+            int granularitySeconds) {
+        List<DiffStatisticsQueryResult> results = diffRecordDAO.selectTrendStatistics(
+                migrationKey, startDate, endDate, status, granularitySeconds);
+        return results.stream().map(res -> new DiffStatisticsPoint(
+                res.getTimePoint(),
+                res.getTotalCount(),
+                res.getDiffCount(),
+                res.getTotalCount() == 0 ? 0 : (double) res.getDiffCount() / res.getTotalCount(),
+                res.getAvgOldCost() == null ? 0 : res.getAvgOldCost().intValue(),
+                res.getAvgNewCost() == null ? 0 : res.getAvgNewCost().intValue()
+        )).collect(Collectors.toList());
     }
 
     private DiffRecordDO toDataObject(DiffRecord record) {
@@ -110,7 +196,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         dataObject.setNewErrorMessage(record.getNewErrorMessage());
         dataObject.setOldRequestParams(record.getOldRequestParams());
         dataObject.setNewRequestParams(record.getNewRequestParams());
-        dataObject.setMigrationTaskStatus(record.getMigrationTaskStatus());
+        dataObject.setMigrationStatus(record.getMigrationTaskStatus());
         dataObject.setGrayscaleRules(record.getGrayscaleRules());
         dataObject.setGrayscaleHit(record.getGrayscaleHit() != null && record.getGrayscaleHit() ? 1 : 0);
         dataObject.setFallbackTriggered(record.getFallbackTriggered() != null && record.getFallbackTriggered() ? 1 : 0);
@@ -138,7 +224,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                 dataObject.getNewErrorMessage(),
                 dataObject.getOldRequestParams(),
                 dataObject.getNewRequestParams(),
-                dataObject.getMigrationTaskStatus(),
+                dataObject.getMigrationStatus(),
                 dataObject.getGrayscaleRules(),
                 Integer.valueOf(1).equals(dataObject.getGrayscaleHit()),
                 Integer.valueOf(1).equals(dataObject.getFallbackTriggered()));

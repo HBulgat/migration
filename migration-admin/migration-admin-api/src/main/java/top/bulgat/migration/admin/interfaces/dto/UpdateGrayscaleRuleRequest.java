@@ -16,6 +16,8 @@ public record UpdateGrayscaleRuleRequest(
         @JsonProperty("rule_id") @NotBlank String ruleId,
         @JsonProperty("rule_type") String ruleType,
         @JsonProperty("rule_value") String ruleValue,
-        @JsonProperty("enable") Boolean enable) {
+        @JsonProperty("enable") Boolean enable,
+        @JsonProperty("weight") Integer weight) {
 }
+
 

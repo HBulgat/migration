@@ -40,8 +40,12 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
             return false;
         }
 
+        List<GrayscaleConfig> sortedRules = new java.util.ArrayList<>(rules);
+        sortedRules.sort(java.util.Comparator.comparing(GrayscaleConfig::getWeight, java.util.Comparator.nullsLast(java.util.Comparator.reverseOrder())));
+
         Map<String, Object> safeParams = params == null ? Collections.emptyMap() : params;
-        for (GrayscaleConfig rule : rules) {
+
+        for (GrayscaleConfig rule : sortedRules) {
             if (rule == null || !Boolean.TRUE.equals(rule.getEnable())) {
                 continue;
             }

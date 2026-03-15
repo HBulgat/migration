@@ -61,7 +61,7 @@ async function handleLogin(): Promise<void> {
       <div class="login-header">
         <img :src="logoImg" class="login-logo" />
         <h1>后端接口迁移平台</h1>
-        <p>Admin Console</p>
+        <p>Migration Admin Console</p>
       </div>
 
       <el-form ref="formRef" :model="formModel" :rules="rules" label-position="top" @keyup.enter="handleLogin">

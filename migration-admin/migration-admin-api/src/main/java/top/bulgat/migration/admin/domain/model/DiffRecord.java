@@ -31,7 +31,7 @@ public class DiffRecord {
     private final String newErrorMessage;
     private final String oldRequestParams;
     private final String newRequestParams;
-    private final Integer MigrationTaskStatus;
+    private final Integer migrationTaskStatus;
     private final String grayscaleRules;
     private final Boolean grayscaleHit;
     private final Boolean fallbackTriggered;

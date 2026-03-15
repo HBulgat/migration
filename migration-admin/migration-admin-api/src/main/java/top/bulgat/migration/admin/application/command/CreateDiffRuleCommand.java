@@ -5,5 +5,7 @@ public record CreateDiffRuleCommand(
         String ruleType,
         String fieldPath,
         String ruleValue,
-        boolean enable
+        boolean enable,
+        Integer weight
 ) {}
+

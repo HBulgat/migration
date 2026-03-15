@@ -196,7 +196,9 @@ class Test {
                 DiffRuleType.IGNORE,
                 "$.a",
                 "",
-                true));
+                true,
+                0));
+
         DiffResult result = new DiffResult(true, List.of(), 5L);
         when(diffRuleRepository.findEnabledRules("user.query")).thenReturn(rules);
         when(diffDomainService.execute(any(DiffRequest.class), eq(rules))).thenReturn(result);

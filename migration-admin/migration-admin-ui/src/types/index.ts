@@ -25,6 +25,7 @@ export interface GrayscaleRule {
   rule_type: string
   rule_value: string
   enable: boolean
+  weight: number
   create_time?: string
   update_time?: string
 }
@@ -39,7 +40,8 @@ export interface DiffItem {
 export interface DiffRecord {
   id: number
   migration_key: string
-  trace_id?: string | null
+  trace_id: string
+  migration_status: number
   old_response?: string | null
   new_response?: string | null
   diff_results: DiffItem[]
@@ -52,12 +54,17 @@ export interface DiffRecord {
   create_time?: string
 }
 
-export interface DiffStatistics {
+export interface DiffStatisticsPoint {
+  time_point: string
   total_count: number
   diff_count: number
   diff_rate: number
   avg_old_cost_time: number
   avg_new_cost_time: number
+}
+
+export interface DiffStatistics {
+  points: DiffStatisticsPoint[]
 }
 
 export interface TaskOption {

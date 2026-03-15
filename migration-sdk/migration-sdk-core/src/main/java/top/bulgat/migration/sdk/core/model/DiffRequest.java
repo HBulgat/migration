@@ -27,7 +27,7 @@ public class DiffRequest {
     private String newErrorMessage;
     private String oldRequestParams;
     private String newRequestParams;
-    private Integer MigrationTaskStatus;
+    private Integer migrationTaskStatus;
     private String grayscaleRules;
     private Boolean grayscaleHit;
     private Boolean fallbackTriggered;

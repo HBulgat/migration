@@ -33,8 +33,10 @@ public class GrayscaleRuleAssembler {
                 request.migrationKey(),
                 request.ruleType(),
                 request.ruleValue(),
-                request.enable());
+                request.enable(),
+                request.weight());
     }
+
 
     /**
      * 执行 toUpdateCommand 业务逻辑。
@@ -47,8 +49,10 @@ public class GrayscaleRuleAssembler {
                 request.ruleId(),
                 request.ruleType(),
                 request.ruleValue(),
-                request.enable());
+                request.enable(),
+                request.weight());
     }
+
 
     /**
      * 执行 toDeleteCommand 业务逻辑。
@@ -91,6 +95,7 @@ public class GrayscaleRuleAssembler {
                 rule.getRuleType().name(),
                 rule.getRuleValue(),
                 rule.isEnable(),
+                rule.getWeight(),
                 rule.getCreateTime(),
                 rule.getUpdateTime());
     }

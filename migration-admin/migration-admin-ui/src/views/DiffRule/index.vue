@@ -175,16 +175,22 @@ onMounted(async () => {
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="field_path" label="字段路径" min-width="200" show-overflow-tooltip>
+      <el-table-column prop="field_path" label="字段路径" min-width="180" show-overflow-tooltip>
         <template #default="{ row }"><code class="fpath">{{ row.field_path }}</code></template>
       </el-table-column>
-      <el-table-column prop="rule_value" label="规则值" min-width="150" show-overflow-tooltip />
+      <el-table-column prop="rule_value" label="规则值" min-width="350" show-overflow-tooltip />
+      <el-table-column prop="weight" label="权重" width="80" align="center">
+        <template #default="{ row }">
+          <el-tag size="small" effect="plain">{{ row.weight || 0 }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="enable" label="启用状态" width="100" align="center">
         <template #default="{ row }">
           <el-switch v-model="row.enable" @change="() => handleEnableChange(row)" />
         </template>
       </el-table-column>
-      <el-table-column prop="update_time" label="更新时间" width="160" />
+
+      <el-table-column prop="update_time" label="更新时间" width="180" />
       <el-table-column label="操作" width="150" align="center" fixed="right">
         <template #default="{ row }">
           <el-button link type="primary" @click="handleEdit(row)">编辑</el-button>

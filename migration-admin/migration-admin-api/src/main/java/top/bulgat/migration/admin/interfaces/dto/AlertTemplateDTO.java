@@ -1,6 +1,7 @@
 package top.bulgat.migration.admin.interfaces.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Builder;
 import lombok.Data;
@@ -13,15 +14,18 @@ import java.time.LocalDateTime;
 @Builder
 public class AlertTemplateDTO {
 
+    @JsonProperty("template_key")
     private String templateKey;
     private NoticeChannel channel;
     private String name;
     private JsonNode template;
     
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("create_time")
     private LocalDateTime createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonProperty("update_time")
     private LocalDateTime updateTime;
 
     public static AlertTemplateDTO from(AlertTemplate t) {
