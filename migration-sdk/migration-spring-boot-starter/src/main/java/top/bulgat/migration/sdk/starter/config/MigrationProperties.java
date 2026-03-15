@@ -2,6 +2,7 @@ package top.bulgat.migration.sdk.starter.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import top.bulgat.common.base.util.StringUtils;
 import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
 
@@ -10,23 +11,25 @@ import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
  */
 @Data
 @ConfigurationProperties(prefix = "migration")
+@Configuration
 public class MigrationProperties {
 
-        private ConfigCenterProperties configCenterConfig;
-        private DiffServiceProperties diffServiceConfig;
+        private ConfigCenterClientProperties configCenterClient;
+        private DiffServiceClientProperties diffServiceClient;
 
         @Data
-        @ConfigurationProperties(prefix = "migration.config-center")
-        public static class ConfigCenterProperties {
+        @ConfigurationProperties(prefix = "migration.config-center-client")
+        public static class ConfigCenterClientProperties {
                 private boolean enable=true;
                 private String address;
                 private String internalToken;
                 private Integer timeout;
+                private Boolean cacheEnable=false;
                 private Integer cacheRefreshIntervalSeconds;
         }
         @Data
-        @ConfigurationProperties(prefix = "migration.diff-service")
-        public static class DiffServiceProperties {
+        @ConfigurationProperties(prefix = "migration.diff-service-client")
+        public static class DiffServiceClientProperties {
                 private boolean enable=true;
                 private String address;
 //                private Integer timeout;
@@ -41,30 +44,34 @@ public class MigrationProperties {
         public MigrationSdkProperties toSdkProperties() {
                 MigrationSdkProperties fromEnv = MigrationSdkProperties.fromEnv();
                 return MigrationSdkProperties.builder()
-                        .configCenterEnable(configCenterConfig == null
+                        .configCenterEnable(configCenterClient == null
                                         ?fromEnv.getConfigCenterEnable()
-                                        : configCenterConfig.enable)
-                        .configCenterAddress(configCenterConfig == null || StringUtils.isBlank(configCenterConfig.address)
+                                        : configCenterClient.enable)
+                        .configCenterAddress(configCenterClient == null || StringUtils.isBlank(configCenterClient.address)
                                         ? fromEnv.getConfigCenterAddress()
-                                        : configCenterConfig.address)
-                        .configCenterInternalToken(configCenterConfig==null||StringUtils.isBlank(configCenterConfig.internalToken)
+                                        : configCenterClient.address)
+                        .configCenterInternalToken(configCenterClient ==null||StringUtils.isBlank(configCenterClient.internalToken)
                                         ?fromEnv.getConfigCenterInternalToken()
-                                        :configCenterConfig.internalToken)
-                        .configCenterTimeout(configCenterConfig==null|| configCenterConfig.timeout==null||configCenterConfig.timeout<=0
+                                        : configCenterClient.internalToken)
+                        .configCenterTimeout(configCenterClient ==null|| configCenterClient.timeout==null|| configCenterClient.timeout<=0
                                         ? fromEnv.getConfigCenterTimeout()
-                                        : configCenterConfig.timeout)
-                        .cacheRefreshIntervalSeconds(configCenterConfig==null||configCenterConfig.cacheRefreshIntervalSeconds==null||configCenterConfig.cacheRefreshIntervalSeconds<=0
-                                        ?fromEnv.getCacheRefreshIntervalSeconds()
-                                        :configCenterConfig.cacheRefreshIntervalSeconds)
-                        .diffServiceEnable(configCenterConfig == null
+                                        : configCenterClient.timeout)
+                        .configCenterCacheEnable(configCenterClient==null
+                                        ?fromEnv.getConfigCenterCacheEnable()
+                                        :configCenterClient.cacheEnable)
+                        .configCenterCacheRefreshIntervalSeconds(configCenterClient ==null|| configCenterClient.cacheRefreshIntervalSeconds==null
+                                || configCenterClient.cacheRefreshIntervalSeconds<=0
+                                        ?fromEnv.getConfigCenterCacheRefreshIntervalSeconds()
+                                        : configCenterClient.cacheRefreshIntervalSeconds)
+                        .diffServiceEnable(configCenterClient == null
                                 ?fromEnv.getDiffServiceEnable()
-                                : diffServiceConfig.enable)
-                        .diffServiceAddress(diffServiceConfig == null || StringUtils.isBlank(diffServiceConfig.address)
+                                : diffServiceClient.enable)
+                        .diffServiceAddress(diffServiceClient == null || StringUtils.isBlank(diffServiceClient.address)
                                         ? fromEnv.getDiffServiceAddress()
-                                        : diffServiceConfig.address)
-                        .diffServiceInternalToken(diffServiceConfig == null || StringUtils.isBlank(diffServiceConfig.internalToken)
+                                        : diffServiceClient.address)
+                        .diffServiceInternalToken(diffServiceClient == null || StringUtils.isBlank(diffServiceClient.internalToken)
                                         ? fromEnv.getDiffServiceInternalToken()
-                                        : diffServiceConfig.internalToken)
+                                        : diffServiceClient.internalToken)
                         .build();
         }
 }

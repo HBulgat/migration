@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import top.bulgat.migration.sdk.core.config.CachedConfigClient;
 import top.bulgat.migration.sdk.core.config.HttpConfigClient;
+import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
 import top.bulgat.migration.sdk.core.diff.DisruptorDiffServiceCaller;
 import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
@@ -16,13 +17,15 @@ import top.bulgat.migration.sdk.core.strategy.MigrationStrategyRegistry;
 import top.bulgat.migration.sdk.starter.aop.MigrationAnnotationAdvisor;
 import top.bulgat.migration.sdk.starter.aop.MigrationInterceptor;
 
+import java.util.Objects;
+
 /**
  * 迁移 Starter 自动装配。
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({MigrationProperties.class,
-        MigrationProperties.DiffServiceProperties.class,
-        MigrationProperties.ConfigCenterProperties.class
+        MigrationProperties.DiffServiceClientProperties.class,
+        MigrationProperties.ConfigCenterClientProperties.class
 })
 @ConditionalOnProperty(prefix = "migration", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class MigrationAutoConfiguration {
@@ -33,7 +36,12 @@ public class MigrationAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ConfigClient configClient(MigrationProperties properties) {
-        return new CachedConfigClient(new HttpConfigClient(properties.toSdkProperties()),properties.getConfigCenterConfig().getCacheRefreshIntervalSeconds());
+        MigrationSdkProperties sdkProperties = properties.toSdkProperties();
+        ConfigClient configClient = new HttpConfigClient(sdkProperties);
+        if (Objects.equals(Boolean.TRUE,sdkProperties.getConfigCenterCacheEnable())){
+            return new CachedConfigClient(configClient,sdkProperties.getConfigCenterCacheRefreshIntervalSeconds());
+        }
+        return configClient;
     }
 
     /**

@@ -63,7 +63,7 @@ public class MigrationClient implements AutoCloseable {
     public MigrationClient(MigrationConfig config, MigrationSdkProperties properties, ExecutorService executorService) {
         this(
                 config,
-                new CachedConfigClient(new HttpConfigClient(properties), properties.getCacheRefreshIntervalSeconds()),
+                new CachedConfigClient(new HttpConfigClient(properties), properties.getConfigCenterCacheRefreshIntervalSeconds()),
                 new DisruptorDiffServiceCaller(properties),
                 new DefaultGrayscaleMatcher(),
                 MigrationStrategyRegistry.defaultRegistry(),

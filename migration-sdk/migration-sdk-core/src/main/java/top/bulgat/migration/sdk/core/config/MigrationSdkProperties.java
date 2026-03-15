@@ -26,11 +26,12 @@ public class MigrationSdkProperties {
     public static final String ENV_CONFIG_CENTER_ADDRESS = "MIGRATION_CONFIG_CENTER_ADDRESS";
     /** 配置中心内部令牌环境变量。 */
     public static final String ENV_CONFIG_CENTER_INTERNAL_TOKEN="ENV_CONFIG_CENTER_INTERNAL_TOKEN";
+    /** 是否启用缓存 */
+    public static final String ENV_CONFIG_CENTER_CACHE_ENABLE="ENV_CONFIG_CENTER_CACHE_ENABLE";
     /** 缓存定时刷新间隔（秒）环境变量。 */
-    public static final String ENV_CACHE_REFRESH_INTERVAL_SECONDS = "ENV_CACHE_REFRESH_INTERVAL_SECONDS";
-    /**  */
+    public static final String ENV_CONFIG_CENTER_CACHE_REFRESH_INTERVAL_SECONDS = "ENV_CONFIG_CENTER_CACHE_REFRESH_INTERVAL_SECONDS";
+    /** 超时时间 */
     public static final String ENV_CONFIG_CENTER_TIMEOUT = "ENV_CONFIG_CENTER_TIMEOUT";
-
     // ---------------------------------
     // ------------diff-service---------
     public static final String ENV_DIFF_SERVICE_ENABLE = "ENV_DIFF_SERVICE_ENABLE";
@@ -42,13 +43,13 @@ public class MigrationSdkProperties {
     private Boolean configCenterEnable;
     private String configCenterAddress;
     private String configCenterInternalToken;
-    private int cacheRefreshIntervalSeconds;
+    private Boolean configCenterCacheEnable;
+    private int configCenterCacheRefreshIntervalSeconds;
     private int configCenterTimeout;
 
     private Boolean diffServiceEnable=true;
     private String diffServiceAddress;
     private String diffServiceInternalToken;
-//    private int diffServiceTimeout;
 
     /**
      * 从环境变量构建配置。
@@ -60,7 +61,8 @@ public class MigrationSdkProperties {
                 .configCenterAddress(resolve(ENV_CONFIG_CENTER_ADDRESS, "http://localhost:8080"))
                 .configCenterInternalToken(resolve(ENV_CONFIG_CENTER_INTERNAL_TOKEN,"ENV_CONFIG_CENTER_INTERNAL_TOKEN"))
                 .configCenterEnable(resolveBoolean(ENV_CONFIG_CENTER_ENABLE,null))
-                .cacheRefreshIntervalSeconds(resolveInteger(ENV_CACHE_REFRESH_INTERVAL_SECONDS,60))
+                .configCenterCacheEnable(resolveBoolean(ENV_CONFIG_CENTER_CACHE_ENABLE,null))
+                .configCenterCacheRefreshIntervalSeconds(resolveInteger(ENV_CONFIG_CENTER_CACHE_REFRESH_INTERVAL_SECONDS,60))
                 .configCenterTimeout(resolveInteger(ENV_CONFIG_CENTER_TIMEOUT,5))
                 .diffServiceAddress(resolve(ENV_DIFF_SERVICE_ADDRESS, "http://localhost:8081"))
                 .diffServiceInternalToken(resolve(ENV_DIFF_SERVICE_INTERNAL_TOKEN, "ENV_DIFF_SERVICE_INTERNAL_TOKEN"))

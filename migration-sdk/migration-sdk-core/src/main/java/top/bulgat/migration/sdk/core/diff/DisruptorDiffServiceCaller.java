@@ -41,7 +41,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
      * @param properties SDK 运行时配置
      */
     public DisruptorDiffServiceCaller(MigrationSdkProperties properties) {
-        this(trimTrailingSlash(properties.getDiffServiceAddress()), createHttpClient(properties.getCacheRefreshIntervalSeconds()));
+        this(trimTrailingSlash(properties.getDiffServiceAddress()), createHttpClient(properties.getConfigCenterCacheRefreshIntervalSeconds()));
     }
 
     /**
