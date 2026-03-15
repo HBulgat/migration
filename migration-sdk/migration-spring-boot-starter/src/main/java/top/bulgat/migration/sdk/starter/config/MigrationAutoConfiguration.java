@@ -20,7 +20,10 @@ import top.bulgat.migration.sdk.starter.aop.MigrationInterceptor;
  * 迁移 Starter 自动装配。
  */
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(MigrationProperties.class)
+@EnableConfigurationProperties({MigrationProperties.class,
+        MigrationProperties.DiffServiceProperties.class,
+        MigrationProperties.ConfigCenterProperties.class
+})
 @ConditionalOnProperty(prefix = "migration", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class MigrationAutoConfiguration {
 
@@ -30,7 +33,7 @@ public class MigrationAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ConfigClient configClient(MigrationProperties properties) {
-        return new CachedConfigClient(new HttpConfigClient(properties.toSdkProperties()),5);
+        return new CachedConfigClient(new HttpConfigClient(properties.toSdkProperties()),properties.getConfigCenterConfig().getCacheRefreshIntervalSeconds());
     }
 
     /**

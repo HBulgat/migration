@@ -41,9 +41,9 @@ public class HttpConfigClient implements ConfigClient {
      */
     public HttpConfigClient(MigrationSdkProperties properties) {
         this(
-                trimTrailingSlash(properties.getConfigCenterUrl()),
+                trimTrailingSlash(properties.getConfigCenterAddress()),
                 createHttpClient(properties.getDefaultTimeout()),
-                properties.getInternalToken());
+                properties.getDiffServiceInternalToken());
     }
 
     /**

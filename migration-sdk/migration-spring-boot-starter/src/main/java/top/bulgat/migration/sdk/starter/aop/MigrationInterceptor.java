@@ -103,7 +103,6 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
         MigrationClient client = new MigrationClient(
                 MigrationConfig.builder()
                         .migrationKey(migration.key())
-                        .timeout(migrationProperties.toSdkProperties().getDefaultTimeout())
                         .build(),
                 configClient,
                 diffServiceCaller,
