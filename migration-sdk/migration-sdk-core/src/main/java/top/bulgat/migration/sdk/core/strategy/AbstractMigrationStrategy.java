@@ -36,35 +36,94 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
     }
 
     /**
-     * 在调用线程（主线程）执行旧接口，在异步线程执行新接口。
+     * 在调用线程（主线程）执行旧接口，在异步线程执行新接口进行 Diff。
+     * 遵循主线程零阻塞原则，执行完旧接口即刻返回。
      *
-     * @param context 执行上下文
-     * @param <T>     返回值类型
-     * @return 新旧方法的并发调用结果
+     * @param context        执行上下文
+     * @param grayscaleParam 灰度参数
+     * @param <T>            返回值类型
+     * @return 仅包含旧接口调用结果的 ConcurrentInvocationResult
      */
-    protected <T> ConcurrentInvocationResult<T> invokeOldMainNewAsync(MigrationExecutionContext<T> context) {
-        CompletableFuture<InvocationResult<T>> newFuture = CompletableFuture.supplyAsync(
-                () -> invokeSafely(context.getNewMethod(), context.getArgs()),
-                context.getExecutorService());
-        InvocationResult<T> oldResult = invokeSafely(context.getOldMethod(), context.getArgs());
-        InvocationResult<T> newResult = newFuture.join();
-        return new ConcurrentInvocationResult<>(oldResult, newResult);
+    protected <T> ConcurrentInvocationResult<T> invokeOldMainNewAsync(MigrationExecutionContext<T> context, Map<String, Object> grayscaleParam) {
+        String traceId = ThreadContext.getTraceId();
+        Object[] args = context.getArgs() == null ? new Object[0] : context.getArgs();
+
+        // 用于后台线程获取主线程结果的 Future
+        CompletableFuture<InvocationResult<T>> oldResultFuture = new CompletableFuture<>();
+
+        // 异步执行：新接口 + 等待旧接口 + 上报 Diff
+        CompletableFuture.runAsync(() -> {
+            try {
+                ThreadContext.setTraceId(traceId);
+                // 执行新接口
+                InvocationResult<T> newResult = invokeSafely(context.getNewMethod(), args);
+                // 阻塞后台线程等待主线程执行完（带超时保护，防止死锁）
+                InvocationResult<T> oldResult = oldResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+                // 后台上报
+                sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
+            } catch (Exception ex) {
+                log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
+            } finally {
+                ThreadContext.clear();
+            }
+        }, context.getExecutorService());
+
+        // 主线程同步执行旧接口
+        InvocationResult<T> oldResult = null;
+        try {
+            oldResult = invokeSafely(context.getOldMethod(), args);
+        } finally {
+            // 无论成功失败，都必须 complete future，让后台线程继续
+            oldResultFuture.complete(oldResult);
+        }
+
+        // 立即返回结果给业务主流程，绝不等待
+        return new ConcurrentInvocationResult<>(oldResult, null);
     }
 
     /**
-     * 在调用线程（主线程）执行新接口，在异步线程执行旧接口。
+     * 在调用线程（主线程）执行新接口，在异步线程执行旧接口进行 Diff。
+     * 遵循主线程零阻塞原则，正常情况下返回新接口结果。
      *
-     * @param context 执行上下文
-     * @param <T>     返回值类型
-     * @return 新旧方法的并发调用结果
+     * @param context        执行上下文
+     * @param grayscaleParam 灰度参数
+     * @param <T>            返回值类型
+     * @return 仅包含新接口调用结果的 ConcurrentInvocationResult
      */
-    protected <T> ConcurrentInvocationResult<T> invokeNewMainOldAsync(MigrationExecutionContext<T> context) {
-        CompletableFuture<InvocationResult<T>> oldFuture = CompletableFuture.supplyAsync(
-                () -> invokeSafely(context.getOldMethod(), context.getArgs()),
-                context.getExecutorService());
-        InvocationResult<T> newResult = invokeSafely(context.getNewMethod(), context.getArgs());
-        InvocationResult<T> oldResult = oldFuture.join();
-        return new ConcurrentInvocationResult<>(oldResult, newResult);
+    protected <T> ConcurrentInvocationResult<T> invokeNewMainOldAsync(MigrationExecutionContext<T> context, Map<String, Object> grayscaleParam) {
+        String traceId = ThreadContext.getTraceId();
+        Object[] args = context.getArgs() == null ? new Object[0] : context.getArgs();
+
+        // 用于后台线程获取主线程结果的 Future
+        CompletableFuture<InvocationResult<T>> newResultFuture = new CompletableFuture<>();
+
+        // 异步执行：旧接口 + 等待新接口 + 上报 Diff
+        CompletableFuture.runAsync(() -> {
+            try {
+                ThreadContext.setTraceId(traceId);
+                // 执行旧接口
+                InvocationResult<T> oldResult = invokeSafely(context.getOldMethod(), args);
+                // 阻塞后台线程等待主线程执行完（带超时保护）
+                InvocationResult<T> newResult = newResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+                // 后台上报
+                sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
+            } catch (Exception ex) {
+                log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
+            } finally {
+                ThreadContext.clear();
+            }
+        }, context.getExecutorService());
+
+        // 主线程同步执行新接口
+        InvocationResult<T> newResult = null;
+        try {
+            newResult = invokeSafely(context.getNewMethod(), args);
+        } finally {
+            newResultFuture.complete(newResult);
+        }
+
+        // 立即返回新接口结果
+        return new ConcurrentInvocationResult<>(null, newResult);
     }
 
     /**

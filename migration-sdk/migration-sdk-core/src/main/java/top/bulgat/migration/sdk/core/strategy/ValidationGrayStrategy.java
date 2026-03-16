@@ -2,6 +2,7 @@ package top.bulgat.migration.sdk.core.strategy;
 
 import java.util.Map;
 import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
+import top.bulgat.migration.sdk.core.support.InvocationResult;
 
 /**
  * 第2阶段（验证-灰度）：并发调用新旧接口，执行Diff比对，但始终返回旧接口结果。
@@ -31,20 +32,20 @@ public class ValidationGrayStrategy extends AbstractMigrationStrategy {
         Map<String, Object> grayscaleParam = context.buildParam();
         boolean hitGray = matchGrayscale(context, grayscaleParam);
 
-        // 并发执行旧接口和新接口
-        ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context);
-
-        // 如果命中灰度，则异步发送Diff对比
+        // 如果命中灰度，并发执行并异步发送Diff对比；否则仅执行旧接口
         if (hitGray) {
-            sendDiffAsync(context, result.oldResult(), result.newResult(), grayscaleParam, hitGray, false);
+            ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context, grayscaleParam);
+            if (result.oldResult().isSuccess()) {
+                return result.oldResult().value();
+            }
+            return executeFallbackAfterOldFailed(context, result.oldResult().error());
         }
 
-        // 始终优先返回旧接口的结果
-        if (result.oldResult().isSuccess()) {
-            return result.oldResult().value();
+        // 未命中灰度，仅调用旧接口（不执行并发对比）
+        InvocationResult<T> oldResult = invokeSafely(context.getOldMethod(), context.getArgs());
+        if (oldResult.isSuccess()) {
+            return oldResult.value();
         }
-
-        // 旧接口失败时，执行降级逻辑
-        return executeFallbackAfterOldFailed(context, result.oldResult().error());
+        return executeFallbackAfterOldFailed(context, oldResult.error());
     }
 }
