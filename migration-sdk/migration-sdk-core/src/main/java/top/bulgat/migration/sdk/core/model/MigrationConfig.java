@@ -1,5 +1,6 @@
 package top.bulgat.migration.sdk.core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MigrationConfig {
-
+    @JsonProperty("migration_key")
     private String migrationKey;
+    @JsonProperty("status")
     private Integer status;
+    @JsonProperty("description")
     private String description;
-    private Integer timeout;
 }

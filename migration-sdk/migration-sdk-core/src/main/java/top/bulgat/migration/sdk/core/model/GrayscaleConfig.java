@@ -1,5 +1,6 @@
 package top.bulgat.migration.sdk.core.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +14,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GrayscaleConfig {
-
+    @JsonProperty("rule_id")
     private String ruleId;
+    @JsonProperty("migration_key")
     private String migrationKey;
+    @JsonProperty("rule_type")
     private String ruleType;
+    @JsonProperty("rule_value")
     private String ruleValue;
+    @JsonProperty("enable")
     private Boolean enable;
+    @JsonProperty("weight")
     private Integer weight;
 }
 
