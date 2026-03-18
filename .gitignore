@@ -44,3 +44,8 @@ application-local.yml
 /migration-admin/migration-admin-ui/node_modules/
 /migration-admin/migration-admin-ui/dist/
 .env
+
+# Performance Test Benchmarking
+/migration-benchmark-app/
+seed_data.py
+benchmark_schema.sql
