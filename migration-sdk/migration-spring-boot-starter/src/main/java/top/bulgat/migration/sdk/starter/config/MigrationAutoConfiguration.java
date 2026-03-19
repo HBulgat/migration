@@ -92,4 +92,12 @@ public class MigrationAutoConfiguration {
     public MigrationAnnotationAdvisor migrationAnnotationAdvisor(MigrationInterceptor interceptor) {
         return new MigrationAnnotationAdvisor(interceptor);
     }
+
+    /**
+     * 配置预热器。
+     */
+    @Bean
+    public MigrationPreWarmer migrationPreWarmer(ConfigClient configClient) {
+        return new MigrationPreWarmer(configClient);
+    }
 }

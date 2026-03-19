@@ -1,6 +1,6 @@
 package top.bulgat.migration.sdk.core.diff;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.lmax.disruptor.BlockingWaitStrategy;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
@@ -22,6 +22,11 @@ import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
 import top.bulgat.migration.sdk.core.model.DiffRequest;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
 
+import com.lmax.disruptor.WorkHandler;
+import com.lmax.disruptor.InsufficientCapacityException;
+import java.util.concurrent.atomic.AtomicLong;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+
 /**
  * 基于 Disruptor 的异步 Diff 调用器。
  */
@@ -35,6 +40,7 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     private final CloseableHttpClient httpClient;
     private final Disruptor<DiffEvent> disruptor;
     private final RingBuffer<DiffEvent> ringBuffer;
+    private final AtomicLong dropCount = new AtomicLong(0);
 
     /**
      * 根据 SDK 配置创建 Diff 调用器。
@@ -42,19 +48,19 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
      * @param properties SDK 运行时配置
      */
     public DisruptorDiffServiceCaller(MigrationSdkProperties properties) {
-        this(trimTrailingSlash(properties.getDiffServiceAddress()), createHttpClient(properties.getDiffServiceTimeout()),properties.getDiffServiceInternalToken());
+        this(trimTrailingSlash(properties.getDiffServiceAddress()), 
+             createHttpClient(properties.getDiffServiceTimeout(), properties.getDiffServiceMaxConnections()),
+             properties.getDiffServiceInternalToken(),
+             properties.getDiffServiceWorkerCount());
     }
 
     /**
      * 供测试或自定义注入使用的构造函数。
-     *
-     * @param diffServiceUrl Diff 服务地址
-     * @param httpClient     HTTP 客户端
      */
-    DisruptorDiffServiceCaller(String diffServiceUrl, CloseableHttpClient httpClient,String internalToken) {
+    DisruptorDiffServiceCaller(String diffServiceUrl, CloseableHttpClient httpClient, String internalToken, Integer workerCount) {
         this.diffServiceUrl = trimTrailingSlash(diffServiceUrl);
         this.httpClient = httpClient;
-        this.internalToken=internalToken;
+        this.internalToken = internalToken;
         this.disruptor = new Disruptor<>(
                 DiffEvent::new,
                 RING_BUFFER_SIZE,
@@ -62,13 +68,36 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
                 ProducerType.MULTI,
                 new BlockingWaitStrategy());
 
-        this.disruptor.handleEventsWith((event, sequence, endOfBatch) -> send(event.request));
+        // 使用 WorkerPool 实现多线程并发消费，提升吞吐量
+        int threads = workerCount != null && workerCount > 0 ? workerCount : 4;
+        DiffWorkHandler[] handlers = new DiffWorkHandler[threads];
+        for (int i = 0; i < threads; i++) {
+            handlers[i] = new DiffWorkHandler();
+        }
+        this.disruptor.handleEventsWithWorkerPool(handlers);
+        
         this.disruptor.start();
         this.ringBuffer = disruptor.getRingBuffer();
+        log.info("[Migration-SDK] DisruptorDiffServiceCaller started with {} workers.", threads);
     }
 
     /**
-     * 将 Diff 请求发布到 Disruptor 队列。
+     * 实现 WorkHandler 接口，支持 WorkerPool 多线程消费。
+     */
+    private class DiffWorkHandler implements WorkHandler<DiffEvent> {
+        @Override
+        public void onEvent(DiffEvent event) {
+            if (event != null && event.request != null) {
+                send(event.request);
+                // 处理完后清空引用，协助 GC
+                event.request = null;
+            }
+        }
+    }
+
+    /**
+     * 非阻塞式地将 Diff 请求发布到 Disruptor 队列。
+     * 如果队列已满，直接丢弃以保证业务链路不被阻塞。
      *
      * @param request Diff 请求
      */
@@ -77,7 +106,19 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
         if (request == null) {
             return;
         }
-        long sequence = ringBuffer.next();
+        
+        long sequence;
+        try {
+            // 尝试获取可用位次，如果队列满则直接抛出异常
+            sequence = ringBuffer.tryNext();
+        } catch (InsufficientCapacityException e) {
+            long totalDropped = dropCount.incrementAndGet();
+            if (totalDropped % 100 == 1) { // 采样日志，避免日志爆炸
+                log.warn("[Migration-SDK] Diff queue is full, dropping request. Total dropped: {}", totalDropped);
+            }
+            return;
+        }
+
         try {
             DiffEvent event = ringBuffer.get(sequence);
             event.request = request;
@@ -108,32 +149,20 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
      *
      * @param request Diff 请求
      */
+    /**
+     * 向远端 Diff 服务发送一次请求。
+     *
+     * @param request Diff 请求
+     */
     private void send(DiffRequest request) {
         if (request == null) {
             return;
         }
 
-        JSONObject payload = new JSONObject();
-        payload.put("migration_key", request.getMigrationKey());
-        payload.put("trace_id", request.getTraceId());
-        payload.put("old_json", request.getOldJson());
-        payload.put("new_json", request.getNewJson());
-        payload.put("old_cost_time_ms", request.getOldCostTimeMs());
-        payload.put("new_cost_time_ms", request.getNewCostTimeMs());
-        payload.put("grayscale_param", request.getGrayscaleParam());
-        payload.put("old_success", request.getOldSuccess());
-        payload.put("new_success", request.getNewSuccess());
-        payload.put("old_error_message", request.getOldErrorMessage());
-        payload.put("new_error_message", request.getNewErrorMessage());
-        payload.put("old_request_params", request.getOldRequestParams());
-        payload.put("new_request_params", request.getNewRequestParams());
-        payload.put("migration_status", request.getMigrationTaskStatus());
-        payload.put("grayscale_rules", request.getGrayscaleRules());
-        payload.put("grayscale_hit", request.getGrayscaleHit());
-        payload.put("fallback_triggered", request.getFallbackTriggered());
+        String jsonPayload = JSON.toJSONString(request);
 
         HttpPost post = new HttpPost(diffServiceUrl + "/api/v1/diff");
-        post.setEntity(new StringEntity(payload.toJSONString(), StandardCharsets.UTF_8));
+        post.setEntity(new StringEntity(jsonPayload, StandardCharsets.UTF_8));
         post.setHeader("Content-Type", "application/json");
         post.setHeader("X-Internal-Token", internalToken);
         try (CloseableHttpResponse response = httpClient.execute(post)) {
@@ -152,25 +181,29 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
     }
 
     /**
-     * 创建带超时配置的 HTTP 客户端。
-     *
-     * @param timeout 超时时间（毫秒）
-     * @return HTTP 客户端
+     * 创建带超时和连接池配置的 HTTP 客户端。
      */
-    private static CloseableHttpClient createHttpClient(int timeout) {
+    private static CloseableHttpClient createHttpClient(int timeout, Integer maxConnections) {
+        int max = maxConnections != null && maxConnections > 0 ? maxConnections : 100;
+        
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        cm.setMaxTotal(max);
+        cm.setDefaultMaxPerRoute(max);
+
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(timeout)
                 .setConnectionRequestTimeout(timeout)
                 .setSocketTimeout(timeout)
                 .build();
-        return HttpClients.custom().setDefaultRequestConfig(requestConfig).build();
+        
+        return HttpClients.custom()
+                .setConnectionManager(cm)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 
     /**
      * 规范化 URL，并在为空时提供默认值。
-     *
-     * @param value 原始 URL value
-     * @return 规范化后的 URL
      */
     private static String trimTrailingSlash(String value) {
         if (value == null || value.isBlank()) {

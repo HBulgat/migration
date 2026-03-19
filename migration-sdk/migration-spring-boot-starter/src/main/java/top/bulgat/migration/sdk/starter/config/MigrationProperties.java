@@ -34,6 +34,8 @@ public class MigrationProperties {
                 private String address;
                 private int timeout=5000;
                 private String internalToken;
+                private int workerPoolSize=4;
+                private int maxConnections=100;
         }
 
         /**
@@ -62,7 +64,7 @@ public class MigrationProperties {
                         .configCenterCacheRefreshIntervalSeconds(configCenterClient ==null || configCenterClient.cacheRefreshIntervalSeconds<=0
                                         ?fromEnv.getConfigCenterCacheRefreshIntervalSeconds()
                                         : configCenterClient.cacheRefreshIntervalSeconds)
-                        .diffServiceEnable(configCenterClient == null
+                        .diffServiceEnable(diffServiceClient == null
                                 ?fromEnv.getDiffServiceEnable()
                                 : diffServiceClient.enable)
                         .diffServiceAddress(diffServiceClient == null || StringUtils.isBlank(diffServiceClient.address)
@@ -74,6 +76,12 @@ public class MigrationProperties {
                         .diffServiceTimeout(diffServiceClient==null||diffServiceClient.timeout<=0
                                         ? fromEnv.getDiffServiceTimeout()
                                         : diffServiceClient.timeout)
+                        .diffServiceWorkerCount(diffServiceClient == null || diffServiceClient.workerPoolSize <= 0
+                                        ? fromEnv.getDiffServiceWorkerCount()
+                                        : diffServiceClient.workerPoolSize)
+                        .diffServiceMaxConnections(diffServiceClient == null || diffServiceClient.maxConnections <= 0
+                                        ? fromEnv.getDiffServiceMaxConnections()
+                                        : diffServiceClient.maxConnections)
                         .build();
         }
 }

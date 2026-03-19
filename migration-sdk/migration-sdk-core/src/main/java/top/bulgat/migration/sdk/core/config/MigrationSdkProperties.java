@@ -41,6 +41,10 @@ public class MigrationSdkProperties {
     public static final String ENV_DIFF_SERVICE_INTERNAL_TOKEN = "ENV_DIFF_SERVICE_INTERNAL_TOKEN";
     /** Diff 服务超时时间*/
     public static final String ENV_DIFF_SERVICE_TIMEOUT="ENV_DIFF_SERVICE_TIMEOUT";
+    /** Diff 服务工作线程数*/
+    public static final String ENV_DIFF_SERVICE_WORKER_COUNT="ENV_DIFF_SERVICE_WORKER_COUNT";
+    /** Diff 服务最大连接数*/
+    public static final String ENV_DIFF_SERVICE_MAX_CONNECTIONS="ENV_DIFF_SERVICE_MAX_CONNECTIONS";
 
     private Boolean configCenterEnable;
     private String configCenterAddress;
@@ -49,10 +53,13 @@ public class MigrationSdkProperties {
     private Integer configCenterCacheRefreshIntervalSeconds;
     private Integer configCenterTimeout;
 
+    @Builder.Default
     private Boolean diffServiceEnable=true;
     private String diffServiceAddress;
     private String diffServiceInternalToken;
     private Integer diffServiceTimeout;
+    private Integer diffServiceWorkerCount;
+    private Integer diffServiceMaxConnections;
 
     /**
      * 从环境变量构建配置。
@@ -71,6 +78,8 @@ public class MigrationSdkProperties {
                 .diffServiceInternalToken(resolve(ENV_DIFF_SERVICE_INTERNAL_TOKEN, "ENV_DIFF_SERVICE_INTERNAL_TOKEN"))
                 .diffServiceEnable(resolveBoolean(ENV_DIFF_SERVICE_ENABLE,null))
                 .diffServiceTimeout(resolveInteger(ENV_DIFF_SERVICE_TIMEOUT,null))
+                .diffServiceWorkerCount(resolveInteger(ENV_DIFF_SERVICE_WORKER_COUNT, 4))
+                .diffServiceMaxConnections(resolveInteger(ENV_DIFF_SERVICE_MAX_CONNECTIONS, 100))
                 .build();
     }
 

@@ -336,7 +336,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
                         thread.setName(prefix + index.getAndIncrement());
                         return thread;
                     },
-                    new ThreadPoolExecutor.CallerRunsPolicy());
+                    new ThreadPoolExecutor.AbortPolicy());
         });
     }
 

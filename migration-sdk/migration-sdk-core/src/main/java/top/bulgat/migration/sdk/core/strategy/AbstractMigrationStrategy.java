@@ -3,6 +3,7 @@ package top.bulgat.migration.sdk.core.strategy;
 import com.alibaba.fastjson2.JSON;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,21 +53,26 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
         CompletableFuture<InvocationResult<T>> oldResultFuture = new CompletableFuture<>();
 
         // 异步执行：新接口 + 等待旧接口 + 上报 Diff
-        CompletableFuture.runAsync(() -> {
-            try {
-                ThreadContext.setTraceId(traceId);
-                // 执行新接口
-                InvocationResult<T> newResult = invokeSafely(context.getNewMethod(), args);
-                // 阻塞后台线程等待主线程执行完（带超时保护，防止死锁）
-                InvocationResult<T> oldResult = oldResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
-                // 后台上报
-                sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
-            } catch (Exception ex) {
-                log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
-            } finally {
-                ThreadContext.clear();
-            }
-        }, context.getExecutorService());
+        // 异步执行：新接口 + 等待旧接口 + 上报 Diff
+        try {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    ThreadContext.setTraceId(traceId);
+                    // 执行新接口
+                    InvocationResult<T> newResult = invokeSafely(context.getNewMethod(), args);
+                    // 阻塞后台线程等待主线程执行完（带超时保护，防止死锁）
+                    InvocationResult<T> oldResult = oldResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+                    // 后台上报
+                    sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
+                } catch (Exception ex) {
+                    log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
+                } finally {
+                    ThreadContext.clear();
+                }
+            }, context.getExecutorService());
+        } catch (RejectedExecutionException e) {
+            log.warn("[Migration-SDK] Background task rejected for migrationKey={}, executing synchronously.", context.getMigrationKey());
+        }
 
         // 主线程同步执行旧接口
         InvocationResult<T> oldResult = null;
@@ -98,21 +104,25 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
         CompletableFuture<InvocationResult<T>> newResultFuture = new CompletableFuture<>();
 
         // 异步执行：旧接口 + 等待新接口 + 上报 Diff
-        CompletableFuture.runAsync(() -> {
-            try {
-                ThreadContext.setTraceId(traceId);
-                // 执行旧接口
-                InvocationResult<T> oldResult = invokeSafely(context.getOldMethod(), args);
-                // 阻塞后台线程等待主线程执行完（带超时保护）
-                InvocationResult<T> newResult = newResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
-                // 后台上报
-                sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
-            } catch (Exception ex) {
-                log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
-            } finally {
-                ThreadContext.clear();
-            }
-        }, context.getExecutorService());
+        try {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    ThreadContext.setTraceId(traceId);
+                    // 执行旧接口
+                    InvocationResult<T> oldResult = invokeSafely(context.getOldMethod(), args);
+                    // 阻塞后台线程等待主线程执行完（带超时保护）
+                    InvocationResult<T> newResult = newResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+                    // 后台上报
+                    sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
+                } catch (Exception ex) {
+                    log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
+                } finally {
+                    ThreadContext.clear();
+                }
+            }, context.getExecutorService());
+        } catch (RejectedExecutionException e) {
+            log.warn("[Migration-SDK] Background task rejected for migrationKey={}, executing synchronously.", context.getMigrationKey());
+        }
 
         // 主线程同步执行新接口
         InvocationResult<T> newResult = null;
@@ -190,7 +200,7 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
                     .newErrorMessage(newResult.error() != null ? newResult.error().getMessage() : null)
                     .oldRequestParams(JSON.toJSONString(context.getArgs()))
                     .newRequestParams(JSON.toJSONString(context.getArgs()))
-                    .migrationTaskStatus(context.getMigrationTaskStatus())
+                    .migrationStatus(context.getMigrationTaskStatus())
                     .grayscaleRules(JSON.toJSONString(context.getGrayscaleRules()))
                     .grayscaleHit(grayscaleHit)
                     .fallbackTriggered(fallbackTriggered)
