@@ -63,25 +63,27 @@ func userParamHandler(args ...interface{}) map[string]interface{} {
 	}
 }
 
+// migrationWrap 统一的简写泛型封装：让 target 函数完全接管 gin.Context
+func migrationWrap[T any](
+	client *migration.Client,
+	key string,
+	oldFn strategy.TargetFunc,
+	newFn strategy.TargetFunc,
+	fallbackFn strategy.FallbackFunc,
+	mapBuilder strategy.ParamHandler,
+) gin.HandlerFunc {
+	// 1. 初始化灰度策略与执行函数
+	executeFn := client.Wrap(key, oldFn, newFn, fallbackFn, mapBuilder)
+	// 2. 返回被通用泛型函数包裹好的 Gin HTTP Handler
+	return HandleWithMigration[T](executeFn, func(c *gin.Context) []interface{} {
+		return []interface{}{c} // 核心魔法：以后 SDK args[0] 全是 *gin.Context ！
+	})
+}
+
 // RegisterRoutes 统一注册所有的路由和迁移策略包装，不污染 main 函数
 func RegisterRoutes(r *gin.Engine, client *migration.Client) {
 
-	// 统一的简写闭包封装：让 target 函数完全接管 gin.Context
-	migrationWrap := func(
-		key string,
-		oldFn strategy.TargetFunc,
-		newFn strategy.TargetFunc,
-		fallbackFn strategy.FallbackFunc,
-		mapBuilder strategy.ParamHandler,
-	) gin.HandlerFunc {
-		// 1. 初始化灰度策略与执行函数
-		executeFn := client.Wrap(key, oldFn, newFn, fallbackFn, mapBuilder)
-		// 2. 返回被通用泛型函数包裹好的 Gin HTTP Handler
-		return HandleWithMigration[User](executeFn, func(c *gin.Context) []interface{} {
-			return []interface{}{c} // 核心魔法：以后 SDK args[0] 全是 *gin.Context ！
-		})
-	}
-
 	// 极简路由绑定：完全按照您的期望，一句搞定！
-	r.GET("/api/v1/user/:id", migrationWrap("user-getUser-api", targetOld, targetNew, targetFallback, userParamHandler))
+	r.GET("/api/v1/user/:id", migrationWrap[User](client, "user-getUser-api", targetOld, targetNew, targetFallback, userParamHandler))
 }
+
