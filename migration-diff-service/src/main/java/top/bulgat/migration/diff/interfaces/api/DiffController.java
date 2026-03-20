@@ -13,6 +13,8 @@ import top.bulgat.migration.diff.interfaces.assembler.DiffCommandAssembler;
 import top.bulgat.migration.diff.interfaces.dto.DiffExecuteRequest;
 import top.bulgat.migration.diff.interfaces.dto.DiffExecuteResponse;
 
+import java.util.List;
+
 /**
  * Diff 执行接口。
  */
@@ -39,5 +41,11 @@ public class DiffController {
     @PostMapping
     public Result<DiffExecuteResponse> execute(@Valid @RequestBody DiffExecuteRequest request) {
         return Result.success(assembler.toResponse(applicationService.executeDiff(assembler.toCommand(request))));
+    }
+
+    @Operation(summary = "Batch execute diff", description = "Batch compare old_json and new_json with diff rules")
+    @PostMapping("/batch")
+    public Result<List<DiffExecuteResponse>> batchExecute(@Valid @RequestBody List<DiffExecuteRequest> request) {
+        return Result.success(assembler.toResponseList(applicationService.executeDiffBatch(assembler.toCommandList(request))));
     }
 }

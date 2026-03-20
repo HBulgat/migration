@@ -53,7 +53,6 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
         CompletableFuture<InvocationResult<T>> oldResultFuture = new CompletableFuture<>();
 
         // 异步执行：新接口 + 等待旧接口 + 上报 Diff
-        // 异步执行：新接口 + 等待旧接口 + 上报 Diff
         try {
             CompletableFuture.runAsync(() -> {
                 try {

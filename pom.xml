@@ -17,7 +17,6 @@
         <module>migration-admin</module>
         <module>migration-diff-service</module>
         <module>migration-config-common</module>
-        <module>migration-benchmark-app</module>
     </modules>
 
     <properties>

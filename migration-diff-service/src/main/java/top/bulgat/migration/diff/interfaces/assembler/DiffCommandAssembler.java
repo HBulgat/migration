@@ -57,4 +57,24 @@ public class DiffCommandAssembler {
                 .collect(Collectors.toList());
         return new DiffExecuteResponse(result.hasDiff(), items, result.getCostTimeMs());
     }
+
+    /**
+     * 批量转换请求。
+     */
+    public List<ExecuteDiffCommand> toCommandList(List<DiffExecuteRequest> requests) {
+        if (requests == null) {
+            return List.of();
+        }
+        return requests.stream().map(this::toCommand).collect(Collectors.toList());
+    }
+
+    /**
+     * 批量转换响应。
+     */
+    public List<DiffExecuteResponse> toResponseList(List<DiffResult> results) {
+        if (results == null) {
+            return List.of();
+        }
+        return results.stream().map(this::toResponse).collect(Collectors.toList());
+    }
 }

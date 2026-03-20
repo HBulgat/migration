@@ -1,6 +1,7 @@
 package top.bulgat.migration.diff.application.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -51,24 +52,7 @@ public class DiffApplicationService {
                 command.migrationKey(), command.traceId(),
                 command.oldJson() == null ? null : command.oldJson().length(),
                 command.newJson() == null ? null : command.newJson().length());
-        DiffRequest request = new DiffRequest(
-                command.migrationKey(),
-                command.traceId(),
-                command.oldJson(),
-                command.newJson(),
-                command.oldCostTimeMs(),
-                command.newCostTimeMs(),
-                command.grayscaleParam(),
-                command.oldSuccess(),
-                command.newSuccess(),
-                command.oldErrorMessage(),
-                command.newErrorMessage(),
-                command.oldRequestParams(),
-                command.newRequestParams(),
-                command.migrationTaskStatus(),
-                command.grayscaleRules(),
-                command.grayscaleHit(),
-                command.fallbackTriggered());
+        DiffRequest request = command.toDiffRequest();
         List<DiffRule> rules = diffRuleRepository.findEnabledRules(command.migrationKey());
         log.info("diff.execute rulesLoaded migrationKey={}, ruleCount={}", command.migrationKey(), rules.size());
         DiffResult result = domainService.execute(request, rules);
@@ -79,6 +63,49 @@ public class DiffApplicationService {
                 command.migrationKey(), result.hasDiff(), result.getDiffItems().size(), result.getCostTimeMs());
         return result;
     }
+
+    /**
+     * 批量执行Diff比对用例，最大化吞吐量。
+     *
+     * @param commands Diff 批量执行命令
+     * @return 批量Diff结果
+     */
+    public List<DiffResult> executeDiffBatch(List<ExecuteDiffCommand> commands) {
+        if (commands == null || commands.isEmpty()) {
+            return List.of();
+        }
+
+        long start = System.currentTimeMillis();
+        // 核心优化：Diff比对是CPU密集型操作（JSON解析与对比），使用 parallelStream 最大化吞吐量
+        List<DiffRequestResultPair> pairs = commands.parallelStream()
+                .map(command -> {
+                    validateCommand(command);
+                    DiffRequest request = command.toDiffRequest();
+                    // 规则通常带有本地缓存，按 key 查询极快
+                    List<DiffRule> rules = diffRuleRepository.findEnabledRules(command.migrationKey());
+                    DiffResult result = domainService.execute(request, rules);
+                    return new DiffRequestResultPair(request, result);
+                })
+                .collect(Collectors.toList());
+
+        // 批量落库，减少数据库交互频率带来的IO等待
+        diffRecordRepository.saveBatch(
+                pairs.stream().map(DiffRequestResultPair::request).collect(Collectors.toList()),
+                pairs.stream().map(DiffRequestResultPair::result).collect(Collectors.toList())
+        );
+
+        // 告警处理（保持异步特性，不阻塞当前线程池）
+        for (DiffRequestResultPair pair : pairs) {
+            alertService.alertIfNeeded(pair.request(), pair.result());
+        }
+
+        log.info("diff.executeBatch done batchSize={}, costTimeMs={}", commands.size(), System.currentTimeMillis() - start);
+
+        return pairs.stream().map(DiffRequestResultPair::result).collect(Collectors.toList());
+    }
+
+    // 内部结构体用于流处理中的结果透传
+    private record DiffRequestResultPair(DiffRequest request, DiffResult result) {}
 
     private void validateCommand(ExecuteDiffCommand command) {
         if (command == null) {

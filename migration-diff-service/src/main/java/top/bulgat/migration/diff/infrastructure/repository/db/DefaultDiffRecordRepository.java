@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import top.bulgat.migration.diff.domain.model.DiffItem;
 import top.bulgat.migration.diff.domain.model.DiffRecord;
 import top.bulgat.migration.diff.domain.model.DiffRequest;
@@ -72,6 +73,25 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         log.info("diff_record.save migrationKey={}, traceId={}, hasDiff={}, diffItemCount={}",
                 request.getMigrationKey(), request.getTraceId(), dataObject.getHasDiff(), result.getDiffItems().size());
         return toDomain(dataObject);
+    }
+
+    /**
+     * 批量持久化数据。利用 Spring 事务包装单个插入，减少提交开销。
+     * 同样利用了 BaseMapper 的 insert 方法。
+     *
+     * @param requests 请求参数列表。
+     * @param results  结果对象列表。
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void saveBatch(List<DiffRequest> requests, List<DiffResult> results) {
+        if (requests == null || results == null || requests.size() != results.size()) {
+            throw new IllegalArgumentException("requests and results must be non-null and have the same size");
+        }
+        for (int i = 0; i < requests.size(); i++) {
+            save(requests.get(i), results.get(i));
+        }
+        log.info("diff_record.saveBatch completed batchSize={}", requests.size());
     }
 
     private String writeDiffItems(List<DiffItem> items) {
