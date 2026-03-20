@@ -15,6 +15,7 @@ import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
 import top.bulgat.migration.sdk.core.diff.DisruptorDiffServiceCaller;
 import top.bulgat.migration.sdk.core.function.ExecuteFunction;
 import top.bulgat.migration.sdk.core.function.ParamHandler;
+import top.bulgat.migration.sdk.core.extension.DiffPostProcessor;
 import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
 import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
@@ -128,14 +129,16 @@ public class MigrationClient implements AutoCloseable {
      * @param oldMethod    旧接口方法引用
      * @param newMethod    新接口方法引用
      * @param paramHandler 灰度参数处理器，用于将方法参数转换为灰度匹配字典
+     * @param postProcessor 后置数据处理器，用于对比前清洗数据
      * @param <T>          方法返回值类型
      * @return 封装后的可执行函数
      */
     public <T> ExecuteFunction<T> wrap(
             Function<Object[], T> oldMethod,
             Function<Object[], T> newMethod,
-            ParamHandler paramHandler) {
-        return wrap(oldMethod, newMethod, null, paramHandler);
+            ParamHandler paramHandler,
+            DiffPostProcessor postProcessor) {
+        return wrap(oldMethod, newMethod, null, paramHandler, postProcessor);
     }
 
     /**
@@ -145,6 +148,7 @@ public class MigrationClient implements AutoCloseable {
      * @param newMethod      新接口方法引用
      * @param fallbackMethod 降级方法引用，入参包含原参数和异常对象
      * @param paramHandler   灰度参数处理器
+     * @param postProcessor  后置数据处理器
      * @param <T>            返回值类型
      * @return 封装后的可执行函数
      */
@@ -152,15 +156,17 @@ public class MigrationClient implements AutoCloseable {
             Function<Object[], T> oldMethod,
             Function<Object[], T> newMethod,
             BiFunction<Object[], Exception, T> fallbackMethod,
-            ParamHandler paramHandler) {
+            ParamHandler paramHandler,
+            DiffPostProcessor postProcessor) {
         Objects.requireNonNull(oldMethod, "oldMethod is required");
+
         Objects.requireNonNull(newMethod, "newMethod is required");
 
         BiFunction<Object[], Exception, T> safeFallback = fallbackMethod == null
                 ? new DefaultOldFallback<>(oldMethod)
                 : fallbackMethod;
 
-        return args -> execute(oldMethod, newMethod, safeFallback, paramHandler, args);
+        return args -> execute(oldMethod, newMethod, safeFallback, paramHandler, postProcessor, args);
     }
 
     /**
@@ -170,6 +176,7 @@ public class MigrationClient implements AutoCloseable {
      * @param newMethod      新接口分支
      * @param fallbackMethod 降级分支
      * @param paramHandler   灰度参数处理器
+     * @param postProcessor  后置数据处理器
      * @param args           原始调用参数
      * @param <T>            返回值类型
      * @return 实际执行分支的返回结果
@@ -179,6 +186,7 @@ public class MigrationClient implements AutoCloseable {
             Function<Object[], T> newMethod,
             BiFunction<Object[], Exception, T> fallbackMethod,
             ParamHandler paramHandler,
+            DiffPostProcessor postProcessor,
             Object[] args) {
         try {
             // 从配置中心拉取最新配置和灰度规则
@@ -204,6 +212,7 @@ public class MigrationClient implements AutoCloseable {
                     .migrationTaskStatus(status.getCode())
                     .fallbackMethod(fallbackMethod)
                     .paramHandler(paramHandler)
+                    .postProcessor(postProcessor)
                     .args(args)
                     .diffServiceCaller(diffServiceCaller)
                     .grayscaleMatcher(grayscaleMatcher)

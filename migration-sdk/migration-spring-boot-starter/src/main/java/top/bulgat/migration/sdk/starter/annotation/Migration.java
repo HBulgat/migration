@@ -6,6 +6,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import top.bulgat.migration.sdk.core.function.ParamHandler;
+import top.bulgat.migration.sdk.core.extension.DiffPostProcessor;
+import top.bulgat.migration.sdk.core.extension.DefaultDiffPostProcessor;
 
 /**
  * 迁移注解：声明当前方法由 SDK 接管新旧逻辑路由。
@@ -39,6 +41,12 @@ public @interface Migration {
      * 参数处理器类型。
      */
     Class<? extends ParamHandler> paramHandler() default ParamHandler.class;
+
+    /**
+     * 迁移数据后置处理器类型。
+     * 用于在发往 Diff 接口前对新旧返回结果进行裁剪、对其或结构转换。
+     */
+    Class<? extends DiffPostProcessor> postProcessor() default DefaultDiffPostProcessor.class;
 
     /**
      * 核心线程数。

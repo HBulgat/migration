@@ -25,6 +25,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import top.bulgat.migration.sdk.core.client.MigrationClient;
 import top.bulgat.migration.sdk.core.function.ParamHandler;
+import top.bulgat.migration.sdk.core.extension.DiffPostProcessor;
+import top.bulgat.migration.sdk.core.extension.DefaultDiffPostProcessor;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
@@ -98,6 +100,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
                 : resolveTargetMethod(target, migration.fallBackMethod(), entryMethod.getParameterTypes(), true);
 
         ParamHandler paramHandler = resolveParamHandler(migration.paramHandler());
+        DiffPostProcessor postProcessor = resolvePostProcessor(migration.postProcessor());
         ExecutorService executorService = resolveExecutor(entryMethod, migration);
 
         MigrationClient client = new MigrationClient(
@@ -116,7 +119,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
                 ? null
                 : invokeFallbackFunction(fallbackMethod.target(), fallbackMethod.method(), entryMethod.getParameterCount());
 
-        return client.wrap(oldInvoker, newInvoker, fallbackInvoker, paramHandler).apply(args);
+        return client.wrap(oldInvoker, newInvoker, fallbackInvoker, paramHandler, postProcessor).apply(args);
     }
 
     /**
@@ -304,6 +307,30 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
             return handlerClass.getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             throw new IllegalStateException("cannot create param handler: " + handlerClass.getName(), ex);
+        }
+    }
+
+    /**
+     * 从Spring 上下文中解析数据后置处理器实例，或者通过反射创建实例。
+     *
+     * @param processorClass 注解中指定的数据后置处理器类
+     * @return 数据后置处理器实例
+     */
+    private DiffPostProcessor resolvePostProcessor(Class<? extends DiffPostProcessor> processorClass) {
+        if (processorClass == null || processorClass == DefaultDiffPostProcessor.class) {
+            return new DefaultDiffPostProcessor();
+        }
+        if (applicationContext != null) {
+            try {
+                return applicationContext.getBean(processorClass);
+            } catch (Exception ignored) {
+                // 回退到基于反射的实例化方式。
+            }
+        }
+        try {
+            return processorClass.getDeclaredConstructor().newInstance();
+        } catch (Exception ex) {
+            throw new IllegalStateException("cannot create diff post processor: " + processorClass.getName(), ex);
         }
     }
 

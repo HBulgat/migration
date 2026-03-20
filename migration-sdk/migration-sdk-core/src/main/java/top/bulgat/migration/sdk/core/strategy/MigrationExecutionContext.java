@@ -9,6 +9,7 @@ import java.util.function.Function;
 import lombok.Builder;
 import lombok.Getter;
 import top.bulgat.migration.sdk.core.function.ParamHandler;
+import top.bulgat.migration.sdk.core.extension.DiffPostProcessor;
 import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
 import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
@@ -29,6 +30,7 @@ public class MigrationExecutionContext<T> {
     private final Function<Object[], T> newMethod;
     private final BiFunction<Object[], Exception, T> fallbackMethod;
     private final ParamHandler paramHandler;
+    private final DiffPostProcessor postProcessor;
     private final Object[] args;
     private final DiffServiceCaller diffServiceCaller;
     private final GrayscaleMatcher grayscaleMatcher;

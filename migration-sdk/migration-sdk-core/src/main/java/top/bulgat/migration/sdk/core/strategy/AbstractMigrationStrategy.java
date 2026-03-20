@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.bulgat.common.base.thread.ThreadContext;
 import top.bulgat.migration.sdk.core.model.DiffRequest;
+import top.bulgat.migration.sdk.core.extension.DiffPostProcessor;
 import top.bulgat.migration.sdk.core.support.InvocationResult;
 import top.bulgat.migration.sdk.core.support.OldInvocationFailedException;
 
@@ -185,11 +186,17 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
             boolean grayscaleHit,
             boolean fallbackTriggered) {
         try {
+            Object rawOld = oldResult.isSuccess() ? oldResult.value() : null;
+            Object rawNew = newResult.isSuccess() ? newResult.value() : null;
+
+            DiffPostProcessor.ProcessedResult processed = context.getPostProcessor()
+                    .process(context.getMigrationKey(), rawOld, rawNew);
+
             context.getDiffServiceCaller().executeDiffAsync(DiffRequest.builder()
                     .migrationKey(context.getMigrationKey())
                     .traceId(ThreadContext.getTraceId())
-                    .oldJson(oldResult.isSuccess() ? JSON.toJSONString(oldResult.value()) : null)
-                    .newJson(newResult.isSuccess() ? JSON.toJSONString(newResult.value()) : null)
+                    .oldJson(oldResult.isSuccess() ? JSON.toJSONString(processed.processedOld()) : null)
+                    .newJson(newResult.isSuccess() ? JSON.toJSONString(processed.processedNew()) : null)
                     .oldCostTimeMs((int) oldResult.costTimeMs())
                     .newCostTimeMs((int) newResult.costTimeMs())
                     .grayscaleParam(JSON.toJSONString(grayscaleParam))
