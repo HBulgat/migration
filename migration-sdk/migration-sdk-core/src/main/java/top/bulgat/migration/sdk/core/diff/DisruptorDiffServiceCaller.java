@@ -149,11 +149,6 @@ public class DisruptorDiffServiceCaller implements DiffServiceCaller {
      *
      * @param request Diff 请求
      */
-    /**
-     * 向远端 Diff 服务发送一次请求。
-     *
-     * @param request Diff 请求
-     */
     private void send(DiffRequest request) {
         if (request == null) {
             return;

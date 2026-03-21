@@ -26,7 +26,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateGrayscaleRuleRequest;
 /**
  * 灰度规则管理接口.
  */
-@Tag(name = "Grayscale Rule API", description = "Manage migration 灰度规则")
+@Tag(name = "灰度规则API", description = "管理迁移灰度规则")
 @Validated
 @RestController
 @RequestMapping("/api/v1/grayscale_rule")
@@ -62,7 +62,7 @@ public class GrayscaleRuleController {
         return Result.success(null);
     }
 
-    @Operation(summary = "Toggle grayscale rule enable status")
+    @Operation(summary = "切换灰度规则启用状态")
     @PostMapping("/update_enable")
     public Result<Void> updateEnable(@Valid @RequestBody UpdateGrayscaleRuleEnableRequest request) {
         applicationService.updateEnable(assembler.toUpdateEnableCommand(request));

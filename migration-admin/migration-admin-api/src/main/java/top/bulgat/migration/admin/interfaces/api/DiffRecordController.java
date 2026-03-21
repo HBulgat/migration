@@ -25,7 +25,7 @@ import top.bulgat.migration.admin.interfaces.dto.DiffStatisticsResponse;
 /**
  * Diff 记录查询接口。
  */
-@Tag(name = "Diff Record API", description = "Query diff record list, detail and statistics")
+@Tag(name = "Diff记录API", description = "查询Diff记录列表、详情和统计")
 @Validated
 @RestController
 @RequestMapping("/api/v1/diff_record")
@@ -70,7 +70,7 @@ public class DiffRecordController {
                 diffRecordResponses));
     }
 
-    @Operation(summary = "Get diff record detail")
+    @Operation(summary = "获取Diff记录详情")
     @GetMapping("/detail")
     public Result<DiffRecordResponse> detail(@RequestParam("id") long id) {
         log.info("diff_record.detail request id={}", id);

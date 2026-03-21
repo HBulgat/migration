@@ -26,7 +26,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateMigrationTaskStatusReques
 /**
  * 迁移任务管理接口。
  */
-@Tag(name = "Migration Task API", description = "创建、查询、更新和删除迁移任务")
+@Tag(name = "迁移任务API", description = "创建、查询、更新和删除迁移任务")
 @Validated
 @RestController
 @RequestMapping("/api/v1/migration_task")

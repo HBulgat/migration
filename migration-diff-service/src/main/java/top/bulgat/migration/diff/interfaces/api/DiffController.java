@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Diff 执行接口。
  */
-@Tag(name = "Diff API", description = "Execute JSON diff with configured rules")
+@Tag(name = "Diff执行API", description = "执行JSON Diff比对")
 @RestController
 @RequestMapping("/api/v1/diff")
 public class DiffController {
@@ -37,13 +37,13 @@ public class DiffController {
      * @param request Diff 请求参数。
      * @return Diff 执行结果
      */
-    @Operation(summary = "Execute diff", description = "Compare old_json and new_json with diff rules")
+    @Operation(summary = "执行Diff", description = "根据Diff规则比对新旧JSON响应")
     @PostMapping
     public Result<DiffExecuteResponse> execute(@Valid @RequestBody DiffExecuteRequest request) {
         return Result.success(assembler.toResponse(applicationService.executeDiff(assembler.toCommand(request))));
     }
 
-    @Operation(summary = "Batch execute diff", description = "Batch compare old_json and new_json with diff rules")
+    @Operation(summary = "批量执行Diff", description = "批量根据Diff规则比对新旧JSON响应")
     @PostMapping("/batch")
     public Result<List<DiffExecuteResponse>> batchExecute(@Valid @RequestBody List<DiffExecuteRequest> request) {
         return Result.success(assembler.toResponseList(applicationService.executeDiffBatch(assembler.toCommandList(request))));

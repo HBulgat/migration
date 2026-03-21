@@ -26,7 +26,7 @@ import top.bulgat.migration.admin.interfaces.dto.UpdateDiffRuleRequest;
 /**
  * Diff规则管理接口.
  */
-@Tag(name = "Diff Rule API", description = "Manage migration diff rules")
+@Tag(name = "Diff规则API", description = "管理迁移Diff规则")
 @Validated
 @RestController
 @RequestMapping("/api/v1/diff_rule")
@@ -62,7 +62,7 @@ public class DiffRuleController {
         return Result.success(null);
     }
 
-    @Operation(summary = "Toggle diff rule enable status")
+    @Operation(summary = "切换Diff规则启用状态")
     @PostMapping("/update_enable")
     public Result<Void> updateEnable(@Valid @RequestBody UpdateDiffRuleEnableRequest request) {
         applicationService.updateEnable(assembler.toUpdateEnableCommand(request));

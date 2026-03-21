@@ -18,15 +18,7 @@ migration-diff:
     password: ${MIGRATION_DIFF_CONFIG_CENTER_PASSWORD}
     meta-info:
       namespace: ${MIGRATION_DIFF_CONFIG_CENTER_META_INFO_NAMESPACE:}
-  notice:
-    email:
-      auth: true
-      charset: UTF-8
-      ssl-enable: true
-      host: ""
-      port: 1
-      username: ""
-      password:
+
 logging:
   level:
     top.bulgat: INFO
