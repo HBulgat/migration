@@ -49,3 +49,12 @@ application-local.yml
 /migration-benchmark-app/
 seed_data.py
 benchmark_schema.sql
+
+
+### openspec ###
+openspec/
+.agent/
+.trae/
+
+### migration-sdk-go ###
+migration-sdk/migration-sdk-go/
