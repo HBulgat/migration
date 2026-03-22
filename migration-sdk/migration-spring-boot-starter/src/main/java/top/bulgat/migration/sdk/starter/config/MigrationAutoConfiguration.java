@@ -24,7 +24,7 @@ import java.util.Objects;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties({MigrationProperties.class,
-        MigrationProperties.DiffServiceClientProperties.class,
+        MigrationProperties.DiffServiceCallerProperties.class,
         MigrationProperties.ConfigCenterClientProperties.class
 })
 @ConditionalOnProperty(prefix = "migration", name = "enabled", havingValue = "true", matchIfMissing = true)

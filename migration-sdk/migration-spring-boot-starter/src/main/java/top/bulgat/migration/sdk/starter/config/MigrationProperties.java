@@ -15,7 +15,7 @@ import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
 public class MigrationProperties {
 
         private ConfigCenterClientProperties configCenterClient;
-        private DiffServiceClientProperties diffServiceClient;
+        private DiffServiceCallerProperties diffServiceClient;
 
         @Data
         @ConfigurationProperties(prefix = "migration.config-center-client")
@@ -28,8 +28,8 @@ public class MigrationProperties {
                 private int cacheRefreshIntervalSeconds=30;
         }
         @Data
-        @ConfigurationProperties(prefix = "migration.diff-service-client")
-        public static class DiffServiceClientProperties {
+        @ConfigurationProperties(prefix = "migration.diff-service-caller")
+        public static class DiffServiceCallerProperties {
                 private boolean enable=true;
                 private String address;
                 private int timeout=5000;

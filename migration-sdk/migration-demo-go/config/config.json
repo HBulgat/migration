@@ -1,0 +1,21 @@
+{
+  "server": {
+    "port": 9000
+  },
+  "migration": {
+    "config_center_client_config": {
+      "enable": true,
+      "address": "https://migration.bulgat.top",
+      "internal_token": "bc9efd204c39e076a99ba81d2fc023071561af3d2d770a9027d9683a417efe74",
+      "timeout_seconds": 10,
+      "cache_enable": true,
+      "cache_refresh_interval_seconds": 5
+    },
+    "diff_reporter_config": {
+      "enable": true,
+      "address": "https://migration-diff.bulgat.top",
+      "internal_token": "bc9efd204c39e076a99ba81d2fc023071561af3d2d770a9027d9683a417efe74",
+      "timeout_seconds": 10
+    }
+  }
+}
