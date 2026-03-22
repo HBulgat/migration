@@ -1,7 +1,5 @@
 package top.bulgat.migration.diff.domain.model;
 
-import lombok.AllArgsConstructor;
-
 /**
  * 单个 Diff 明细项。
  */
