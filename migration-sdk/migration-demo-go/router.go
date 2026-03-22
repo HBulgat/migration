@@ -1,77 +1,86 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/HBulgat/migration-demo-go/handler"
-	"github.com/HBulgat/migration-sdk-go"
+	migration "github.com/HBulgat/migration-sdk-go" // 请根据实际包路径调整
 	"github.com/gin-gonic/gin"
 )
 
-// RegisterRoutes 统一注册所有的路由和迁移策略包装，无需污染业务代码
+// RegisterRoutes 统一注册所有的路由和迁移策略包装
 func RegisterRoutes(r *gin.Engine) {
-	// 极简泛型路由绑定
+	// 注册用户查询接口
 	r.GET("/api/v1/user/:id", migrationWrap(
-		"get-user-by-id",
-		handler.UserParamHandler,
-		handler.OldGetUserById,
-		handler.NewGetUserById,
-		handler.FallbackGetUserById,
+		"get-user-by-id",         // 迁移策略 Key
+		handler.UserParamHandler, // 参数提取器: func(ctx *gin.Context) map[string]interface{}
+		nil,
+		handler.OldGetUserById,      // 旧逻辑: func(ctx *gin.Context) (interface{}, error)
+		handler.NewGetUserById,      // 新逻辑: func(ctx *gin.Context) (interface{}, error)
+		handler.FallbackGetUserById, // 降级逻辑: func(ctx *gin.Context) (interface{}, error)
 	))
 }
 
-// migrationWrap 基于泛型的通用路由包装器 (Generics Handler)
-func migrationWrap[T any](
+// migrationWrap 通用路由包装器 (无泛型版本)
+func migrationWrap(
 	migrationKey string,
-	paramExtractor func(*T) map[string]interface{},
-	functions ...func(ctx *gin.Context) (interface{}, error),
+	paramExtractor func(ctx *gin.Context) map[string]interface{},
+	postProcessor migration.PostProcessor,
+	oldFunc func(ctx *gin.Context) (interface{}, error),
+	newFunc func(ctx *gin.Context) (interface{}, error),
+	fallbackFunc func(ctx *gin.Context) (interface{}, error),
 ) gin.HandlerFunc {
-
-	// 适配器：将强类型的业务函数适配为 SDK 的 migration.Function
 	adapt := func(f func(ctx *gin.Context) (interface{}, error)) migration.Function {
 		return func(args ...interface{}) (interface{}, error) {
-			ctx := args[0].(*gin.Context)
+			if len(args) == 0 {
+				return nil, fmt.Errorf("no context provided to migration function")
+			}
+
+			ctx, ok := args[0].(*gin.Context)
+			if !ok {
+				// 如果类型不对，返回明确错误而不是 Panic
+				return nil, fmt.Errorf("invalid context type: expected *gin.Context, got %T", args[0])
+			}
+
 			return f(ctx)
 		}
 	}
 
-	var adaptedFunctions []migration.Function
-	for _, f := range functions {
-		adaptedFunctions = append(adaptedFunctions, adapt(f))
-	}
-
 	// 适配参数提取器
 	paramHandler := func(args ...interface{}) map[string]interface{} {
-		req := args[1].(*T)
-		if paramExtractor != nil {
-			return paramExtractor(req)
+		if len(args) == 0 {
+			return map[string]interface{}{}
 		}
-		return map[string]interface{}{}
+		ctx, ok := args[0].(*gin.Context)
+		if !ok {
+			return map[string]interface{}{}
+		}
+		return paramExtractor(ctx)
 	}
 
-	// 将当前 API 路由和新旧等函数一同注册到 SDK 的 Client Wrapper 中
-	// 前三个分别为 oldFunc, newFunc, fallbackFunc
-	wrap := client.Wrap(migrationKey, paramHandler, nil, adaptedFunctions...)
+	sdkOld := adapt(oldFunc)
+	sdkNew := adapt(newFunc)
+	sdkFallback := adapt(fallbackFunc)
 
-	// 返回标准的 Gin Handler
+	wrap := client.Wrap(migrationKey, paramHandler, postProcessor, sdkOld, sdkNew, sdkFallback)
+
+	// 返回最终的 Gin HTTP Handler
 	return func(c *gin.Context) {
-		var req T
-		// 根据 HTTP 途径绑定 Request (支持 Query, JSON Body)
-		if err := c.ShouldBind(&req); err != nil {
-			c.JSON(400, gin.H{"code": 400, "message": "Bad Request"})
-			return
-		}
-		// 覆盖绑定 URI，解决类似 /:id 的解析
-		_ = c.ShouldBindUri(&req)
+		res, err := wrap(c)
 
-		// 触发主流程包装：将 gin 的原生请求 Context 与模型数据 req 传给内部各阶段策略
-		res, err := wrap(c.Request.Context(), &req)
 		if err != nil {
-			c.JSON(500, gin.H{"code": 500, "message": err.Error()})
+			// 根据业务需求处理错误，这里统一返回 500
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    http.StatusInternalServerError,
+				"message": err.Error(),
+			})
 			return
 		}
 
-		// 内部策略处理后的有效业务响应统一在此吐出，彻底解决新老接口抢占 Write Header 和竞争写的死锁问题。
-		c.JSON(200, gin.H{
-			"code":    200,
+		// 统一成功响应格式
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusOK,
 			"message": "OK",
 			"data":    res,
 		})

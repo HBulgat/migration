@@ -1,7 +1,7 @@
 package model
 
 type GetUserByIdRequest struct {
-	UserID string `json:"user_id"`
+	UserID string `json:"user_id" form:"user_id" uri:"id"`
 }
 
 type GetUserByIdResponse struct {
