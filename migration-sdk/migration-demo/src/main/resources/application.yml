@@ -5,11 +5,7 @@ spring:
   application:
     name: migration.test.demo
   profiles:
-    active: default
-migration:
-  config-center-url: ""
-  diff-service-url: ""
-  default-timeout: 5000
+    active: local
 
 logging:
   level:
