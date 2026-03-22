@@ -16,7 +16,7 @@ public record DiffRecordResponse(
         @JsonProperty("diff_results") List<DiffItemResponse> diffResults,
         @JsonProperty("has_diff") boolean hasDiff,
         @JsonProperty("diff_type") String diffType,
-        @JsonProperty("grayscale_param") String grayscaleParam,
+        @JsonProperty("gray_param") String grayParam,
         @JsonProperty("old_cost_time_ms") Integer oldCostTimeMs,
         @JsonProperty("new_cost_time_ms") Integer newCostTimeMs,
         @JsonProperty("total_cost_time_ms") Integer totalCostTimeMs,

@@ -11,7 +11,7 @@
 //import org.springframework.context.support.StaticApplicationContext;
 //import top.bulgat.migration.sdk.core.function.ParamHandler;
 //import top.bulgat.migration.sdk.core.model.DiffRequest;
-//import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
+//import top.bulgat.migration.sdk.core.model.GrayConfig;
 //import top.bulgat.migration.sdk.core.model.MigrationConfig;
 //import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 //import top.bulgat.migration.sdk.core.spi.ConfigClient;
@@ -32,7 +32,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //        interceptor.setApplicationContext(new StaticApplicationContext());
@@ -56,11 +56,11 @@
 //    }
 //
 //    @Test
-//    void invoke_shouldUseReflectionCreatedParamHandlerForGrayscale() {
+//    void invoke_shouldUseReflectionCreatedParamHandlerForGray() {
 //        ParamHandlerDemoService.OLD_COUNT.set(0);
 //        ParamHandlerDemoService.NEW_COUNT.set(0);
 //
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"9001\"]")
 //                .enable(true)
@@ -73,7 +73,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //
@@ -106,7 +106,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //
@@ -146,7 +146,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //
@@ -187,7 +187,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //        interceptor.setApplicationContext(new StaticApplicationContext());
@@ -217,7 +217,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //
@@ -256,7 +256,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //        interceptor.setApplicationContext(new StaticApplicationContext());
@@ -287,7 +287,7 @@
 //        MigrationInterceptor interceptor = new MigrationInterceptor(
 //                configClient,
 //                diffServiceCaller,
-//                new top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher(),
+//                new top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                new MigrationProperties());
 //
@@ -316,7 +316,7 @@
 //
 //    private static final class FakeConfigClient implements ConfigClient {
 //        private int status = MigrationTaskStatus.OLD.getCode();
-//        private List<GrayscaleConfig> rules = List.of();
+//        private List<GrayConfig> rules = List.of();
 //
 //        @Override
 //        public MigrationConfig getMigrationConfig(String migrationKey) {
@@ -324,7 +324,7 @@
 //        }
 //
 //        @Override
-//        public List<GrayscaleConfig> getGrayscaleRules(String migrationKey) {
+//        public List<GrayConfig> getGrayRules(String migrationKey) {
 //            return rules;
 //        }
 //    }

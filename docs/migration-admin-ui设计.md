@@ -35,7 +35,7 @@ migration-admin-ui/
 │   │   ├── MigrationTask/          # 迁移任务管理
 │   │   │   ├── index.vue          # 任务列表
 │   │   │   └── EditDialog.vue     # 创建/编辑弹窗
-│   │   ├── GrayscaleRule/         # 灰度规则管理
+│   │   ├── GrayRule/         # 灰度规则管理
 │   │   │   ├── index.vue          # 规则列表
 │   │   │   └── EditDialog.vue     # 创建/编辑弹窗
 │   │   └── DiffRecord/            # Diff结果查询
@@ -47,7 +47,7 @@ migration-admin-ui/
 │   │   └── DiffViewer.vue         # Diff对比视图
 │   ├── api/                       # API调用
 │   │   ├── migrationTask.ts       # 迁移任务API
-│   │   ├── grayscaleRule.ts       # 灰度规则API
+│   │   ├── grayRule.ts       # 灰度规则API
 │   │   └── diffRecord.ts          # Diff记录API
 │   ├── router/                    # 路由配置
 │   │   └── index.ts
@@ -277,7 +277,7 @@ migration-admin-ui/
 
 ---
 
-#### 6.4.6 灰度规则列表 (GrayscaleRule/index)
+#### 6.4.6 灰度规则列表 (GrayRule/index)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -312,7 +312,7 @@ migration-admin-ui/
 
 ---
 
-#### 6.4.7 灰度规则创建/编辑弹窗 (GrayscaleRule/EditDialog)
+#### 6.4.7 灰度规则创建/编辑弹窗 (GrayRule/EditDialog)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -475,38 +475,38 @@ export const deleteMigrationTask = (data: {
   migration_key: string;
 }) => post('/api/v1/migration_task/delete', data);
 
-// src/api/grayscaleRule.ts
-export const getGrayscaleRuleList = (params: {
+// src/api/grayRule.ts
+export const getGrayRuleList = (params: {
   migration_key: string;
   page: number;
   pageSize: number;
-}) => get('/api/v1/grayscale_rule/list', { params });
+}) => get('/api/v1/gray_rule/list', { params });
 
-export const createGrayscaleRule = (data: {
+export const createGrayRule = (data: {
   migration_key: string;
   rule_type: string;
   rule_value: string;
   enable: boolean;
-}) => post('/api/v1/grayscale_rule/create', data);
+}) => post('/api/v1/gray_rule/create', data);
 
-export const updateGrayscaleRule = (data: {
+export const updateGrayRule = (data: {
   migration_key: string;
   rule_id: string;
   rule_type?: string;
   rule_value?: string;
   enable?: boolean;
-}) => post('/api/v1/grayscale_rule/update', data);
+}) => post('/api/v1/gray_rule/update', data);
 
-export const updateGrayscaleRuleEnable = (data: {
+export const updateGrayRuleEnable = (data: {
   migration_key: string;
   rule_id: string;
   enable: boolean;
-}) => post('/api/v1/grayscale_rule/update_enable', data);
+}) => post('/api/v1/gray_rule/update_enable', data);
 
-export const deleteGrayscaleRule = (data: {
+export const deleteGrayRule = (data: {
   migration_key: string;
   rule_id: string;
-}) => post('/api/v1/grayscale_rule/delete', data);
+}) => post('/api/v1/gray_rule/delete', data);
 
 // src/api/diffRecord.ts
 export const getDiffRecordList = (params: {

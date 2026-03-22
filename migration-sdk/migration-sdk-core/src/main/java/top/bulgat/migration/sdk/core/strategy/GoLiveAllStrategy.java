@@ -27,10 +27,10 @@ public class GoLiveAllStrategy extends AbstractMigrationStrategy {
      */
     @Override
     public <T> T execute(MigrationExecutionContext<T> context) {
-        Map<String, Object> grayscaleParam = context.buildParam();
+        Map<String, Object> grayParam = context.buildParam();
 
         // 并发调用，主线程执行新接口，辅助接口在后台跑
-        ConcurrentInvocationResult<T> result = invokeNewMainOldAsync(context, grayscaleParam);
+        ConcurrentInvocationResult<T> result = invokeNewMainOldAsync(context, grayParam);
 
         // 如果新接口执行成功，直接返回（后台在异步处理对比）
         if (result.newResult().isSuccess()) {

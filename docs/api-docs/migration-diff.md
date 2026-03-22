@@ -41,7 +41,7 @@ Success example:
 | new_json | string | yes | New response JSON string. |
 | old_cost_time_ms | integer | no | Must be `>= 0` when provided. |
 | new_cost_time_ms | integer | no | Must be `>= 0` when provided. |
-| grayscale_param | string | no | Grayscale params, stored as-is. |
+| gray_param | string | no | Gray params, stored as-is. |
 
 Request example:
 
@@ -53,7 +53,7 @@ Request example:
   "new_json": "{\"name\":\"tom\",\"age\":19}",
   "old_cost_time_ms": 12,
   "new_cost_time_ms": 10,
-  "grayscale_param": "{\"uid\":1001}"
+  "gray_param": "{\"uid\":1001}"
 }
 ```
 

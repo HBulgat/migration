@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import type { DiffItem, DiffRecord, DiffStatistics, GrayscaleRule, MigrationTask, PageResult } from '@/types'
+import type { DiffItem, DiffRecord, DiffStatistics, GrayRule, MigrationTask, PageResult } from '@/types'
 
 interface MigrationTaskListParams {
   page: number
@@ -8,7 +8,7 @@ interface MigrationTaskListParams {
   keyword?: string
 }
 
-interface GrayscaleRuleListParams {
+interface GrayRuleListParams {
   migration_key: string
   page: number
   pageSize: number
@@ -63,14 +63,13 @@ let mockTaskStore: MigrationTask[] = [
 ]
 
 let mockRuleIdSequence = 6
-let mockGrayscaleRuleStore: GrayscaleRule[] = [
+let mockGrayRuleStore: GrayRule[] = [
   {
     rule_id: 'rule-0001',
     migration_key: 'user-getUser-api',
     rule_type: 'PERCENTAGE',
     rule_value: '30',
     enable: true,
-    weight: 10,
     create_time: '2026-02-18T12:00:00',
     update_time: '2026-02-23T09:00:00',
   },
@@ -80,7 +79,6 @@ let mockGrayscaleRuleStore: GrayscaleRule[] = [
     rule_type: 'WHITELIST',
     rule_value: '["1001","1002"]',
     enable: false,
-    weight: 0,
     create_time: '2026-02-18T12:30:00',
     update_time: '2026-02-19T10:00:00',
   },
@@ -90,7 +88,6 @@ let mockGrayscaleRuleStore: GrayscaleRule[] = [
     rule_type: 'BLACKLIST',
     rule_value: '["9001","9002"]',
     enable: true,
-    weight: 5,
     create_time: '2026-02-17T10:10:00',
     update_time: '2026-02-22T15:30:00',
   },
@@ -100,7 +97,6 @@ let mockGrayscaleRuleStore: GrayscaleRule[] = [
     rule_type: 'EXPRESSION',
     rule_value: '#userLevel >= 4',
     enable: true,
-    weight: 20,
     create_time: '2026-02-16T15:10:00',
     update_time: '2026-02-21T15:22:00',
   },
@@ -110,7 +106,6 @@ let mockGrayscaleRuleStore: GrayscaleRule[] = [
     rule_type: 'PERCENTAGE',
     rule_value: '100',
     enable: true,
-    weight: 0,
     create_time: '2026-02-10T11:45:00',
     update_time: '2026-02-20T08:15:00',
   },
@@ -147,7 +142,7 @@ function buildMockDiffRecords(): DiffRecord[] {
           diff_results: payload.diffItems,
           has_diff: hasDiff,
           diff_type: payload.diffItems[0]?.diff_type,
-          grayscale_param: JSON.stringify({ userId: `${1000 + (id % 50)}`, region: id % 2 === 0 ? 'beijing' : 'shanghai' }),
+          gray_param: JSON.stringify({ userId: `${1000 + (id % 50)}`, region: id % 2 === 0 ? 'beijing' : 'shanghai' }),
           old_cost_time_ms: oldCost,
           new_cost_time_ms: newCost,
           total_cost_time_ms: oldCost + newCost,
@@ -367,7 +362,7 @@ export function queryMigrationTask(payload: { migration_key: string }): Promise<
 export function deleteMigrationTask(payload: { migration_key: string }): Promise<void> {
   return simulateNetwork(() => {
     mockTaskStore = mockTaskStore.filter((item) => item.migration_key !== payload.migration_key)
-    mockGrayscaleRuleStore = mockGrayscaleRuleStore.filter((item) => item.migration_key !== payload.migration_key)
+    mockGrayRuleStore = mockGrayRuleStore.filter((item) => item.migration_key !== payload.migration_key)
   })
 }
 
@@ -386,40 +381,39 @@ export function updateMigrationTaskStatus(payload: {
   })
 }
 
-export function listGrayscaleRules(params: GrayscaleRuleListParams): Promise<PageResult<GrayscaleRule>> {
+export function listGrayRules(params: GrayRuleListParams): Promise<PageResult<GrayRule>> {
   return simulateNetwork(() => {
-    const list = mockGrayscaleRuleStore
+    const list = mockGrayRuleStore
       .filter((item) => item.migration_key === params.migration_key)
       .sort((a, b) => dayjs(b.update_time).valueOf() - dayjs(a.update_time).valueOf())
     return paginate(list, params.page, params.pageSize)
   })
 }
 
-export function createGrayscaleRule(payload: {
+export function createGrayRule(payload: {
   migration_key: string
   rule_type: string
   rule_value: string
   enable: boolean
-}): Promise<GrayscaleRule> {
+}): Promise<GrayRule> {
   return simulateNetwork(() => {
     const now = nowIso()
-    const rule: GrayscaleRule = {
+    const rule: GrayRule = {
       rule_id: `rule-${String(mockRuleIdSequence).padStart(4, '0')}`,
       migration_key: payload.migration_key,
       rule_type: payload.rule_type,
       rule_value: payload.rule_value,
       enable: payload.enable,
-      weight: (payload as any).weight ?? 0,
       create_time: now,
       update_time: now,
     }
     mockRuleIdSequence += 1
-    mockGrayscaleRuleStore = [rule, ...mockGrayscaleRuleStore]
+    mockGrayRuleStore = [rule, ...mockGrayRuleStore]
     return cloneDeep(rule)
   })
 }
 
-export function updateGrayscaleRule(payload: {
+export function updateGrayRule(payload: {
   migration_key: string
   rule_id: string
   rule_type?: string
@@ -427,7 +421,7 @@ export function updateGrayscaleRule(payload: {
   enable?: boolean
 }): Promise<void> {
   return simulateNetwork(() => {
-    const target = mockGrayscaleRuleStore.find(
+    const target = mockGrayRuleStore.find(
       (item) => item.migration_key === payload.migration_key && item.rule_id === payload.rule_id,
     )
     if (!target) {
@@ -447,20 +441,20 @@ export function updateGrayscaleRule(payload: {
   })
 }
 
-export function updateGrayscaleRuleEnable(payload: {
+export function updateGrayRuleEnable(payload: {
   migration_key: string
   rule_id: string
   enable: boolean
 }): Promise<void> {
-  return updateGrayscaleRule(payload)
+  return updateGrayRule(payload)
 }
 
-export function deleteGrayscaleRule(payload: {
+export function deleteGrayRule(payload: {
   migration_key: string
   rule_id: string
 }): Promise<void> {
   return simulateNetwork(() => {
-    mockGrayscaleRuleStore = mockGrayscaleRuleStore.filter(
+    mockGrayRuleStore = mockGrayRuleStore.filter(
       (item) => !(item.migration_key === payload.migration_key && item.rule_id === payload.rule_id),
     )
   })

@@ -9,10 +9,10 @@ import top.bulgat.migration.sdk.core.config.CachedConfigClient;
 import top.bulgat.migration.sdk.core.config.HttpConfigClient;
 import top.bulgat.migration.sdk.core.config.MigrationSdkProperties;
 import top.bulgat.migration.sdk.core.diff.DisruptorDiffServiceCaller;
-import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
+import top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
-import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
+import top.bulgat.migration.sdk.core.spi.GrayMatcher;
 import top.bulgat.migration.sdk.core.strategy.MigrationStrategyRegistry;
 import top.bulgat.migration.sdk.starter.aop.MigrationAnnotationAdvisor;
 import top.bulgat.migration.sdk.starter.aop.MigrationInterceptor;
@@ -58,8 +58,8 @@ public class MigrationAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public GrayscaleMatcher grayscaleMatcher() {
-        return new DefaultGrayscaleMatcher();
+    public GrayMatcher grayMatcher() {
+        return new DefaultGrayMatcher();
     }
 
     /**
@@ -78,11 +78,11 @@ public class MigrationAutoConfiguration {
     public MigrationInterceptor migrationInterceptor(
             ConfigClient configClient,
             DiffServiceCaller diffServiceCaller,
-            GrayscaleMatcher grayscaleMatcher,
+            GrayMatcher grayMatcher,
             MigrationStrategyRegistry strategyRegistry,
             MigrationProperties properties) {
         return new MigrationInterceptor(
-                configClient, diffServiceCaller, grayscaleMatcher, strategyRegistry, properties);
+                configClient, diffServiceCaller, grayMatcher, strategyRegistry, properties);
     }
 
     /**

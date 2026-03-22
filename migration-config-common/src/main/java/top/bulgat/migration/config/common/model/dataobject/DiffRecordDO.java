@@ -30,8 +30,8 @@ public class DiffRecordDO {
     private Integer hasDiff;
     @TableField("diff_type")
     private String diffType;
-    @TableField("grayscale_param")
-    private String grayscaleParam;
+    @TableField("gray_param")
+    private String grayParam;
     @TableField("old_cost_time_ms")
     private Integer oldCostTimeMs;
     @TableField("new_cost_time_ms")
@@ -54,10 +54,10 @@ public class DiffRecordDO {
     private String newRequestParams;
     @TableField("migration_status")
     private Integer migrationStatus;
-    @TableField("grayscale_rules")
-    private String grayscaleRules;
-    @TableField("grayscale_hit")
-    private Integer grayscaleHit;
+    @TableField("gray_rules")
+    private String grayRules;
+    @TableField("gray_hit")
+    private Integer grayHit;
     @TableField("fallback_triggered")
     private Integer fallbackTriggered;
 }

@@ -35,9 +35,9 @@ const router = createRouter({
           meta: { title: '迁移任务', requiresAuth: true },
         },
         {
-          path: '/grayscale-rule',
-          name: 'grayscale-rule',
-          component: () => import('@/views/GrayscaleRule/index.vue'),
+          path: '/gray-rule',
+          name: 'gray-rule',
+          component: () => import('@/views/GrayRule/index.vue'),
           meta: { title: '灰度规则', requiresAuth: true },
         },
         {
@@ -108,6 +108,23 @@ router.beforeEach(async (to) => {
   }
 
   return true
+})
+
+router.onError((error, to) => {
+  const isChunkLoadFailed =
+    error.message.includes('Failed to fetch dynamically imported module') ||
+    error.message.includes('Importing a module script failed') ||
+    error.message.includes('Unable to preload CSS')
+
+  if (isChunkLoadFailed) {
+    if (to?.fullPath) {
+      window.location.replace(to.fullPath)
+    } else {
+      window.location.reload()
+    }
+  } else {
+    console.error('Router error:', error)
+  }
 })
 
 export default router

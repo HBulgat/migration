@@ -102,7 +102,7 @@ public class DiffRecordAssembler {
                 toItemResponse(record.getDiffResults()),
                 record.isHasDiff(),
                 record.getDiffType(),
-                record.getGrayscaleParam(),
+                record.getGrayParam(),
                 record.getOldCostTimeMs(),
                 record.getNewCostTimeMs(),
                 record.getTotalCostTimeMs(),

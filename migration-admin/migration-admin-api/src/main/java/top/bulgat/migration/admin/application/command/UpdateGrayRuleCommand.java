@@ -1,13 +1,13 @@
 package top.bulgat.migration.admin.application.command;
 
 /**
- * 创建灰度规则命令，包含创建参数。
+ * 更新灰度规则命令，包含可变更字段。
  */
-public record CreateGrayscaleRuleCommand(
+public record UpdateGrayRuleCommand(
         String migrationKey,
+        String ruleId,
         String ruleType,
         String ruleValue,
-        boolean enable,
-        Integer weight) {
+        Boolean enable) {
 }
 

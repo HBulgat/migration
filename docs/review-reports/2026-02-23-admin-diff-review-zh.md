@@ -16,24 +16,24 @@
 状态：**已修复**
 
 - 主存储Key前缀已统一为 `migration_`。
-- 保留对历史 `grayscale_` / `diff_` 的兼容读取回退。
+- 保留对历史 `gray_` / `diff_` 的兼容读取回退。
 - 引入分组（Group）隔离任务配置与规则配置，避免同前缀冲突。
 
 关键修复位置：
 - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepository.java:26`
 - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepository.java:78`
 - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepository.java:108`
-- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepository.java:24`
-- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepository.java:25`
-- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepository.java:132`
+- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepository.java:24`
+- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepository.java:25`
+- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepository.java:132`
 - `migration-diff/src/main/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepository.java:28`
 - `migration-diff/src/main/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepository.java:29`
 - `migration-diff/src/main/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepository.java:67`
 
 兼容回归用例：
 - `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepositoryTest.java:63`
-- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepositoryTest.java:94`
-- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepositoryTest.java:107`
+- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepositoryTest.java:94`
+- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepositoryTest.java:107`
 - `migration-diff/src/test/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepositoryTest.java:162`
 - `migration-diff/src/test/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepositoryTest.java:183`
 
@@ -83,7 +83,7 @@
 
 - 为 admin-api 三个 Controller 补充了 OpenAPI 注解，便于自动生成接口文档：
   - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/MigrationTaskController.java:29`
-  - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/GrayscaleRuleController.java:29`
+  - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/GrayRuleController.java:29`
   - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/DiffRecordController.java:25`
 - 修改后再次执行回归测试：
   - `mvn -q -f migration-admin/migration-admin-api/pom.xml test`：通过

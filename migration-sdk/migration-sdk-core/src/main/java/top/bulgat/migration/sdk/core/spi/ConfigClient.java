@@ -1,7 +1,7 @@
 package top.bulgat.migration.sdk.core.spi;
 
 import java.util.List;
-import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
+import top.bulgat.migration.sdk.core.model.GrayConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
 
 /**
@@ -23,7 +23,7 @@ public interface ConfigClient extends AutoCloseable {
      * @param migrationKey 迁移任务 key
      * @return 灰度规则列表
      */
-    List<GrayscaleConfig> getGrayscaleRules(String migrationKey);
+    List<GrayConfig> getGrayRules(String migrationKey);
 
     @Override
     default void close() {

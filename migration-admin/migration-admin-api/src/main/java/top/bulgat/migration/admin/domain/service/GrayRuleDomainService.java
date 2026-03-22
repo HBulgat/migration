@@ -1,22 +1,22 @@
 package top.bulgat.migration.admin.domain.service;
 
 import org.springframework.stereotype.Component;
-import top.bulgat.migration.admin.domain.model.GrayscaleRule;
-import top.bulgat.migration.config.common.model.enums.GrayscaleRuleType;
+import top.bulgat.migration.admin.domain.model.GrayRule;
+import top.bulgat.migration.config.common.model.enums.GrayRuleType;
 
 /**
  * 灰度规则领域服务。
  * 负责灰度规则类型和值的领域校验。
  */
 @Component
-public class GrayscaleRuleDomainService {
+public class GrayRuleDomainService {
 
     /**
      * 校验灰度规则实体。
      *
      * @param rule 规则实体
      */
-    public void validateRule(GrayscaleRule rule) {
+    public void validateRule(GrayRule rule) {
         validateRuleValue(rule.getRuleType(), rule.getRuleValue());
     }
 
@@ -26,7 +26,7 @@ public class GrayscaleRuleDomainService {
      * @param type 规则类型
      * @param value 规则值
      */
-    public void validateRuleValue(GrayscaleRuleType type, String value) {
+    public void validateRuleValue(GrayRuleType type, String value) {
         if (type == null) {
             throw new IllegalArgumentException("rule_type is required");
         }

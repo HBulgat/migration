@@ -178,7 +178,7 @@ Status transition rule:
 
 ## 3. 灰度规则接口
 
-基础路径: `/api/v1/grayscale_rule`
+基础路径: `/api/v1/gray_rule`
 
 ### 3.1 创建灰度规则
 
@@ -199,7 +199,7 @@ Status transition rule:
 - `BLACKLIST` and `WHITELIST`: JSON array string
 - `EXPRESSION`: 否n-empty string
 
-响应 `data`: `GrayscaleRule响应`
+响应 `data`: `GrayRule响应`
 
 | 字段 | 类型 | 说明 |
 |---|---|---|
@@ -272,7 +272,7 @@ Query参数:
 | page | integer | 否 | `1` | 页码。 |
 | page_size | integer | 否 | `10` | 每页条数。 |
 
-响应 `data`: `PageResult<GrayscaleRule响应>`.
+响应 `data`: `PageResult<GrayRule响应>`.
 
 ---
 
@@ -312,7 +312,7 @@ Business rule: if both dates are provided, `start_date <= end_date`.
 | diff_results | array<DiffItem响应> | Diff details. |
 | has_diff | boolean | Whether diff exists. |
 | diff_type | string | Diff summary type. |
-| grayscale_param | string | Grayscale params. |
+| gray_param | string | Gray params. |
 | old_cost_time_ms | integer | Old api cost in ms. |
 | new_cost_time_ms | integer | New api cost in ms. |
 | total_cost_time_ms | integer | Total cost in ms. |
@@ -395,7 +395,7 @@ Business rule: if both dates are provided, `start_date <= end_date`.
 - `status out of range [1,7]`
 - `start_date must 否t be later than end_date`
 - `migration task 否t found: ...`
-- `grayscale rule 否t found: ...`
+- `gray rule 否t found: ...`
 - `diff record 否t found: ...`
 - `migration_key is required`
 - `migration_key is too long`

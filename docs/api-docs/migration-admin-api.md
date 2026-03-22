@@ -173,9 +173,9 @@ Response: `Result<Void>`.
 
 ---
 
-## 3. Grayscale Rule APIs
+## 3. Gray Rule APIs
 
-Base path: `/api/v1/grayscale_rule`
+Base path: `/api/v1/gray_rule`
 
 ### 3.1 Create rule
 
@@ -196,7 +196,7 @@ Request body:
 - `BLACKLIST` and `WHITELIST`: JSON array string
 - `EXPRESSION`: non-empty string
 
-Response `data`: `GrayscaleRuleResponse`
+Response `data`: `GrayRuleResponse`
 
 | Field | Type | Description |
 |---|---|---|
@@ -269,7 +269,7 @@ Query params:
 | page | integer | no | `1` | Page number. |
 | page_size | integer | no | `10` | Page size. |
 
-Response `data`: `PageResult<GrayscaleRuleResponse>`.
+Response `data`: `PageResult<GrayRuleResponse>`.
 
 ---
 
@@ -309,7 +309,7 @@ Response `data`: `PageResult<DiffRecordResponse>`.
 | diff_results | array<DiffItemResponse> | Diff details. |
 | has_diff | boolean | Whether diff exists. |
 | diff_type | string | Diff summary type. |
-| grayscale_param | string | Grayscale params. |
+| gray_param | string | Gray params. |
 | old_cost_time_ms | integer | Old api cost in ms. |
 | new_cost_time_ms | integer | New api cost in ms. |
 | total_cost_time_ms | integer | Total cost in ms. |
@@ -392,7 +392,7 @@ Common messages:
 - `status out of range [1,7]`
 - `start_date must not be later than end_date`
 - `migration task not found: ...`
-- `grayscale rule not found: ...`
+- `gray rule not found: ...`
 - `diff record not found: ...`
 - `migration_key is required`
 - `migration_key is too long`

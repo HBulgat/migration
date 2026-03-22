@@ -140,7 +140,7 @@ public class AlertService {
         vars.put("oldCostTimeMs", str(request.getOldCostTimeMs()));
         vars.put("newCostTimeMs", str(request.getNewCostTimeMs()));
         vars.put("migrationStatus", str(request.getMigrationTaskStatus()));
-        vars.put("grayscaleHit", str(request.getGrayscaleHit()));
+        vars.put("grayHit", str(request.getGrayHit()));
         vars.put("errorSummary", buildErrorSummary(request));
         return vars;
     }

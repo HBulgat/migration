@@ -90,7 +90,7 @@ dataId: `alert_template`，group: `ALERT_RULE_GROUP`
 | `oldCostTimeMs` | 旧接口耗时(ms) | `12` |
 | `newCostTimeMs` | 新接口耗时(ms) | `45` |
 | `migrationStatus` | 迁移阶段(1-7) | `4` |
-| `grayscaleHit` | 是否命中灰度 | `true` |
+| `grayHit` | 是否命中灰度 | `true` |
 | `errorSummary` | 错误摘要 | `旧接口正常; 新接口异常: NPE` |
 
 ---

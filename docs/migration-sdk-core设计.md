@@ -40,7 +40,7 @@ public class MigrationConfig {
 // 灰度规则配置
 @Data
 @Builder
-public class GrayscaleConfig {
+public class GrayConfig {
     private String migrationKey;      // 迁移任务key
     private String ruleType;         // PERCENTAGE/BLACKLIST/WHITELIST/EXPRESSION
     private String ruleValue;        // 规则值
@@ -82,7 +82,7 @@ public enum MigrationTaskStatus {
 }
 
 // 灰度规则类型枚举
-public enum GrayscaleRuleType {
+public enum GrayRuleType {
     PERCENTAGE,      // 百分比
     BLACKLIST,       // 黑名单
     WHITELIST,       // 白名单
@@ -144,7 +144,7 @@ public interface ConfigClient {
      * @param migrationKey 迁移任务key
      * @return 灰度规则列表
      */
-    List<GrayscaleConfig> getGrayscaleRules(String migrationKey);
+    List<GrayConfig> getGrayRules(String migrationKey);
 }
 
 // Diff服务调用器接口 - 异步调用Diff服务
@@ -302,10 +302,10 @@ public class GoLiveGrayStrategy<T> implements MigrationStrategy<T> {
             ParamHandler paramHandler,
             Object[] args) {
         // 获取灰度参数
-        Map<String, Object> grayscaleParam = paramHandler.build(args);
+        Map<String, Object> grayParam = paramHandler.build(args);
 
         // 判断是否命中灰度
-        boolean hitGray = matchGrayscale(grayscaleParam);
+        boolean hitGray = matchGray(grayParam);
 
         if (hitGray) {
             // 命中灰度，调用新接口

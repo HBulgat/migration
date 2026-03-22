@@ -11,7 +11,6 @@ public record GrayRuleConfig(
         @JsonProperty("rule_type") String ruleType,
         @JsonProperty("rule_value") String ruleValue,
         @JsonProperty("enable") boolean enable,
-        @JsonProperty("weight") Integer weight,
         @JsonProperty("create_time") LocalDateTime createTime,
         @JsonProperty("update_time") LocalDateTime updateTime) {
 }

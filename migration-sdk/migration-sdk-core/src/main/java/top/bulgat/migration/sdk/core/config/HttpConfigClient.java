@@ -18,7 +18,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import top.bulgat.common.base.model.Result;
-import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
+import top.bulgat.migration.sdk.core.model.GrayConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 
@@ -92,15 +92,15 @@ public class HttpConfigClient implements ConfigClient {
      * @return 灰度规则列表
      */
     @Override
-    public List<GrayscaleConfig> getGrayscaleRules(String migrationKey) {
+    public List<GrayConfig> getGrayRules(String migrationKey) {
         String encodedKey = URLEncoder.encode(migrationKey, StandardCharsets.UTF_8);
-        String path = "/api/internal/sdk/grayscale_rule/list?migration_key=" + encodedKey;
+        String path = "/api/internal/sdk/gray_rule/list?migration_key=" + encodedKey;
         String body = executeGet(path);
 
-        Result<List<GrayscaleConfig>> result = JSON.parseObject(body,
+        Result<List<GrayConfig>> result = JSON.parseObject(body,
                 new TypeReference<>() {
                 });
-        ensureSuccess(result, "query grayscale rules");
+        ensureSuccess(result, "query gray rules");
 
         if (result.getData() == null || result.getData().isEmpty()) {
             return List.of();

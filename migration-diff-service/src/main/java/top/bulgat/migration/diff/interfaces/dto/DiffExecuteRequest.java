@@ -25,7 +25,7 @@ public record DiffExecuteRequest(
         @Schema(description = "新接口耗时(ms)")
         @JsonProperty("new_cost_time_ms") @Min(0) Integer newCostTimeMs,
         @Schema(description = "灰度参数")
-        @JsonProperty("grayscale_param") String grayscaleParam,
+        @JsonProperty("gray_param") String grayParam,
         @Schema(description = "旧接口是否成功")
         @JsonProperty("old_success") Boolean oldSuccess,
         @Schema(description = "新接口是否成功")
@@ -41,9 +41,9 @@ public record DiffExecuteRequest(
         @Schema(description = "迁移任务状态")
         @JsonProperty("migration_status") Integer migrationTaskStatus,
         @Schema(description = "灰度规则集合")
-        @JsonProperty("grayscale_rules") String grayscaleRules,
+        @JsonProperty("gray_rules") String grayRules,
         @Schema(description = "是否命中灰度")
-        @JsonProperty("grayscale_hit") Boolean grayscaleHit,
+        @JsonProperty("gray_hit") Boolean grayHit,
         @Schema(description = "是否触发异常降级")
         @JsonProperty("fallback_triggered") Boolean fallbackTriggered) {
 }

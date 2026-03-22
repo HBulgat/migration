@@ -28,7 +28,7 @@ public class DiffCommandAssembler {
                 request.newJson(),
                 request.oldCostTimeMs(),
                 request.newCostTimeMs(),
-                request.grayscaleParam(),
+                request.grayParam(),
                 request.oldSuccess(),
                 request.newSuccess(),
                 request.oldErrorMessage(),
@@ -36,8 +36,8 @@ public class DiffCommandAssembler {
                 request.oldRequestParams(),
                 request.newRequestParams(),
                 request.migrationTaskStatus(),
-                request.grayscaleRules(),
-                request.grayscaleHit(),
+                request.grayRules(),
+                request.grayHit(),
                 request.fallbackTriggered());
     }
 

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GrayscaleConfig {
+public class GrayConfig {
     @JsonProperty("rule_id")
     private String ruleId;
     @JsonProperty("migration_key")
@@ -24,7 +24,5 @@ public class GrayscaleConfig {
     private String ruleValue;
     @JsonProperty("enable")
     private Boolean enable;
-    @JsonProperty("weight")
-    private Integer weight;
 }
 

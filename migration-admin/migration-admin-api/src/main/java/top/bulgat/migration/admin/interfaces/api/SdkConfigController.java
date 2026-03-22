@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.bulgat.common.base.model.Result;
 import top.bulgat.common.base.util.JsonUtils;
-import top.bulgat.migration.admin.application.service.GrayscaleRuleApplicationService;
+import top.bulgat.migration.admin.application.service.GrayRuleApplicationService;
 import top.bulgat.migration.admin.application.service.MigrationTaskApplicationService;
-import top.bulgat.migration.admin.interfaces.assembler.GrayscaleRuleAssembler;
+import top.bulgat.migration.admin.interfaces.assembler.GrayRuleAssembler;
 import top.bulgat.migration.admin.interfaces.assembler.MigrationTaskCommandAssembler;
-import top.bulgat.migration.admin.interfaces.dto.GrayscaleRuleResponse;
+import top.bulgat.migration.admin.interfaces.dto.GrayRuleResponse;
 import top.bulgat.migration.admin.interfaces.dto.MigrationTaskResponse;
 import top.bulgat.migration.admin.interfaces.dto.QueryMigrationTaskRequest;
 
@@ -31,18 +31,18 @@ import top.bulgat.migration.admin.interfaces.dto.QueryMigrationTaskRequest;
 public class SdkConfigController {
     private final MigrationTaskApplicationService migrationTaskApplicationService;
     private final MigrationTaskCommandAssembler migrationTaskAssembler;
-    private final GrayscaleRuleApplicationService grayscaleRuleApplicationService;
-    private final GrayscaleRuleAssembler grayscaleRuleAssembler;
+    private final GrayRuleApplicationService grayRuleApplicationService;
+    private final GrayRuleAssembler grayRuleAssembler;
 
     public SdkConfigController(
             MigrationTaskApplicationService migrationTaskApplicationService,
             MigrationTaskCommandAssembler migrationTaskAssembler,
-            GrayscaleRuleApplicationService grayscaleRuleApplicationService,
-            GrayscaleRuleAssembler grayscaleRuleAssembler) {
+            GrayRuleApplicationService grayRuleApplicationService,
+            GrayRuleAssembler grayRuleAssembler) {
         this.migrationTaskApplicationService = migrationTaskApplicationService;
         this.migrationTaskAssembler = migrationTaskAssembler;
-        this.grayscaleRuleApplicationService = grayscaleRuleApplicationService;
-        this.grayscaleRuleAssembler = grayscaleRuleAssembler;
+        this.grayRuleApplicationService = grayRuleApplicationService;
+        this.grayRuleAssembler = grayRuleAssembler;
     }
 
     @PostMapping("/migration_task/query")
@@ -51,13 +51,13 @@ public class SdkConfigController {
                 migrationTaskApplicationService.getByMigrationKey(migrationTaskAssembler.toQueryCommand(request))));
     }
 
-    @GetMapping("/grayscale_rule/list")
-    public Result<List<GrayscaleRuleResponse>> listGrayscaleRules(
+    @GetMapping("/gray_rule/list")
+    public Result<List<GrayRuleResponse>> listGrayRules(
             @RequestParam("migration_key") @NotBlank String migrationKey) {
-        log.info("[listGrayscaleRules] migrationKey={}", migrationKey);
-        List<GrayscaleRuleResponse> res = grayscaleRuleAssembler.toResponseList(
-                grayscaleRuleApplicationService.listAllByMigrationKey(migrationKey));
-        log.info("[listGrayscaleRules] res={}", JsonUtils.toJson(res));
+        log.info("[listGrayRules] migrationKey={}", migrationKey);
+        List<GrayRuleResponse> res = grayRuleAssembler.toResponseList(
+                grayRuleApplicationService.listAllByMigrationKey(migrationKey));
+        log.info("[listGrayRules] res={}", JsonUtils.toJson(res));
         return Result.success(res);
     }
 }

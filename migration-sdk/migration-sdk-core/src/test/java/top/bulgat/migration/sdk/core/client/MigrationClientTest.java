@@ -12,9 +12,9 @@
 //import org.junit.jupiter.api.AfterEach;
 //import org.junit.jupiter.api.Test;
 //import top.bulgat.migration.sdk.core.function.ExecuteFunction;
-//import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
+//import top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher;
 //import top.bulgat.migration.sdk.core.model.DiffRequest;
-//import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
+//import top.bulgat.migration.sdk.core.model.GrayConfig;
 //import top.bulgat.migration.sdk.core.model.MigrationConfig;
 //import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 //import top.bulgat.migration.sdk.core.spi.ConfigClient;
@@ -59,7 +59,7 @@
 //
 ////    @Test
 //    void wrap_shouldReturnOldAndSendDiffWhenValidationGray() {
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"1001\"]")
 //                .enable(true)
@@ -120,7 +120,7 @@
 //
 //    @Test
 //    void wrap_shouldReturnNewOnlyWhenGoLiveGrayAndGrayHit() {
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"1001\"]")
 //                .enable(true)
@@ -154,7 +154,7 @@
 //
 //    @Test
 //    void wrap_shouldReturnOldAndSendDiffWhenGoLiveGrayAndGrayMiss() {
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"1001\"]")
 //                .enable(true)
@@ -233,7 +233,7 @@
 //
 //    @Test
 //    void wrap_shouldNotInvokeOldTwiceWhenGoLiveGrayMissOldFails() {
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"1001\"]")
 //                .enable(true)
@@ -265,7 +265,7 @@
 //
 //    @Test
 //    void wrap_shouldNotInvokeOldTwiceWhenDecommissioningGrayMissAndNewFails() {
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"1001\"]")
 //                .enable(true)
@@ -324,7 +324,7 @@
 //
 //    @Test
 //    void wrap_shouldNotInvokeOldTwiceWhenDecommissioningGrayMissBothFail() {
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"1001\"]")
 //                .enable(true)
@@ -356,7 +356,7 @@
 //
 //    @Test
 //    void wrap_shouldOnlyCallNewWhenDecommissioningGrayAndGrayHit() {
-//        GrayscaleConfig whitelistRule = GrayscaleConfig.builder()
+//        GrayConfig whitelistRule = GrayConfig.builder()
 //                .ruleType("WHITELIST")
 //                .ruleValue("[\"1001\"]")
 //                .enable(true)
@@ -393,16 +393,16 @@
 //                MigrationConfig.builder().migrationKey("user-getUser-api").build(),
 //                configClient,
 //                diffServiceCaller,
-//                new DefaultGrayscaleMatcher(),
+//                new DefaultGrayMatcher(),
 //                MigrationStrategyRegistry.defaultRegistry(),
 //                executorService);
 //    }
 //
 //    private static final class FakeConfigClient implements ConfigClient {
 //        private final int status;
-//        private final List<GrayscaleConfig> rules;
+//        private final List<GrayConfig> rules;
 //
-//        private FakeConfigClient(int status, List<GrayscaleConfig> rules) {
+//        private FakeConfigClient(int status, List<GrayConfig> rules) {
 //            this.status = status;
 //            this.rules = rules;
 //        }
@@ -416,7 +416,7 @@
 //        }
 //
 //        @Override
-//        public List<GrayscaleConfig> getGrayscaleRules(String migrationKey) {
+//        public List<GrayConfig> getGrayRules(String migrationKey) {
 //            return rules;
 //        }
 //    }

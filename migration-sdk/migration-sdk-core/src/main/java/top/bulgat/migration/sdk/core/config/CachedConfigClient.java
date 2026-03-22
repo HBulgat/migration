@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
+import top.bulgat.migration.sdk.core.model.GrayConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 
@@ -21,7 +21,7 @@ public class CachedConfigClient implements ConfigClient {
 
     private final ConfigClient delegate;
     private final ConcurrentHashMap<String, MigrationConfig> statusCache = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, List<GrayscaleConfig>> rulesCache = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, List<GrayConfig>> rulesCache = new ConcurrentHashMap<>();
     private final Set<String> trackedKeys = ConcurrentHashMap.newKeySet();
     private final ScheduledExecutorService scheduler;
 
@@ -56,11 +56,11 @@ public class CachedConfigClient implements ConfigClient {
     }
 
     @Override
-    public List<GrayscaleConfig> getGrayscaleRules(String migrationKey) {
+    public List<GrayConfig> getGrayRules(String migrationKey) {
         trackedKeys.add(migrationKey);
         return rulesCache.computeIfAbsent(migrationKey, key -> {
             try {
-                return delegate.getGrayscaleRules(key);
+                return delegate.getGrayRules(key);
             } catch (Exception ex) {
                 log.error("[Migration-SDK] Failed to lazy load gray rules for {}, wait for next background refresh.",
                         key, ex);
@@ -81,12 +81,12 @@ public class CachedConfigClient implements ConfigClient {
             }
 
             try {
-                List<GrayscaleConfig> rules = delegate.getGrayscaleRules(key);
+                List<GrayConfig> rules = delegate.getGrayRules(key);
                 if (rules != null) {
                     rulesCache.put(key, rules);
                 }
             } catch (Exception ex) {
-                log.error("[Migration-SDK] Background refresh failed for grayscale rules. key={}", key, ex);
+                log.error("[Migration-SDK] Background refresh failed for gray rules. key={}", key, ex);
             }
         }
     }

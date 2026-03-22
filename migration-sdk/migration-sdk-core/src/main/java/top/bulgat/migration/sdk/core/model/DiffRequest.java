@@ -39,9 +39,9 @@ public class DiffRequest {
     @JSONField(name = "new_cost_time_ms")
     private Integer newCostTimeMs;
 
-    @JsonProperty("grayscale_param")
-    @JSONField(name = "grayscale_param")
-    private String grayscaleParam;
+    @JsonProperty("gray_param")
+    @JSONField(name = "gray_param")
+    private String grayParam;
 
     @JsonProperty("old_success")
     @JSONField(name = "old_success")
@@ -71,13 +71,13 @@ public class DiffRequest {
     @JSONField(name = "migration_status")
     private Integer migrationStatus;
 
-    @JsonProperty("grayscale_rules")
-    @JSONField(name = "grayscale_rules")
-    private String grayscaleRules;
+    @JsonProperty("gray_rules")
+    @JSONField(name = "gray_rules")
+    private String grayRules;
 
-    @JsonProperty("grayscale_hit")
-    @JSONField(name = "grayscale_hit")
-    private Boolean grayscaleHit;
+    @JsonProperty("gray_hit")
+    @JSONField(name = "gray_hit")
+    private Boolean grayHit;
 
     @JsonProperty("fallback_triggered")
     @JSONField(name = "fallback_triggered")

@@ -14,7 +14,7 @@ import top.bulgat.migration.admin.application.command.UpdateMigrationTaskCommand
 import top.bulgat.migration.admin.application.command.UpdateMigrationTaskStatusCommand;
 import top.bulgat.migration.admin.domain.model.MigrationTask;
 import top.bulgat.migration.admin.domain.repository.DiffRuleRepository;
-import top.bulgat.migration.admin.domain.repository.GrayscaleRuleRepository;
+import top.bulgat.migration.admin.domain.repository.GrayRuleRepository;
 import top.bulgat.migration.admin.domain.repository.MigrationTaskRepository;
 import top.bulgat.migration.admin.domain.service.MigrationTaskDomainService;
 import top.bulgat.migration.config.common.model.enums.MigrationTaskStatus;
@@ -27,17 +27,17 @@ import top.bulgat.migration.config.common.model.enums.MigrationTaskStatus;
 public class MigrationTaskApplicationService {
 
     private final MigrationTaskRepository repository;
-    private final GrayscaleRuleRepository grayscaleRuleRepository;
+    private final GrayRuleRepository grayRuleRepository;
     private final DiffRuleRepository diffRuleRepository;
     private final MigrationTaskDomainService domainService;
 
     public MigrationTaskApplicationService(
             MigrationTaskRepository repository,
-            GrayscaleRuleRepository grayscaleRuleRepository,
+            GrayRuleRepository grayRuleRepository,
             DiffRuleRepository diffRuleRepository,
             MigrationTaskDomainService domainService) {
         this.repository = repository;
-        this.grayscaleRuleRepository = grayscaleRuleRepository;
+        this.grayRuleRepository = grayRuleRepository;
         this.diffRuleRepository = diffRuleRepository;
         this.domainService = domainService;
     }
@@ -208,7 +208,7 @@ public class MigrationTaskApplicationService {
     private void doDeleteByMigrationKey(String migrationKey) {
         doGetByMigrationKey(migrationKey);
         repository.deleteByMigrationKey(migrationKey);
-        grayscaleRuleRepository.deleteByMigrationKey(migrationKey);
+        grayRuleRepository.deleteByMigrationKey(migrationKey);
         diffRuleRepository.deleteByMigrationKey(migrationKey);
     }
 

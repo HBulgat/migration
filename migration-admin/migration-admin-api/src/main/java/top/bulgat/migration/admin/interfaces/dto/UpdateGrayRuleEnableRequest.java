@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 接口请求 DTO。
  */
-public record UpdateGrayscaleRuleEnableRequest(
+public record UpdateGrayRuleEnableRequest(
         @JsonProperty("migration_key")
         @NotBlank
         @Size(max = 128)

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { deleteGrayscaleRule, getGrayscaleRuleList, updateGrayscaleRuleEnable } from '@/api/grayscaleRule'
-import { getGrayscaleRuleTypeLabel } from '@/constants'
+import { deleteGrayRule, getGrayRuleList, updateGrayRuleEnable } from '@/api/grayRule'
+import { getGrayRuleTypeLabel } from '@/constants'
 import { useMigrationTaskStore } from '@/store'
 import { formatDateTime } from '@/utils/format'
-import EditDialog from '@/views/GrayscaleRule/EditDialog.vue'
-import type { GrayscaleRule } from '@/types'
+import EditDialog from '@/views/GrayRule/EditDialog.vue'
+import type { GrayRule } from '@/types'
 
 const taskStore = useMigrationTaskStore()
 
 const loading = ref(false)
-const tableData = ref<GrayscaleRule[]>([])
+const tableData = ref<GrayRule[]>([])
 const total = ref(0)
 const current = ref(1)
 const pageSize = ref(10)
@@ -22,7 +22,7 @@ const filterForm = reactive({
 
 const dialogVisible = ref(false)
 const dialogMode = ref<'create' | 'edit'>('create')
-const editingRule = ref<GrayscaleRule | null>(null)
+const editingRule = ref<GrayRule | null>(null)
 const switchLoading = ref<Record<string, boolean>>({})
 
 async function loadTableData(): Promise<void> {
@@ -34,7 +34,7 @@ async function loadTableData(): Promise<void> {
 
   loading.value = true
   try {
-    const pageResult = await getGrayscaleRuleList({
+    const pageResult = await getGrayRuleList({
       migration_key: filterForm.migration_key,
       page: current.value,
       pageSize: pageSize.value,
@@ -57,17 +57,17 @@ function openCreateDialog(): void {
   dialogVisible.value = true
 }
 
-function openEditDialog(rule: GrayscaleRule): void {
+function openEditDialog(rule: GrayRule): void {
   dialogMode.value = 'edit'
   editingRule.value = rule
   dialogVisible.value = true
 }
 
-async function handleDelete(rule: GrayscaleRule): Promise<void> {
+async function handleDelete(rule: GrayRule): Promise<void> {
   await ElMessageBox.confirm(`确认删除规则 ${rule.rule_id} 吗？`, '删除确认', {
     type: 'warning',
   })
-  await deleteGrayscaleRule({
+  await deleteGrayRule({
     migration_key: rule.migration_key,
     rule_id: rule.rule_id,
   })
@@ -75,14 +75,14 @@ async function handleDelete(rule: GrayscaleRule): Promise<void> {
   await loadTableData()
 }
 
-async function handleEnableChange(rule: GrayscaleRule, enable: boolean): Promise<void> {
+async function handleEnableChange(rule: GrayRule, enable: boolean): Promise<void> {
   switchLoading.value = {
     ...switchLoading.value,
     [rule.rule_id]: true,
   }
 
   try {
-    await updateGrayscaleRuleEnable({
+    await updateGrayRuleEnable({
       migration_key: rule.migration_key,
       rule_id: rule.rule_id,
       enable,
@@ -158,12 +158,7 @@ onMounted(async () => {
         <el-table-column prop="rule_id" label="规则ID" min-width="160" />
         <el-table-column label="规则类型" width="140">
           <template #default="scope">
-            {{ getGrayscaleRuleTypeLabel(scope.row.rule_type) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="weight" label="权重" width="80" align="center">
-          <template #default="{ row }">
-            <el-tag size="small" effect="plain">{{ row.weight || 0 }}</el-tag>
+            {{ getGrayRuleTypeLabel(scope.row.rule_type) }}
           </template>
         </el-table-column>
         <el-table-column label="启用状态" width="120">

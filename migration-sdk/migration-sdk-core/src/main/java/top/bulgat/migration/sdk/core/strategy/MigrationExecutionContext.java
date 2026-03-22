@@ -10,9 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import top.bulgat.migration.sdk.core.function.ParamHandler;
 import top.bulgat.migration.sdk.core.extension.DiffPostProcessor;
-import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
+import top.bulgat.migration.sdk.core.model.GrayConfig;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
-import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
+import top.bulgat.migration.sdk.core.spi.GrayMatcher;
 import top.bulgat.migration.sdk.core.support.DefaultOldFallback;
 
 /**
@@ -25,7 +25,7 @@ import top.bulgat.migration.sdk.core.support.DefaultOldFallback;
 public class MigrationExecutionContext<T> {
 
     private final String migrationKey;
-    private final List<GrayscaleConfig> grayscaleRules;
+    private final List<GrayConfig> grayRules;
     private final Function<Object[], T> oldMethod;
     private final Function<Object[], T> newMethod;
     private final BiFunction<Object[], Exception, T> fallbackMethod;
@@ -33,7 +33,7 @@ public class MigrationExecutionContext<T> {
     private final DiffPostProcessor postProcessor;
     private final Object[] args;
     private final DiffServiceCaller diffServiceCaller;
-    private final GrayscaleMatcher grayscaleMatcher;
+    private final GrayMatcher grayMatcher;
     private final ExecutorService executorService;
     private final int migrationTaskStatus;
 

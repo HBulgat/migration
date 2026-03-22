@@ -9,15 +9,14 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 接口请求 DTO。
  */
-public record CreateGrayscaleRuleRequest(
+public record CreateGrayRuleRequest(
         @JsonProperty("migration_key")
         @NotBlank
         @Size(max = 128)
         @Pattern(regexp = "^\\S+$") String migrationKey,
         @JsonProperty("rule_type") @NotBlank String ruleType,
         @JsonProperty("rule_value") @NotBlank String ruleValue,
-        @JsonProperty("enable") @NotNull Boolean enable,
-        @JsonProperty("weight") Integer weight) {
+        @JsonProperty("enable") @NotNull Boolean enable) {
 }
 
 

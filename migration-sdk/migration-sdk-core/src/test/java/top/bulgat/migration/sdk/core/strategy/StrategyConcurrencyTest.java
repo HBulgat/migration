@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import top.bulgat.common.base.thread.ThreadContext;
 import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
-import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
+import top.bulgat.migration.sdk.core.spi.GrayMatcher;
 import top.bulgat.migration.sdk.core.support.InvocationResult;
 
 import java.util.Collections;
@@ -52,7 +52,7 @@ public class StrategyConcurrencyTest {
                         diffReported.set(true);
                     }
                 })
-                .grayscaleMatcher((rules, params) -> true)
+                .grayMatcher((rules, params) -> true)
                 .build();
 
         // 2. 执行并计时

@@ -2,46 +2,43 @@ package top.bulgat.migration.admin.domain.model;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
-import top.bulgat.migration.config.common.model.enums.GrayscaleRuleType;
+import top.bulgat.migration.config.common.model.enums.GrayRuleType;
 
 /**
  * 灰度规则实体。
  */
 @Getter
-public class GrayscaleRule {
+public class GrayRule {
 
     private final String ruleId;
     private final String migrationKey;
-    private GrayscaleRuleType ruleType;
+    private GrayRuleType ruleType;
     private String ruleValue;
     private boolean enable;
     private final LocalDateTime createTime;
     private LocalDateTime updateTime;
-    private Integer weight;
 
     /**
      * 使用当前时间创建规则。
      */
-    public GrayscaleRule(
+    public GrayRule(
             String ruleId,
             String migrationKey,
-            GrayscaleRuleType ruleType,
+            GrayRuleType ruleType,
             String ruleValue,
-            boolean enable,
-            Integer weight) {
-        this(ruleId, migrationKey, ruleType, ruleValue, enable, weight, LocalDateTime.now(), LocalDateTime.now());
+            boolean enable) {
+        this(ruleId, migrationKey, ruleType, ruleValue, enable, LocalDateTime.now(), LocalDateTime.now());
     }
 
     /**
      * 使用指定时间创建规则。
      */
-    public GrayscaleRule(
+    public GrayRule(
             String ruleId,
             String migrationKey,
-            GrayscaleRuleType ruleType,
+            GrayRuleType ruleType,
             String ruleValue,
             boolean enable,
-            Integer weight,
             LocalDateTime createTime,
             LocalDateTime updateTime) {
         this.ruleId = ruleId;
@@ -49,7 +46,6 @@ public class GrayscaleRule {
         this.ruleType = ruleType;
         this.ruleValue = ruleValue;
         this.enable = enable;
-        this.weight = weight;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
@@ -57,7 +53,7 @@ public class GrayscaleRule {
     /**
      * 部分更新规则字段。
      */
-    public void update(GrayscaleRuleType targetType, String targetValue, Boolean targetEnable, Integer targetWeight) {
+    public void update(GrayRuleType targetType, String targetValue, Boolean targetEnable) {
         if (targetType != null) {
             this.ruleType = targetType;
         }
@@ -66,9 +62,6 @@ public class GrayscaleRule {
         }
         if (targetEnable != null) {
             this.enable = targetEnable;
-        }
-        if (targetWeight != null) {
-            this.weight = targetWeight;
         }
         this.updateTime = LocalDateTime.now();
     }

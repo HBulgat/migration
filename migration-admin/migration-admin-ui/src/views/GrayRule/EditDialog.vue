@@ -2,9 +2,9 @@
 import { computed, reactive, ref, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { ElMessage } from 'element-plus'
-import { createGrayscaleRule, updateGrayscaleRule, type CreateGrayscaleRulePayload } from '@/api/grayscaleRule'
-import { GRAYSCALE_RULE_TYPE_DESC, GRAYSCALE_RULE_TYPE_OPTIONS, getGrayscaleRuleTypeLabel } from '@/constants'
-import type { GrayscaleRule, TaskOption } from '@/types'
+import { createGrayRule, updateGrayRule, type CreateGrayRulePayload } from '@/api/grayRule'
+import { GRAY_RULE_TYPE_DESC, GRAY_RULE_TYPE_OPTIONS, getGrayRuleTypeLabel } from '@/constants'
+import type { GrayRule, TaskOption } from '@/types'
 
 const props = withDefaults(
   defineProps<{
@@ -12,7 +12,7 @@ const props = withDefaults(
     mode: 'create' | 'edit'
     taskOptions: TaskOption[]
     defaultMigrationKey?: string
-    rule?: GrayscaleRule | null
+    rule?: GrayRule | null
   }>(),
   {
     defaultMigrationKey: '',
@@ -28,19 +28,18 @@ const emit = defineEmits<{
 const formRef = ref<FormInstance>()
 const submitLoading = ref(false)
 
-const formModel = reactive<CreateGrayscaleRulePayload & { rule_id: string }>({
+const formModel = reactive<CreateGrayRulePayload & { rule_id: string }>({
   migration_key: '',
   rule_type: 'PERCENTAGE',
   rule_value: '',
   enable: true,
-  weight: 0,
   rule_id: '',
 })
 
 const dialogTitle = computed(() => (props.mode === 'create' ? '新建灰度规则' : '编辑灰度规则'))
 
 const ruleValueTip = computed(() => {
-  return GRAYSCALE_RULE_TYPE_DESC[formModel.rule_type] ?? '请输入规则值'
+  return GRAY_RULE_TYPE_DESC[formModel.rule_type] ?? '请输入规则值'
 })
 
 const dialogVisible = computed({
@@ -91,7 +90,6 @@ function resetForm(): void {
   formModel.rule_type = 'PERCENTAGE'
   formModel.rule_value = ''
   formModel.enable = true
-  formModel.weight = 0
 }
 
 watch(
@@ -107,7 +105,6 @@ watch(
       formModel.rule_type = props.rule.rule_type
       formModel.rule_value = props.rule.rule_value
       formModel.enable = props.rule.enable
-      formModel.weight = props.rule.weight || 0
       return
     }
 
@@ -128,22 +125,20 @@ async function handleSubmit(): Promise<void> {
   submitLoading.value = true
   try {
     if (props.mode === 'create') {
-      await createGrayscaleRule({
+      await createGrayRule({
         migration_key: formModel.migration_key,
         rule_type: formModel.rule_type,
         rule_value: formModel.rule_value.trim(),
         enable: formModel.enable,
-        weight: formModel.weight,
       })
       ElMessage.success('灰度规则创建成功')
     } else {
-      await updateGrayscaleRule({
+      await updateGrayRule({
         migration_key: formModel.migration_key,
         rule_id: formModel.rule_id,
         rule_type: formModel.rule_type,
         rule_value: formModel.rule_value.trim(),
         enable: formModel.enable,
-        weight: formModel.weight,
       })
       ElMessage.success('灰度规则更新成功')
     }
@@ -179,13 +174,13 @@ async function handleSubmit(): Promise<void> {
       <el-form-item label="规则类型" prop="rule_type">
         <el-select v-model="formModel.rule_type" filterable style="width: 100%">
           <el-option
-            v-for="item in GRAYSCALE_RULE_TYPE_OPTIONS"
+            v-for="item in GRAY_RULE_TYPE_OPTIONS"
             :key="item.value"
             :label="item.label"
             :value="item.value"
           >
             <span>{{ item.label }}</span>
-            <span class="type-subtext">{{ GRAYSCALE_RULE_TYPE_DESC[item.value] }}</span>
+            <span class="type-subtext">{{ GRAY_RULE_TYPE_DESC[item.value] }}</span>
           </el-option>
         </el-select>
       </el-form-item>
@@ -203,13 +198,8 @@ async function handleSubmit(): Promise<void> {
         <el-switch v-model="formModel.enable" />
       </el-form-item>
 
-      <el-form-item label="规则权重">
-        <el-input-number v-model="formModel.weight" :min="0" :max="9999" style="width: 100%" />
-        <div class="tip">数值越大优先级越高，相同权重按创建时间倒序。</div>
-      </el-form-item>
-
       <el-alert
-        :title="`当前类型：${getGrayscaleRuleTypeLabel(formModel.rule_type)}`"
+        :title="`当前类型：${getGrayRuleTypeLabel(formModel.rule_type)}`"
         :description="ruleValueTip"
         type="info"
         show-icon

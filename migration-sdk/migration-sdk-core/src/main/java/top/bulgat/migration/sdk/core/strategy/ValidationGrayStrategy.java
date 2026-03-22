@@ -29,12 +29,12 @@ public class ValidationGrayStrategy extends AbstractMigrationStrategy {
     @Override
     public <T> T execute(MigrationExecutionContext<T> context) {
         // 获取灰度参数并进行匹配
-        Map<String, Object> grayscaleParam = context.buildParam();
-        boolean hitGray = matchGrayscale(context, grayscaleParam);
+        Map<String, Object> grayParam = context.buildParam();
+        boolean hitGray = matchGray(context, grayParam);
 
         // 如果命中灰度，并发执行并异步发送Diff对比；否则仅执行旧接口
         if (hitGray) {
-            ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context, grayscaleParam);
+            ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context, grayParam);
             if (result.oldResult().isSuccess()) {
                 return result.oldResult().value();
             }

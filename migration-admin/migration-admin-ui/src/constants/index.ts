@@ -28,14 +28,14 @@ export const MIGRATION_STATUS_OPTIONS: Array<OptionItem<number>> = [
   { label: '停用-全开', value: 7 },
 ]
 
-export const GRAYSCALE_RULE_TYPE_OPTIONS: Array<OptionItem<string>> = [
+export const GRAY_RULE_TYPE_OPTIONS: Array<OptionItem<string>> = [
   { label: '百分比', value: 'PERCENTAGE' },
   { label: '黑名单', value: 'BLACKLIST' },
   { label: '白名单', value: 'WHITELIST' },
   { label: '表达式', value: 'EXPRESSION' },
 ]
 
-export const GRAYSCALE_RULE_TYPE_DESC: Record<string, string> = {
+export const GRAY_RULE_TYPE_DESC: Record<string, string> = {
   PERCENTAGE: '按比例分流到新接口，规则值示例：30',
   BLACKLIST: '指定用户不走新接口，规则值示例：["1001","1002"]',
   WHITELIST: '仅指定用户走新接口，规则值示例：["1001","1002"]',
@@ -51,8 +51,8 @@ export function getMigrationTaskStatusMeta(status: number): StatusMeta {
   return MIGRATION_STATUS_META[status] ?? { label: '未知状态', tagClass: 'status-old' }
 }
 
-export function getGrayscaleRuleTypeLabel(ruleType: string): string {
-  const option = GRAYSCALE_RULE_TYPE_OPTIONS.find((item) => item.value === ruleType)
+export function getGrayRuleTypeLabel(ruleType: string): string {
+  const option = GRAY_RULE_TYPE_OPTIONS.find((item) => item.value === ruleType)
   return option?.label ?? ruleType
 }
 

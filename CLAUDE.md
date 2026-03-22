@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a **Backend API Migration Platform** (后端接口迁移平台) - a system for gradual API migration with gray-scale validation and parallel diff comparison. It enables safe, controlled migration from old APIs to new APIs through 7 progressive stages.
+This is a **Backend API Migration Platform** (后端接口迁移平台) - a system for gradual API migration with gray validation and parallel diff comparison. It enables safe, controlled migration from old APIs to new APIs through 7 progressive stages.
 
 ## Build Commands
 
@@ -66,7 +66,7 @@ migration/
 
 ### Key Configuration Keys (in Config Center)
 - `migration_{key}` - Migration task config
-- `grayscale_{key}` - Gray rules (PERCENTAGE/BLACKLIST/WHITELIST/EXPRESSION)
+- `gray_{key}` - Gray rules (PERCENTAGE/BLACKLIST/WHITELIST/EXPRESSION)
 - `diff_{key}` - Diff rules (IGNORE/TOLERANCE/SCRIPT/SORT)
 
 ## Development Standards
@@ -123,7 +123,7 @@ ExecuteFunction<User> execute = client.wrap(
     this::getUserOld,      // old method
     this::getUserNew,      // new method
     this::getUserFallback, // fallback (optional)
-    paramHandler           // builds grayscale params
+    paramHandler           // builds gray params
 );
 
 // Execute

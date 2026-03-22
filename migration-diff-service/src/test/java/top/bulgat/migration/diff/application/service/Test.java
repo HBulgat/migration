@@ -218,7 +218,7 @@ class Test {
             String newJson,
             Integer oldCostTimeMs,
             Integer newCostTimeMs,
-            String grayscaleParam) {
+            String grayParam) {
         return new ExecuteDiffCommand(
                 migrationKey,
                 traceId,
@@ -226,7 +226,7 @@ class Test {
                 newJson,
                 oldCostTimeMs,
                 newCostTimeMs,
-                grayscaleParam,
+                grayParam,
                 true,
                 true,
                 null,

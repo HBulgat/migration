@@ -53,7 +53,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         dataObject.setDiffResults(writeDiffItems(result.getDiffItems()));
         dataObject.setHasDiff(result.hasDiff() ? 1 : 0);
         dataObject.setDiffType(diffType);
-        dataObject.setGrayscaleParam(request.getGrayscaleParam());
+        dataObject.setGrayParam(request.getGrayParam());
         dataObject.setOldCostTimeMs(request.getOldCostTimeMs());
         dataObject.setNewCostTimeMs(request.getNewCostTimeMs());
         dataObject.setTotalCostTimeMs((int) result.getCostTimeMs());
@@ -65,8 +65,8 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         dataObject.setOldRequestParams(request.getOldRequestParams());
         dataObject.setNewRequestParams(request.getNewRequestParams());
         dataObject.setMigrationStatus(request.getMigrationTaskStatus());
-        dataObject.setGrayscaleRules(request.getGrayscaleRules());
-        dataObject.setGrayscaleHit(request.getGrayscaleHit() != null && request.getGrayscaleHit() ? 1 : 0);
+        dataObject.setGrayRules(request.getGrayRules());
+        dataObject.setGrayHit(request.getGrayHit() != null && request.getGrayHit() ? 1 : 0);
         dataObject
                 .setFallbackTriggered(request.getFallbackTriggered() != null && request.getFallbackTriggered() ? 1 : 0);
         diffRecordDAO.insert(dataObject);
@@ -137,7 +137,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                 readDiffItems(dataObject.getDiffResults()),
                 Integer.valueOf(1).equals(dataObject.getHasDiff()),
                 dataObject.getDiffType(),
-                dataObject.getGrayscaleParam(),
+                dataObject.getGrayParam(),
                 dataObject.getOldCostTimeMs(),
                 dataObject.getNewCostTimeMs(),
                 dataObject.getTotalCostTimeMs(),
@@ -149,8 +149,8 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                 dataObject.getOldRequestParams(),
                 dataObject.getNewRequestParams(),
                 dataObject.getMigrationStatus(),
-                dataObject.getGrayscaleRules(),
-                Integer.valueOf(1).equals(dataObject.getGrayscaleHit()),
+                dataObject.getGrayRules(),
+                Integer.valueOf(1).equals(dataObject.getGrayHit()),
                 Integer.valueOf(1).equals(dataObject.getFallbackTriggered()));
     }
 

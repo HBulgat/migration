@@ -7,34 +7,34 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import top.bulgat.common.base.exception.BizException;
 import top.bulgat.common.base.exception.ErrorCode;
-import top.bulgat.migration.admin.application.command.CreateGrayscaleRuleCommand;
-import top.bulgat.migration.admin.application.command.DeleteGrayscaleRuleCommand;
-import top.bulgat.migration.admin.application.command.ListGrayscaleRuleCommand;
+import top.bulgat.migration.admin.application.command.CreateGrayRuleCommand;
+import top.bulgat.migration.admin.application.command.DeleteGrayRuleCommand;
+import top.bulgat.migration.admin.application.command.ListGrayRuleCommand;
 import top.bulgat.migration.admin.application.command.QueryMigrationTaskCommand;
-import top.bulgat.migration.admin.application.command.UpdateGrayscaleRuleCommand;
-import top.bulgat.migration.admin.application.command.UpdateGrayscaleRuleEnableCommand;
-import top.bulgat.migration.admin.domain.model.GrayscaleRule;
-import top.bulgat.migration.admin.domain.repository.GrayscaleRuleRepository;
-import top.bulgat.migration.admin.domain.service.GrayscaleRuleDomainService;
+import top.bulgat.migration.admin.application.command.UpdateGrayRuleCommand;
+import top.bulgat.migration.admin.application.command.UpdateGrayRuleEnableCommand;
+import top.bulgat.migration.admin.domain.model.GrayRule;
+import top.bulgat.migration.admin.domain.repository.GrayRuleRepository;
+import top.bulgat.migration.admin.domain.service.GrayRuleDomainService;
 import top.bulgat.migration.admin.domain.service.MigrationTaskDomainService;
-import top.bulgat.migration.config.common.model.enums.GrayscaleRuleType;
+import top.bulgat.migration.config.common.model.enums.GrayRuleType;
 
 /**
  * 灰度规则应用服务。
  * 负责灰度规则新增、更新、启停和分页查询等用例编排。
  */
 @Service
-public class GrayscaleRuleApplicationService {
+public class GrayRuleApplicationService {
 
     private final MigrationTaskApplicationService migrationTaskApplicationService;
-    private final GrayscaleRuleRepository repository;
-    private final GrayscaleRuleDomainService domainService;
+    private final GrayRuleRepository repository;
+    private final GrayRuleDomainService domainService;
     private final MigrationTaskDomainService migrationTaskDomainService;
 
-    public GrayscaleRuleApplicationService(
+    public GrayRuleApplicationService(
             MigrationTaskApplicationService migrationTaskApplicationService,
-            GrayscaleRuleRepository repository,
-            GrayscaleRuleDomainService domainService,
+            GrayRuleRepository repository,
+            GrayRuleDomainService domainService,
             MigrationTaskDomainService migrationTaskDomainService) {
         this.migrationTaskApplicationService = migrationTaskApplicationService;
         this.repository = repository;
@@ -48,11 +48,11 @@ public class GrayscaleRuleApplicationService {
      * @param command 创建命令
      * @return 已保存的灰度规则
      */
-    public GrayscaleRule create(CreateGrayscaleRuleCommand command) {
+    public GrayRule create(CreateGrayRuleCommand command) {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "create command is required");
         }
-        return doCreate(command.migrationKey(), command.ruleType(), command.ruleValue(), command.enable(), command.weight());
+        return doCreate(command.migrationKey(), command.ruleType(), command.ruleValue(), command.enable());
     }
 
     /**
@@ -61,7 +61,7 @@ public class GrayscaleRuleApplicationService {
      *
      * @param command 更新命令
      */
-    public void update(UpdateGrayscaleRuleCommand command) {
+    public void update(UpdateGrayRuleCommand command) {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "update command is required");
         }
@@ -70,8 +70,7 @@ public class GrayscaleRuleApplicationService {
                 command.ruleId(),
                 command.ruleType(),
                 command.ruleValue(),
-                command.enable(),
-                command.weight());
+                command.enable());
     }
 
     /**
@@ -79,7 +78,7 @@ public class GrayscaleRuleApplicationService {
      *
      * @param command 删除命令
      */
-    public void delete(DeleteGrayscaleRuleCommand command) {
+    public void delete(DeleteGrayRuleCommand command) {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "delete command is required");
         }
@@ -91,7 +90,7 @@ public class GrayscaleRuleApplicationService {
      *
      * @param command 启停更新命令
      */
-    public void updateEnable(UpdateGrayscaleRuleEnableCommand command) {
+    public void updateEnable(UpdateGrayRuleEnableCommand command) {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "update_enable command is required");
         }
@@ -104,7 +103,7 @@ public class GrayscaleRuleApplicationService {
      * @param command 查询命令
      * @return 当前页灰度规则
      */
-    public List<GrayscaleRule> list(ListGrayscaleRuleCommand command) {
+    public List<GrayRule> list(ListGrayRuleCommand command) {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "list command is required");
         }
@@ -117,7 +116,7 @@ public class GrayscaleRuleApplicationService {
      * @param migrationKey 迁移标识
      * @return 全量灰度规则
      */
-    public List<GrayscaleRule> listAllByMigrationKey(String migrationKey) {
+    public List<GrayRule> listAllByMigrationKey(String migrationKey) {
         validateMigrationKey(migrationKey);
         return doListAll(migrationKey);
     }
@@ -128,24 +127,23 @@ public class GrayscaleRuleApplicationService {
      * @param command 查询命令
      * @return 规则总数
      */
-    public long count(ListGrayscaleRuleCommand command) {
+    public long count(ListGrayRuleCommand command) {
         if (command == null) {
             throw new BizException(ErrorCode.PARAM_ERROR, "count command is required");
         }
         return doCount(command.migrationKey());
     }
 
-    private GrayscaleRule doCreate(String migrationKey, String ruleType, String ruleValue, boolean enable, Integer weight) {
+    private GrayRule doCreate(String migrationKey, String ruleType, String ruleValue, boolean enable) {
         try {
             validateMigrationKey(migrationKey);
             migrationTaskApplicationService.getByMigrationKey(new QueryMigrationTaskCommand(migrationKey));
-            GrayscaleRule rule = new GrayscaleRule(
+            GrayRule rule = new GrayRule(
                     UUID.randomUUID().toString().replace("-", ""),
                     migrationKey,
-                    GrayscaleRuleType.fromValue(ruleType),
+                    GrayRuleType.fromValue(ruleType),
                     ruleValue,
-                    enable,
-                    weight);
+                    enable);
             domainService.validateRule(rule);
             return repository.save(rule);
         } catch (IllegalArgumentException ex) {
@@ -153,7 +151,7 @@ public class GrayscaleRuleApplicationService {
         }
     }
 
-    private void doUpdate(String migrationKey, String ruleId, String ruleType, String ruleValue, Boolean enable, Integer weight) {
+    private void doUpdate(String migrationKey, String ruleId, String ruleType, String ruleValue, Boolean enable) {
         validateMigrationKey(migrationKey);
         if (ruleType == null && ruleValue == null && enable == null) {
             throw new BizException(
@@ -161,14 +159,14 @@ public class GrayscaleRuleApplicationService {
                     "at least one field(rule_type/rule_value/enable) must be provided");
         }
         try {
-            GrayscaleRule existing = getByMigrationKeyAndRuleId(migrationKey, ruleId);
-            GrayscaleRuleType targetType = ruleType == null ? null : GrayscaleRuleType.fromValue(ruleType);
+            GrayRule existing = getByMigrationKeyAndRuleId(migrationKey, ruleId);
+            GrayRuleType targetType = ruleType == null ? null : GrayRuleType.fromValue(ruleType);
             if (targetType != null || ruleValue != null) {
                 domainService.validateRuleValue(
                         targetType == null ? existing.getRuleType() : targetType,
                         ruleValue == null ? existing.getRuleValue() : ruleValue);
             }
-            existing.update(targetType, ruleValue, enable, weight);
+            existing.update(targetType, ruleValue, enable);
             repository.save(existing);
         } catch (IllegalArgumentException ex) {
             throw new BizException(ErrorCode.PARAM_ERROR, ex.getMessage());
@@ -183,12 +181,12 @@ public class GrayscaleRuleApplicationService {
 
     private void doUpdateEnable(String migrationKey, String ruleId, boolean enable) {
         validateMigrationKey(migrationKey);
-        GrayscaleRule existing = getByMigrationKeyAndRuleId(migrationKey, ruleId);
+        GrayRule existing = getByMigrationKeyAndRuleId(migrationKey, ruleId);
         existing.updateEnable(enable);
         repository.save(existing);
     }
 
-    private List<GrayscaleRule> doList(String migrationKey, int page, int pageSize) {
+    private List<GrayRule> doList(String migrationKey, int page, int pageSize) {
         validateMigrationKey(migrationKey);
         validatePagination(page, pageSize);
         return doListAll(migrationKey).stream()
@@ -202,18 +200,17 @@ public class GrayscaleRuleApplicationService {
         return repository.findByMigrationKey(migrationKey).size();
     }
 
-    private List<GrayscaleRule> doListAll(String migrationKey) {
+    private List<GrayRule> doListAll(String migrationKey) {
         return repository.findByMigrationKey(migrationKey).stream()
-                .sorted(Comparator.comparing(GrayscaleRule::getWeight, Comparator.nullsLast(Comparator.reverseOrder()))
-                        .thenComparing(Comparator.comparing(GrayscaleRule::getUpdateTime).reversed()))
+                .sorted(Comparator.comparing(GrayRule::getUpdateTime).reversed())
                 .collect(Collectors.toList());
     }
 
-    private GrayscaleRule getByMigrationKeyAndRuleId(String migrationKey, String ruleId) {
+    private GrayRule getByMigrationKeyAndRuleId(String migrationKey, String ruleId) {
         return repository.findByMigrationKeyAndRuleId(migrationKey, ruleId)
                 .orElseThrow(() -> new BizException(
                         ErrorCode.NOT_FOUND,
-                        "grayscale rule not found: " + ruleId));
+                        "gray rule not found: " + ruleId));
     }
 
     private void validatePagination(int page, int pageSize) {

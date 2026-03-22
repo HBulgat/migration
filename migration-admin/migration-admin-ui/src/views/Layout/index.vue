@@ -38,7 +38,7 @@ const menuItems: MenuItem[] = [
     icon: List,
     children: [
       { path: '/migration-task', title: '迁移任务', icon: List },
-      { path: '/grayscale-rule', title: '灰度规则', icon: Operation },
+      { path: '/gray-rule', title: '灰度规则', icon: Operation },
     ],
   },
   {

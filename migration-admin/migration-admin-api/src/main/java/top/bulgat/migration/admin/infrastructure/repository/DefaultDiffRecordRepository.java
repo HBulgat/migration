@@ -101,7 +101,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                            DiffRecordDO::getTraceId,
                            DiffRecordDO::getHasDiff, 
                            DiffRecordDO::getDiffType, 
-                           DiffRecordDO::getGrayscaleParam,
+                           DiffRecordDO::getGrayParam,
                            DiffRecordDO::getOldCostTimeMs, 
                            DiffRecordDO::getNewCostTimeMs, 
                            DiffRecordDO::getTotalCostTimeMs,
@@ -109,7 +109,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                            DiffRecordDO::getOldErrorMessage,
                            DiffRecordDO::getNewErrorMessage,
                            DiffRecordDO::getMigrationStatus,
-                           DiffRecordDO::getGrayscaleHit,
+                           DiffRecordDO::getGrayHit,
                            DiffRecordDO::getFallbackTriggered,
                            DiffRecordDO::getDiffResults);
         }
@@ -184,7 +184,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         dataObject.setDiffResults(writeDiffItems(record.getDiffResults()));
         dataObject.setHasDiff(record.isHasDiff() ? 1 : 0);
         dataObject.setDiffType(record.getDiffType());
-        dataObject.setGrayscaleParam(record.getGrayscaleParam());
+        dataObject.setGrayParam(record.getGrayParam());
         dataObject.setOldCostTimeMs(record.getOldCostTimeMs());
         dataObject.setNewCostTimeMs(record.getNewCostTimeMs());
         dataObject.setTotalCostTimeMs(record.getTotalCostTimeMs());
@@ -196,8 +196,8 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
         dataObject.setOldRequestParams(record.getOldRequestParams());
         dataObject.setNewRequestParams(record.getNewRequestParams());
         dataObject.setMigrationStatus(record.getMigrationTaskStatus());
-        dataObject.setGrayscaleRules(record.getGrayscaleRules());
-        dataObject.setGrayscaleHit(record.getGrayscaleHit() != null && record.getGrayscaleHit() ? 1 : 0);
+        dataObject.setGrayRules(record.getGrayRules());
+        dataObject.setGrayHit(record.getGrayHit() != null && record.getGrayHit() ? 1 : 0);
         dataObject.setFallbackTriggered(record.getFallbackTriggered() != null && record.getFallbackTriggered() ? 1 : 0);
         return dataObject;
     }
@@ -212,7 +212,7 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                 readDiffItems(dataObject.getDiffResults()),
                 Integer.valueOf(1).equals(dataObject.getHasDiff()),
                 dataObject.getDiffType(),
-                dataObject.getGrayscaleParam(),
+                dataObject.getGrayParam(),
                 dataObject.getOldCostTimeMs(),
                 dataObject.getNewCostTimeMs(),
                 dataObject.getTotalCostTimeMs(),
@@ -224,8 +224,8 @@ public class DefaultDiffRecordRepository implements DiffRecordRepository {
                 dataObject.getOldRequestParams(),
                 dataObject.getNewRequestParams(),
                 dataObject.getMigrationStatus(),
-                dataObject.getGrayscaleRules(),
-                Integer.valueOf(1).equals(dataObject.getGrayscaleHit()),
+                dataObject.getGrayRules(),
+                Integer.valueOf(1).equals(dataObject.getGrayHit()),
                 Integer.valueOf(1).equals(dataObject.getFallbackTriggered()));
     }
 

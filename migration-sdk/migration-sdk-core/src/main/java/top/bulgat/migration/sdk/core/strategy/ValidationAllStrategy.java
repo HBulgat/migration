@@ -27,10 +27,10 @@ public class ValidationAllStrategy extends AbstractMigrationStrategy {
      */
     @Override
     public <T> T execute(MigrationExecutionContext<T> context) {
-        Map<String, Object> grayscaleParam = context.buildParam();
+        Map<String, Object> grayParam = context.buildParam();
 
         // 并发执行旧接口和新接口，后台异步上报 Diff
-        ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context, grayscaleParam);
+        ConcurrentInvocationResult<T> result = invokeOldMainNewAsync(context, grayParam);
 
         // 返回旧接口结果
         if (result.oldResult().isSuccess()) {

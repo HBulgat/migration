@@ -3,7 +3,7 @@ package top.bulgat.migration.sdk.core.model;
 /**
  * 灰度规则类型枚举。
  */
-public enum GrayscaleRuleType {
+public enum GrayRuleType {
     PERCENTAGE,
     BLACKLIST,
     WHITELIST,
@@ -15,7 +15,7 @@ public enum GrayscaleRuleType {
      * @param value 规则类型字符串
      * @return 规则类型枚举
      */
-    public static GrayscaleRuleType fromValue(String value) {
-        return GrayscaleRuleType.valueOf(value.toUpperCase());
+    public static GrayRuleType fromValue(String value) {
+        return GrayRuleType.valueOf(value.toUpperCase());
     }
 }

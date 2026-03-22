@@ -28,8 +28,8 @@ public class DecommissioningGrayStrategy extends AbstractMigrationStrategy {
      */
     @Override
     public <T> T execute(MigrationExecutionContext<T> context) {
-        Map<String, Object> grayscaleParam = context.buildParam();
-        boolean hitGray = matchGrayscale(context, grayscaleParam);
+        Map<String, Object> grayParam = context.buildParam();
+        boolean hitGray = matchGray(context, grayParam);
 
         if (hitGray) {
             // 命中灰度，仅调用新接口
@@ -41,7 +41,7 @@ public class DecommissioningGrayStrategy extends AbstractMigrationStrategy {
         }
 
         // 未命中灰度，并发调用，主线程执行新接口
-        ConcurrentInvocationResult<T> result = invokeNewMainOldAsync(context, grayscaleParam);
+        ConcurrentInvocationResult<T> result = invokeNewMainOldAsync(context, grayParam);
 
         if (result.newResult().isSuccess()) {
             return result.newResult().value();

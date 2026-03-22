@@ -16,13 +16,13 @@ import top.bulgat.migration.sdk.core.diff.DisruptorDiffServiceCaller;
 import top.bulgat.migration.sdk.core.function.ExecuteFunction;
 import top.bulgat.migration.sdk.core.function.ParamHandler;
 import top.bulgat.migration.sdk.core.extension.DiffPostProcessor;
-import top.bulgat.migration.sdk.core.grayscale.DefaultGrayscaleMatcher;
-import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
+import top.bulgat.migration.sdk.core.gray.DefaultGrayMatcher;
+import top.bulgat.migration.sdk.core.model.GrayConfig;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.model.MigrationTaskStatus;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
-import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
+import top.bulgat.migration.sdk.core.spi.GrayMatcher;
 import top.bulgat.migration.sdk.core.strategy.MigrationExecutionContext;
 import top.bulgat.migration.sdk.core.strategy.MigrationStrategy;
 import top.bulgat.migration.sdk.core.strategy.MigrationStrategyRegistry;
@@ -38,7 +38,7 @@ public class MigrationClient implements AutoCloseable {
     private final MigrationConfig config;
     private final ConfigClient configClient;
     private final DiffServiceCaller diffServiceCaller;
-    private final GrayscaleMatcher grayscaleMatcher;
+    private final GrayMatcher grayMatcher;
     private final MigrationStrategyRegistry strategyRegistry;
     private final ExecutorService executorService;
     private final boolean manageResources;
@@ -66,7 +66,7 @@ public class MigrationClient implements AutoCloseable {
                 config,
                 new CachedConfigClient(new HttpConfigClient(properties), properties.getConfigCenterCacheRefreshIntervalSeconds()),
                 new DisruptorDiffServiceCaller(properties),
-                new DefaultGrayscaleMatcher(),
+                new DefaultGrayMatcher(),
                 MigrationStrategyRegistry.defaultRegistry(),
                 executorService,
                 true);
@@ -78,7 +78,7 @@ public class MigrationClient implements AutoCloseable {
      * @param config            基础迁移配置
      * @param configClient      配置中心客户端
      * @param diffServiceCaller Diff 服务调用器
-     * @param grayscaleMatcher  灰度规则匹配器
+     * @param grayMatcher  灰度规则匹配器
      * @param strategyRegistry  策略注册表
      * @param executorService   异步调用线程池
      */
@@ -86,10 +86,10 @@ public class MigrationClient implements AutoCloseable {
             MigrationConfig config,
             ConfigClient configClient,
             DiffServiceCaller diffServiceCaller,
-            GrayscaleMatcher grayscaleMatcher,
+            GrayMatcher grayMatcher,
             MigrationStrategyRegistry strategyRegistry,
             ExecutorService executorService) {
-        this(config, configClient, diffServiceCaller, grayscaleMatcher, strategyRegistry, executorService, false);
+        this(config, configClient, diffServiceCaller, grayMatcher, strategyRegistry, executorService, false);
     }
 
     /**
@@ -98,7 +98,7 @@ public class MigrationClient implements AutoCloseable {
      * @param config            基础迁移配置
      * @param configClient      配置中心客户端
      * @param diffServiceCaller Diff 调用器
-     * @param grayscaleMatcher  灰度匹配器
+     * @param grayMatcher  灰度匹配器
      * @param strategyRegistry  迁移策略注册表
      * @param executorService   线程池
      * @param manageResources   是否由当前实例管理资源的生命周期（关闭时释放）
@@ -107,7 +107,7 @@ public class MigrationClient implements AutoCloseable {
             MigrationConfig config,
             ConfigClient configClient,
             DiffServiceCaller diffServiceCaller,
-            GrayscaleMatcher grayscaleMatcher,
+            GrayMatcher grayMatcher,
             MigrationStrategyRegistry strategyRegistry,
             ExecutorService executorService,
             boolean manageResources) {
@@ -117,7 +117,7 @@ public class MigrationClient implements AutoCloseable {
         }
         this.configClient = Objects.requireNonNull(configClient, "configClient is required");
         this.diffServiceCaller = Objects.requireNonNull(diffServiceCaller, "diffServiceCaller is required");
-        this.grayscaleMatcher = Objects.requireNonNull(grayscaleMatcher, "grayscaleMatcher is required");
+        this.grayMatcher = Objects.requireNonNull(grayMatcher, "grayMatcher is required");
         this.strategyRegistry = Objects.requireNonNull(strategyRegistry, "strategyRegistry is required");
         this.executorService = Objects.requireNonNull(executorService, "executorService is required");
         this.manageResources = manageResources;
@@ -192,7 +192,7 @@ public class MigrationClient implements AutoCloseable {
             // 从配置中心拉取最新配置和灰度规则
             MigrationConfig latestConfig = loadLatestConfig();
             MigrationTaskStatus status = resolveStatus(latestConfig.getStatus());
-            List<GrayscaleConfig> grayscaleRules = loadGrayscaleRules();
+            List<GrayConfig> grayRules = loadGrayRules();
 
             // 根据状态获取对应的策略
             MigrationStrategy strategy = strategyRegistry.getStrategy(status);
@@ -206,7 +206,7 @@ public class MigrationClient implements AutoCloseable {
             // 构建执行上下文
             MigrationExecutionContext<T> context = MigrationExecutionContext.<T>builder()
                     .migrationKey(config.getMigrationKey())
-                    .grayscaleRules(grayscaleRules)
+                    .grayRules(grayRules)
                     .oldMethod(oldMethod)
                     .newMethod(newMethod)
                     .migrationTaskStatus(status.getCode())
@@ -215,7 +215,7 @@ public class MigrationClient implements AutoCloseable {
                     .postProcessor(postProcessor)
                     .args(args)
                     .diffServiceCaller(diffServiceCaller)
-                    .grayscaleMatcher(grayscaleMatcher)
+                    .grayMatcher(grayMatcher)
                     .executorService(executorService)
                     .build();
 
@@ -262,9 +262,9 @@ public class MigrationClient implements AutoCloseable {
      *
      * @return 灰度规则列表
      */
-    private List<GrayscaleConfig> loadGrayscaleRules() {
+    private List<GrayConfig> loadGrayRules() {
         try {
-            List<GrayscaleConfig> rules = configClient.getGrayscaleRules(config.getMigrationKey());
+            List<GrayConfig> rules = configClient.getGrayRules(config.getMigrationKey());
             return rules == null ? Collections.emptyList() : rules;
         } catch (Exception ex) {
             log.warn("load 灰度规则 failed, migrationKey={}", config.getMigrationKey(), ex);

@@ -30,7 +30,7 @@ import top.bulgat.migration.sdk.core.extension.DefaultDiffPostProcessor;
 import top.bulgat.migration.sdk.core.model.MigrationConfig;
 import top.bulgat.migration.sdk.core.spi.ConfigClient;
 import top.bulgat.migration.sdk.core.spi.DiffServiceCaller;
-import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
+import top.bulgat.migration.sdk.core.spi.GrayMatcher;
 import top.bulgat.migration.sdk.core.strategy.MigrationStrategyRegistry;
 import top.bulgat.migration.sdk.starter.annotation.Migration;
 import top.bulgat.migration.sdk.starter.config.MigrationProperties;
@@ -45,7 +45,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
 
     private final ConfigClient configClient;
     private final DiffServiceCaller diffServiceCaller;
-    private final GrayscaleMatcher grayscaleMatcher;
+    private final GrayMatcher grayMatcher;
     private final MigrationStrategyRegistry strategyRegistry;
     private final MigrationProperties migrationProperties;
     private final Map<String, ExecutorService> executorCache = new ConcurrentHashMap<>();
@@ -58,12 +58,12 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
     public MigrationInterceptor(
             ConfigClient configClient,
             DiffServiceCaller diffServiceCaller,
-            GrayscaleMatcher grayscaleMatcher,
+            GrayMatcher grayMatcher,
             MigrationStrategyRegistry strategyRegistry,
             MigrationProperties migrationProperties) {
         this.configClient = configClient;
         this.diffServiceCaller = diffServiceCaller;
-        this.grayscaleMatcher = grayscaleMatcher;
+        this.grayMatcher = grayMatcher;
         this.strategyRegistry = strategyRegistry;
         this.migrationProperties = migrationProperties;
     }
@@ -109,7 +109,7 @@ public class MigrationInterceptor implements MethodInterceptor, ApplicationConte
                         .build(),
                 configClient,
                 diffServiceCaller,
-                grayscaleMatcher,
+                grayMatcher,
                 strategyRegistry,
                 executorService);
 

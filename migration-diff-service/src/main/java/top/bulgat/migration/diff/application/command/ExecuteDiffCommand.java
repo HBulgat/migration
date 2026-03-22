@@ -12,7 +12,7 @@ public record ExecuteDiffCommand(
                 String newJson,
                 Integer oldCostTimeMs,
                 Integer newCostTimeMs,
-                String grayscaleParam,
+                String grayParam,
                 Boolean oldSuccess,
                 Boolean newSuccess,
                 String oldErrorMessage,
@@ -20,8 +20,8 @@ public record ExecuteDiffCommand(
                 String oldRequestParams,
                 String newRequestParams,
                 Integer migrationTaskStatus,
-                String grayscaleRules,
-                Boolean grayscaleHit,
+                String grayRules,
+                Boolean grayHit,
                 Boolean fallbackTriggered) {
 
     /**
@@ -32,9 +32,9 @@ public record ExecuteDiffCommand(
     public DiffRequest toDiffRequest() {
         return new DiffRequest(
                 migrationKey, traceId, oldJson, newJson, oldCostTimeMs, newCostTimeMs,
-                grayscaleParam, oldSuccess, newSuccess, oldErrorMessage, newErrorMessage,
-                oldRequestParams, newRequestParams, migrationTaskStatus, grayscaleRules,
-                grayscaleHit, fallbackTriggered
+                grayParam, oldSuccess, newSuccess, oldErrorMessage, newErrorMessage,
+                oldRequestParams, newRequestParams, migrationTaskStatus, grayRules,
+                grayHit, fallbackTriggered
         );
     }
 }

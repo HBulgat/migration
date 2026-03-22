@@ -44,7 +44,7 @@
 **测试**
 - Java 测试依赖：`junit-jupiter` 与 `spring-boot-starter-test`（Admin：`migration-admin/migration-admin-api/pom.xml:86-94`；Diff：`migration-diff-service/pom.xml:78-86`）。
 - Java 测试组织：按模块目录的 `.../test/java/...`，类名以 `*Test.java` 结尾，包含应用服务、装配器、控制器等（例如 Admin 与 Diff 相关测试目录结构在仓库中已建立）。
-- Go SDK：包含 `*_test.go` 用例（如 `migration-sdk-go/grayscale/matcher_test.go`、`strategy/handlers_test.go`）。
+- Go SDK：包含 `*_test.go` 用例（如 `migration-sdk-go/gray/matcher_test.go`、`strategy/handlers_test.go`）。
 - 执行建议：
   - Maven：按模块执行 `mvn -pl <module> test`（基于 Maven 标准行为）。
   - Go：在 `migration-sdk-go` 目录执行 `go test ./...`（标准 Go 测试约定）。

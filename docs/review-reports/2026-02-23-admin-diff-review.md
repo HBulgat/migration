@@ -16,24 +16,24 @@ All 4 previously reported findings are fixed in code and verified by tests.
 Status: **Fixed**
 
 - Unified primary key prefix to `migration_`.
-- Added compatibility fallback reads for historical keys (`grayscale_`, `diff_`).
+- Added compatibility fallback reads for historical keys (`gray_`, `diff_`).
 - Added group-based isolation to avoid collisions for task/rule payloads.
 
 Key references:
 - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepository.java:26`
 - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepository.java:78`
 - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepository.java:108`
-- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepository.java:24`
-- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepository.java:25`
-- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepository.java:132`
+- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepository.java:24`
+- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepository.java:25`
+- `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepository.java:132`
 - `migration-diff/src/main/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepository.java:28`
 - `migration-diff/src/main/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepository.java:29`
 - `migration-diff/src/main/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepository.java:67`
 
 Compatibility tests added:
 - `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterMigrationTaskRepositoryTest.java:63`
-- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepositoryTest.java:94`
-- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayscaleRuleRepositoryTest.java:107`
+- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepositoryTest.java:94`
+- `migration-admin/migration-admin-api/src/test/java/top/bulgat/migration/admin/infrastructure/repository/ConfigCenterGrayRuleRepositoryTest.java:107`
 - `migration-diff/src/test/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepositoryTest.java:162`
 - `migration-diff/src/test/java/top/bulgat/migration/diff/infrastructure/configcenter/NacosDiffRuleRepositoryTest.java:183`
 
@@ -83,7 +83,7 @@ Key references:
 
 - Added OpenAPI annotations to admin API controllers for better generated API documentation consistency:
   - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/MigrationTaskController.java:29`
-  - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/GrayscaleRuleController.java:29`
+  - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/GrayRuleController.java:29`
   - `migration-admin/migration-admin-api/src/main/java/top/bulgat/migration/admin/interfaces/rest/DiffRecordController.java:25`
 - Re-ran regression tests after annotation updates:
   - `mvn -q -f migration-admin/migration-admin-api/pom.xml test` : **passed**

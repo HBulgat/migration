@@ -77,7 +77,7 @@ class DiffControllerTest {
                                   "new_json": "{\\"a\\":2}",
                                   "old_cost_time_ms": 10,
                                   "new_cost_time_ms": 11,
-                                  "grayscale_param": "{}"
+                                  "gray_param": "{}"
                                 }
                                 """))
                 .andExpect(status().isOk())
@@ -200,7 +200,7 @@ class DiffControllerTest {
             String newJson,
             Integer oldCostTimeMs,
             Integer newCostTimeMs,
-            String grayscaleParam) {
+            String grayParam) {
         return new ExecuteDiffCommand(
                 migrationKey,
                 traceId,
@@ -208,7 +208,7 @@ class DiffControllerTest {
                 newJson,
                 oldCostTimeMs,
                 newCostTimeMs,
-                grayscaleParam,
+                grayParam,
                 true,
                 true,
                 null,

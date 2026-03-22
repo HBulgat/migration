@@ -6,13 +6,12 @@ import java.time.LocalDateTime;
 /**
  * 接口响应 DTO。
  */
-public record GrayscaleRuleResponse(
+public record GrayRuleResponse(
         @JsonProperty("rule_id") String ruleId,
         @JsonProperty("migration_key") String migrationKey,
         @JsonProperty("rule_type") String ruleType,
         @JsonProperty("rule_value") String ruleValue,
         @JsonProperty("enable") boolean enable,
-        @JsonProperty("weight") Integer weight,
         @JsonProperty("create_time") LocalDateTime createTime,
         @JsonProperty("update_time") LocalDateTime updateTime) {
 }

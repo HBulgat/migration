@@ -1,4 +1,4 @@
-package top.bulgat.migration.sdk.core.grayscale;
+package top.bulgat.migration.sdk.core.gray;
 
 import com.alibaba.fastjson2.JSONArray;
 import java.util.Collections;
@@ -12,16 +12,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
-import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
-import top.bulgat.migration.sdk.core.model.GrayscaleRuleType;
-import top.bulgat.migration.sdk.core.spi.GrayscaleMatcher;
+import top.bulgat.migration.sdk.core.model.GrayConfig;
+import top.bulgat.migration.sdk.core.model.GrayRuleType;
+import top.bulgat.migration.sdk.core.spi.GrayMatcher;
 
 /**
  * 默认灰度匹配器，支持百分比、名单和表达式规则。
  */
-public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
+public class DefaultGrayMatcher implements GrayMatcher {
 
-    private static final Logger log = LoggerFactory.getLogger(DefaultGrayscaleMatcher.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultGrayMatcher.class);
     private static final JmesPath<JsonNode> PARSER = new JacksonRuntime();
     private static final Map<String, Expression<JsonNode>> EXPRESSION_CACHE = new ConcurrentHashMap<>();
     private static final Map<String, JSONArray> JSON_ARRAY_CACHE = new ConcurrentHashMap<>();
@@ -35,25 +35,24 @@ public class DefaultGrayscaleMatcher implements GrayscaleMatcher {
      * @return 命中灰度时返回 true
      */
     @Override
-    public boolean match(List<GrayscaleConfig> rules, Map<String, Object> params) {
+    public boolean match(List<GrayConfig> rules, Map<String, Object> params) {
         if (rules == null || rules.isEmpty()) {
             return false;
         }
 
-        List<GrayscaleConfig> sortedRules = new java.util.ArrayList<>(rules);
-        sortedRules.sort(java.util.Comparator.comparing(GrayscaleConfig::getWeight, java.util.Comparator.nullsLast(java.util.Comparator.reverseOrder())));
+        List<GrayConfig> sortedRules = new java.util.ArrayList<>(rules);
 
         Map<String, Object> safeParams = params == null ? Collections.emptyMap() : params;
 
-        for (GrayscaleConfig rule : sortedRules) {
+        for (GrayConfig rule : sortedRules) {
             if (rule == null || !Boolean.TRUE.equals(rule.getEnable())) {
                 continue;
             }
-            GrayscaleRuleType type;
+            GrayRuleType type;
             try {
-                type = GrayscaleRuleType.fromValue(rule.getRuleType());
+                type = GrayRuleType.fromValue(rule.getRuleType());
             } catch (Exception ex) {
-                log.warn("skip invalid grayscale rule type, type={}", rule.getRuleType());
+                log.warn("skip invalid gray rule type, type={}", rule.getRuleType());
                 continue;
             }
 

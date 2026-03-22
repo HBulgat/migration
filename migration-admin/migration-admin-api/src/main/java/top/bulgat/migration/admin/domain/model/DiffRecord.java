@@ -20,7 +20,7 @@ public class DiffRecord {
     private final List<DiffItem> diffResults;
     private final boolean hasDiff;
     private final String diffType;
-    private final String grayscaleParam;
+    private final String grayParam;
     private final Integer oldCostTimeMs;
     private final Integer newCostTimeMs;
     private final Integer totalCostTimeMs;
@@ -32,7 +32,7 @@ public class DiffRecord {
     private final String oldRequestParams;
     private final String newRequestParams;
     private final Integer migrationTaskStatus;
-    private final String grayscaleRules;
-    private final Boolean grayscaleHit;
+    private final String grayRules;
+    private final Boolean grayHit;
     private final Boolean fallbackTriggered;
 }

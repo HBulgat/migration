@@ -29,8 +29,8 @@ public class GoLiveGrayStrategy extends AbstractMigrationStrategy {
     @Override
     public <T> T execute(MigrationExecutionContext<T> context) {
         // 获取灰度参数并进行匹配
-        Map<String, Object> grayscaleParam = context.buildParam();
-        boolean hitGray = matchGrayscale(context, grayscaleParam);
+        Map<String, Object> grayParam = context.buildParam();
+        boolean hitGray = matchGray(context, grayParam);
 
         if (hitGray) {
             // 命中灰度：仅调用新接口
@@ -43,7 +43,7 @@ public class GoLiveGrayStrategy extends AbstractMigrationStrategy {
         }
 
         // 未命中灰度：并发执行并异步发送Diff，并返回旧接口结果
-        ConcurrentInvocationResult<T> concurrentResult = invokeOldMainNewAsync(context, grayscaleParam);
+        ConcurrentInvocationResult<T> concurrentResult = invokeOldMainNewAsync(context, grayParam);
 
         if (concurrentResult.oldResult().isSuccess()) {
             return concurrentResult.oldResult().value();

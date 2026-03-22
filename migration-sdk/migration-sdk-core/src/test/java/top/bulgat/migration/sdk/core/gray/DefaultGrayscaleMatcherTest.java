@@ -1,4 +1,4 @@
-package top.bulgat.migration.sdk.core.grayscale;
+package top.bulgat.migration.sdk.core.gray;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,16 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import top.bulgat.migration.sdk.core.model.GrayscaleConfig;
-import top.bulgat.migration.sdk.core.model.PercentageRoutingStrategy;
+import top.bulgat.migration.sdk.core.model.GrayConfig;
 
-class DefaultGrayscaleMatcherTest {
+class DefaultGrayMatcherTest {
 
-    private final DefaultGrayscaleMatcher matcher = new DefaultGrayscaleMatcher();
+    private final DefaultGrayMatcher matcher = new DefaultGrayMatcher();
 
     @Test
     void match_shouldHitWhitelist() {
-        GrayscaleConfig rule = GrayscaleConfig.builder()
+        GrayConfig rule = GrayConfig.builder()
                 .ruleType("WHITELIST")
                 .ruleValue("[\"1001\",\"1002\"]")
                 .enable(true)
@@ -27,7 +26,7 @@ class DefaultGrayscaleMatcherTest {
 
     @Test
     void match_shouldHitPercentageWhenHundred() {
-        GrayscaleConfig rule = GrayscaleConfig.builder()
+        GrayConfig rule = GrayConfig.builder()
                 .ruleType("PERCENTAGE")
                 .ruleValue("100")
                 .enable(true)
@@ -38,7 +37,7 @@ class DefaultGrayscaleMatcherTest {
 
     @Test
     void match_shouldEvaluateExpression() {
-        GrayscaleConfig rule = GrayscaleConfig.builder()
+        GrayConfig rule = GrayConfig.builder()
                 .ruleType("EXPRESSION")
                 .ruleValue("userId == '1001' && level >= `3`")
                 .enable(true)
@@ -51,9 +50,9 @@ class DefaultGrayscaleMatcherTest {
 //    @Test
     void match_shouldHitPercentageRandomly() {
         // Create matcher with RANDOM strategy
-        DefaultGrayscaleMatcher randomMatcher = new DefaultGrayscaleMatcher();
+        DefaultGrayMatcher randomMatcher = new DefaultGrayMatcher();
 
-        GrayscaleConfig rule = GrayscaleConfig.builder()
+        GrayConfig rule = GrayConfig.builder()
                 .ruleType("PERCENTAGE")
                 .ruleValue("50")
                 .enable(true)

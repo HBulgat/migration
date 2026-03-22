@@ -72,7 +72,7 @@ public class MigrationPreWarmer implements ApplicationListener<ContextRefreshedE
             try {
                 // 触发同步加载并注入缓存
                 configClient.getMigrationConfig(key);
-                configClient.getGrayscaleRules(key);
+                configClient.getGrayRules(key);
                 log.info("[Migration-SDK] Pre-warmed configuration for key: {}", key);
             } catch (Exception e) {
                 log.warn("[Migration-SDK] Failed to pre-warm configuration for key: {}", key, e);

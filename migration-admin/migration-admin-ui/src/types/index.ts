@@ -19,13 +19,12 @@ export interface MigrationTask {
   update_time?: string
 }
 
-export interface GrayscaleRule {
+export interface GrayRule {
   rule_id: string
   migration_key: string
   rule_type: string
   rule_value: string
   enable: boolean
-  weight: number
   create_time?: string
   update_time?: string
 }
@@ -47,7 +46,7 @@ export interface DiffRecord {
   diff_results: DiffItem[]
   has_diff: boolean
   diff_type?: string | null
-  grayscale_param?: string | null
+  gray_param?: string | null
   old_cost_time_ms?: number | null
   new_cost_time_ms?: number | null
   total_cost_time_ms?: number | null

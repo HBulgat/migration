@@ -33,7 +33,7 @@ CREATE TABLE diff_record (
     diff_results TEXT COMMENT 'Diff结果(JSON)',
     has_diff TINYINT NOT NULL DEFAULT 0 COMMENT '是否有差异(0-否/1-是)',
     diff_type VARCHAR(32) COMMENT '差异类型',
-    grayscale_param VARCHAR(512) COMMENT '灰度参数',
+    gray_param VARCHAR(512) COMMENT '灰度参数',
     old_cost_time_ms INT COMMENT '旧接口耗时(ms)',
     new_cost_time_ms INT COMMENT '新接口耗时(ms)',
     total_cost_time_ms INT COMMENT '总耗时(ms)',
@@ -99,38 +99,38 @@ public class MigrationTaskController {
 
 // 灰度规则API
 @RestController
-@RequestMapping("/api/v1/grayscale_rule")
-public class GrayscaleRuleController {
+@RequestMapping("/api/v1/gray_rule")
+public class GrayRuleController {
 
     /**
      * 创建灰度规则（推送到配置中心）
      */
     @PostMapping("/create")
-    public Result<GrayscaleRuleVO> create(@RequestBody GrayscaleRuleCreateRequest request);
+    public Result<GrayRuleVO> create(@RequestBody GrayRuleCreateRequest request);
 
     /**
      * 更新灰度规则（推送到配置中心）
      */
     @PostMapping("/update")
-    public Result<Void> update(@RequestBody GrayscaleRuleUpdateRequest request);
+    public Result<Void> update(@RequestBody GrayRuleUpdateRequest request);
 
     /**
      * 删除灰度规则（从配置中心删除）
      */
     @PostMapping("/delete")
-    public Result<Void> delete(@RequestBody GrayscaleRuleDeleteRequest request);
+    public Result<Void> delete(@RequestBody GrayRuleDeleteRequest request);
 
     /**
      * 更新灰度规则启用状态（推送到配置中心）
      */
     @PostMapping("/update_enable")
-    public Result<Void> updateEnable(@RequestBody UpdateGrayscaleRuleEnableRequest request);
+    public Result<Void> updateEnable(@RequestBody UpdateGrayRuleEnableRequest request);
 
     /**
      * 获取灰度规则列表（从配置中心拉取，分页）
      */
     @GetMapping("/list")
-    public Result<PageResult<GrayscaleRuleVO>> list(
+    public Result<PageResult<GrayRuleVO>> list(
             @RequestParam String migration_key,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer pageSize);
@@ -186,7 +186,7 @@ public class MigrationTaskCreateRequest {
 // 更新灰度规则启用状态请求
 @Data
 @Builder
-public class UpdateGrayscaleRuleEnableRequest {
+public class UpdateGrayRuleEnableRequest {
     @NotBlank
     private String migrationKey;
 
@@ -209,7 +209,7 @@ public class DiffRecordVO {
     private List<DiffItemVO> diffResults;
     private Boolean hasDiff;
     private String diffType;
-    private String grayscaleParam;
+    private String grayParam;
     private Integer oldCostTimeMs;
     private Integer newCostTimeMs;
     private Integer totalCostTimeMs;
@@ -250,8 +250,8 @@ public class ConfigCenterService {
     /**
      * 推送灰度规则到配置中心
      */
-    public void pushGrayscaleRules(String migrationKey, List<GrayscaleConfig> rules) {
-        String dataId = "grayscale_" + migrationKey;
+    public void pushGrayRules(String migrationKey, List<GrayConfig> rules) {
+        String dataId = "gray_" + migrationKey;
         String group = "DEFAULT_GROUP";
         String content = JSON.toJSONString(rules);
         nacosConfigManager.publishConfig(dataId, group, content);
@@ -322,6 +322,6 @@ top.bulgat.migration.admin
 若不满足，接口返回统一业务错误码（`PARAM_ERROR`）。
 - `GET /api/v1/migration_task/list` 的 `status` 过滤值必须在 `[1,7]`，否则返回 `PARAM_ERROR`。
 - `GET /api/v1/diff_record/list` 的 `has_diff` 过滤值仅允许 `0/1`，否则返回 `PARAM_ERROR`。
-- `GET /api/v1/migration_task/list`、`GET /api/v1/grayscale_rule/list`、`GET /api/v1/diff_record/list` 的分页参数 `page/pageSize` 必须满足 `page >= 1` 且 `1 <= pageSize <= 200`，否则返回 `PARAM_ERROR`。
+- `GET /api/v1/migration_task/list`、`GET /api/v1/gray_rule/list`、`GET /api/v1/diff_record/list` 的分页参数 `page/pageSize` 必须满足 `page >= 1` 且 `1 <= pageSize <= 200`，否则返回 `PARAM_ERROR`。
 - `POST /api/v1/migration_task/update` 至少传入一个更新字段：`status` 或 `description`。
-- `POST /api/v1/grayscale_rule/update` 至少传入一个更新字段：`rule_type`、`rule_value`、`enable`。
+- `POST /api/v1/gray_rule/update` 至少传入一个更新字段：`rule_type`、`rule_value`、`enable`。

@@ -42,11 +42,11 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
      * 遵循主线程零阻塞原则，执行完旧接口即刻返回。
      *
      * @param context        执行上下文
-     * @param grayscaleParam 灰度参数
+     * @param grayParam 灰度参数
      * @param <T>            返回值类型
      * @return 仅包含旧接口调用结果的 ConcurrentInvocationResult
      */
-    protected <T> ConcurrentInvocationResult<T> invokeOldMainNewAsync(MigrationExecutionContext<T> context, Map<String, Object> grayscaleParam) {
+    protected <T> ConcurrentInvocationResult<T> invokeOldMainNewAsync(MigrationExecutionContext<T> context, Map<String, Object> grayParam) {
         String traceId = ThreadContext.getTraceId();
         Object[] args = context.getArgs() == null ? new Object[0] : context.getArgs();
 
@@ -63,7 +63,7 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
                     // 阻塞后台线程等待主线程执行完（带超时保护，防止死锁）
                     InvocationResult<T> oldResult = oldResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
                     // 后台上报
-                    sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
+                    sendDiffAsync(context, oldResult, newResult, grayParam, true, false);
                 } catch (Exception ex) {
                     log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
                 } finally {
@@ -92,11 +92,11 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
      * 遵循主线程零阻塞原则，正常情况下返回新接口结果。
      *
      * @param context        执行上下文
-     * @param grayscaleParam 灰度参数
+     * @param grayParam 灰度参数
      * @param <T>            返回值类型
      * @return 仅包含新接口调用结果的 ConcurrentInvocationResult
      */
-    protected <T> ConcurrentInvocationResult<T> invokeNewMainOldAsync(MigrationExecutionContext<T> context, Map<String, Object> grayscaleParam) {
+    protected <T> ConcurrentInvocationResult<T> invokeNewMainOldAsync(MigrationExecutionContext<T> context, Map<String, Object> grayParam) {
         String traceId = ThreadContext.getTraceId();
         Object[] args = context.getArgs() == null ? new Object[0] : context.getArgs();
 
@@ -113,7 +113,7 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
                     // 阻塞后台线程等待主线程执行完（带超时保护）
                     InvocationResult<T> newResult = newResultFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
                     // 后台上报
-                    sendDiffAsync(context, oldResult, newResult, grayscaleParam, true, false);
+                    sendDiffAsync(context, oldResult, newResult, grayParam, true, false);
                 } catch (Exception ex) {
                     log.warn("background diff task failed, migrationKey={}", context.getMigrationKey(), ex);
                 } finally {
@@ -173,8 +173,8 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
      * @param context           执行上下文
      * @param oldResult         旧接口调用结果
      * @param newResult         新接口调用结果
-     * @param grayscaleParam    用于发送的灰度参数
-     * @param grayscaleHit      是否命中灰度规则
+     * @param grayParam    用于发送的灰度参数
+     * @param grayHit      是否命中灰度规则
      * @param fallbackTriggered 是否触发降级
      * @param <T>               返回值类型
      */
@@ -182,8 +182,8 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
             MigrationExecutionContext<T> context,
             InvocationResult<T> oldResult,
             InvocationResult<T> newResult,
-            Map<String, Object> grayscaleParam,
-            boolean grayscaleHit,
+            Map<String, Object> grayParam,
+            boolean grayHit,
             boolean fallbackTriggered) {
         try {
             Object rawOld = oldResult.isSuccess() ? oldResult.value() : null;
@@ -199,7 +199,7 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
                     .newJson(newResult.isSuccess() ? JSON.toJSONString(processed.processedNew()) : null)
                     .oldCostTimeMs((int) oldResult.costTimeMs())
                     .newCostTimeMs((int) newResult.costTimeMs())
-                    .grayscaleParam(JSON.toJSONString(grayscaleParam))
+                    .grayParam(JSON.toJSONString(grayParam))
                     .oldSuccess(oldResult.isSuccess())
                     .newSuccess(newResult.isSuccess())
                     .oldErrorMessage(oldResult.error() != null ? oldResult.error().getMessage() : null)
@@ -207,8 +207,8 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
                     .oldRequestParams(JSON.toJSONString(context.getArgs()))
                     .newRequestParams(JSON.toJSONString(context.getArgs()))
                     .migrationStatus(context.getMigrationTaskStatus())
-                    .grayscaleRules(JSON.toJSONString(context.getGrayscaleRules()))
-                    .grayscaleHit(grayscaleHit)
+                    .grayRules(JSON.toJSONString(context.getGrayRules()))
+                    .grayHit(grayHit)
                     .fallbackTriggered(fallbackTriggered)
                     .build());
         } catch (Exception ex) {
@@ -220,11 +220,11 @@ public abstract class AbstractMigrationStrategy implements MigrationStrategy {
      * 评估并匹配灰度规则。
      *
      * @param context        执行上下文
-     * @param grayscaleParam 提供的灰度参数
+     * @param grayParam 提供的灰度参数
      * @return 如果命中规则，则返回true；否则返回false
      */
-    protected boolean matchGrayscale(MigrationExecutionContext<?> context, Map<String, Object> grayscaleParam) {
-        return context.getGrayscaleMatcher().match(context.getGrayscaleRules(), grayscaleParam);
+    protected boolean matchGray(MigrationExecutionContext<?> context, Map<String, Object> grayParam) {
+        return context.getGrayMatcher().match(context.getGrayRules(), grayParam);
     }
 
     /**
