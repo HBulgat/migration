@@ -5,15 +5,15 @@ import (
 	"net/http"
 
 	"github.com/HBulgat/migration-demo-go/handler"
-	migration "github.com/HBulgat/migration-sdk-go" // 请根据实际包路径调整
+	"github.com/HBulgat/migration-sdk-go"
 	"github.com/gin-gonic/gin"
 )
 
 // RegisterRoutes 统一注册所有的路由和迁移策略包装
 func RegisterRoutes(r *gin.Engine) {
 	// 注册用户查询接口
-	r.GET("/api/v1/user/:id", migrationWrap(
-		"get-user-by-id",         // 迁移策略 Key
+	r.GET("/api/v1/user", migrationWrap(
+		"test-1111110101",        // 迁移策略 Key
 		handler.UserParamHandler, // 参数提取器: func(ctx *gin.Context) map[string]interface{}
 		nil,
 		handler.OldGetUserById,      // 旧逻辑: func(ctx *gin.Context) (interface{}, error)
