@@ -1,12 +1,15 @@
 package handler
 
 import (
-	"context"
-
 	"github.com/HBulgat/migration-demo-go/model"
+	"github.com/gin-gonic/gin"
 )
 
-func NewGetUserById(ctx context.Context, req *model.GetUserByIdRequest) (interface{}, error) {
+func NewGetUserById(ctx *gin.Context) (interface{}, error) {
+	var req model.GetUserByIdRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		return nil, err
+	}
 	return &model.GetUserByIdResponse{
 		UserID:     req.UserID,
 		Username:   "new_username" + req.UserID,
@@ -14,7 +17,11 @@ func NewGetUserById(ctx context.Context, req *model.GetUserByIdRequest) (interfa
 	}, nil
 }
 
-func FallbackGetUserById(ctx context.Context, req *model.GetUserByIdRequest) (interface{}, error) {
+func FallbackGetUserById(ctx *gin.Context) (interface{}, error) {
+	var req model.GetUserByIdRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		return nil, err
+	}
 	return &model.GetUserByIdResponse{
 		UserID:     "fallback_user_id",
 		Username:   "fallback_username",
@@ -22,7 +29,11 @@ func FallbackGetUserById(ctx context.Context, req *model.GetUserByIdRequest) (in
 	}, nil
 }
 
-func OldGetUserById(ctx context.Context, req *model.GetUserByIdRequest) (interface{}, error) {
+func OldGetUserById(ctx *gin.Context) (interface{}, error) {
+	var req model.GetUserByIdRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		return nil, err
+	}
 	return &model.GetUserByIdResponse{
 		UserID:     req.UserID,
 		Username:   "username" + req.UserID,
@@ -30,7 +41,11 @@ func OldGetUserById(ctx context.Context, req *model.GetUserByIdRequest) (interfa
 	}, nil
 }
 
-func UserParamHandler(req *model.GetUserByIdRequest) map[string]interface{} {
+func UserParamHandler(ctx *gin.Context) map[string]interface{} {
+	var req model.GetUserByIdRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		return nil
+	}
 	return map[string]interface{}{
 		"userId": req.UserID,
 	}

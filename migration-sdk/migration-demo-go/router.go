@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-
 	"github.com/HBulgat/migration-demo-go/handler"
 	"github.com/HBulgat/migration-sdk-go"
 	"github.com/gin-gonic/gin"
@@ -24,15 +22,14 @@ func RegisterRoutes(r *gin.Engine) {
 func migrationWrap[T any](
 	migrationKey string,
 	paramExtractor func(*T) map[string]interface{},
-	functions ...func(context.Context, *T) (interface{}, error),
+	functions ...func(ctx *gin.Context) (interface{}, error),
 ) gin.HandlerFunc {
 
 	// 适配器：将强类型的业务函数适配为 SDK 的 migration.Function
-	adapt := func(f func(context.Context, *T) (interface{}, error)) migration.Function {
+	adapt := func(f func(ctx *gin.Context) (interface{}, error)) migration.Function {
 		return func(args ...interface{}) (interface{}, error) {
-			ctx := args[0].(context.Context)
-			req := args[1].(*T)
-			return f(ctx, req)
+			ctx := args[0].(*gin.Context)
+			return f(ctx)
 		}
 	}
 
