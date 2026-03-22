@@ -19,9 +19,9 @@ else
     docker buildx use multiarch-builder
 fi
 
-# 1. 编译本机当前模块的 Jar (确保是最新的再打包)
+# 1. 编译本机当前模块的 Jar (从根目录构建以确保依赖正确解析)
 echo "-> Compiling Java application..."
-mvn clean package -DskipTests
+(cd ../.. && mvn clean package -DskipTests -pl migration-admin/migration-admin-api -am)
 
 # 2. 从本地打包出 amd64 镜像
 echo "-> Building Docker image for linux/amd64..."

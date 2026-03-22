@@ -136,6 +136,17 @@ public class MigrationTaskApplicationService {
     }
 
     /**
+     * 获取全量迁移任务列表。
+     *
+     * @return 全量任务列表
+     */
+    public List<MigrationTask> listAll() {
+        return repository.findAll().stream()
+                .sorted(Comparator.comparing(MigrationTask::getUpdateTime).reversed())
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 统计符合筛选条件的迁移任务总数。
      *
      * @param command 查询命令

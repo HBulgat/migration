@@ -1,10 +1,19 @@
 package top.bulgat.migration.sdk.core.support;
 
+import lombok.Getter;
+
 /**
  * 用于标记旧方法已执行且失败的异常。
  */
+@Getter
 public class OldInvocationFailedException extends RuntimeException {
 
+    /**
+     * -- GETTER --
+     *  返回旧方法异常。
+     *
+     * @return 旧方法 exception
+     */
     private final Exception oldError;
 
     /**
@@ -17,12 +26,4 @@ public class OldInvocationFailedException extends RuntimeException {
         this.oldError = oldError;
     }
 
-    /**
-     * 返回旧方法异常。
-     *
-     * @return 旧方法 exception
-     */
-    public Exception getOldError() {
-        return oldError;
-    }
 }

@@ -1,13 +1,11 @@
 package top.bulgat.migration.config.common.dal;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import top.bulgat.common.base.util.JsonUtils;
+import top.bulgat.common.base.util.StringUtils;
 import top.bulgat.migration.config.common.configcenter.ConfigCenterGateway;
 import top.bulgat.migration.config.common.model.dataobject.DiffRuleConfig;
 
@@ -19,16 +17,13 @@ import top.bulgat.migration.config.common.model.dataobject.DiffRuleConfig;
 @Mapper
 public class DiffRuleConfigDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(DiffRuleConfigDAO.class);
     private static final String DATA_ID_PREFIX = "diff_rule_";
     private static final String GROUP = ConfigCenterGateway.DEFAULT_GROUP;
 
     private final ConfigCenterGateway configCenterGateway;
-    private final ObjectMapper objectMapper;
 
-    public DiffRuleConfigDAO(ConfigCenterGateway configCenterGateway, ObjectMapper objectMapper) {
+    public DiffRuleConfigDAO(ConfigCenterGateway configCenterGateway) {
         this.configCenterGateway = configCenterGateway;
-        this.objectMapper = objectMapper;
     }
 
     /**
@@ -38,19 +33,13 @@ public class DiffRuleConfigDAO {
      * @return 规则 DO 列表，异常时返回空列表
      */
     public List<DiffRuleConfig> findByMigrationKey(String migrationKey) {
-        try {
-            var content = configCenterGateway.getConfig(DATA_ID_PREFIX + migrationKey, GROUP);
-            if (content.isEmpty() || content.get().isBlank()) {
-                return new ArrayList<>();
-            }
-            List<DiffRuleConfig> configs = objectMapper.readValue(content.get(), new TypeReference<>() {});
-            return configs != null ? new ArrayList<>(configs) : new ArrayList<>();
-        } catch (Exception ex) {
-            log.warn("failed to load diff rules from config center, migrationKey={}, reason={}",
-                    migrationKey, sanitizeReason(ex));
-            log.debug("failed to load diff rules detail, migrationKey={}", migrationKey, ex);
+        var content = configCenterGateway.getConfig(DATA_ID_PREFIX + migrationKey, GROUP);
+        if (content.isEmpty()||StringUtils.isBlank(content.get())) {
             return new ArrayList<>();
         }
+        List<DiffRuleConfig> configs = JsonUtils.toList(content.get(), DiffRuleConfig.class);
+        return configs != null ? new ArrayList<>(configs) : new ArrayList<>();
+
     }
 
     /**
@@ -60,13 +49,8 @@ public class DiffRuleConfigDAO {
      * @param configs      规则 DO 列表
      */
     public void save(String migrationKey, List<DiffRuleConfig> configs) {
-        try {
-            String content = objectMapper.writeValueAsString(configs);
-            configCenterGateway.publish(DATA_ID_PREFIX + migrationKey, GROUP, content);
-        } catch (Exception ex) {
-            throw new IllegalStateException(
-                    "failed to publish diff rules for migrationKey: " + migrationKey, ex);
-        }
+        String content = JsonUtils.toJson(configs);
+        configCenterGateway.publish(DATA_ID_PREFIX + migrationKey, GROUP, content);
     }
 
     /**
@@ -76,12 +60,5 @@ public class DiffRuleConfigDAO {
      */
     public void delete(String migrationKey) {
         configCenterGateway.delete(DATA_ID_PREFIX + migrationKey, GROUP);
-    }
-
-    private String sanitizeReason(Exception ex) {
-        if (ex == null || ex.getMessage() == null) {
-            return "unknown";
-        }
-        return ex.getMessage().replaceAll("\\s+", " ").trim();
     }
 }

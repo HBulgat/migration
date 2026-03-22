@@ -3,6 +3,7 @@ package top.bulgat.migration.admin.interfaces.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.validation.annotation.Validated;
@@ -85,6 +86,12 @@ public class MigrationTaskController {
                 applicationService.count(listCommand),
                 taskResponses);
         return Result.success(pageResult);
+    }
+
+    @Operation(summary = "获取全量迁移任务列表")
+    @GetMapping("/list_all")
+    public Result<List<MigrationTaskResponse>> listAll() {
+        return Result.success(assembler.toResponseList(applicationService.listAll()));
     }
 
     @Operation(summary = "更新迁移任务状态")

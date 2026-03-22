@@ -3,12 +3,14 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { deleteMigrationTask, getMigrationTaskList, queryMigrationTask } from '@/api/migrationTask'
 import { MIGRATION_STATUS_OPTIONS } from '@/constants'
+import { useMigrationTaskStore } from '@/store'
 import { formatDateTime } from '@/utils/format'
 import StatusTag from '@/components/StatusTag.vue'
 import EditDialog from '@/views/MigrationTask/EditDialog.vue'
 import type { MigrationTask } from '@/types'
 
 const loading = ref(false)
+const taskStore = useMigrationTaskStore()
 const tableData = ref<MigrationTask[]>([])
 const total = ref(0)
 const current = ref(1)
@@ -87,7 +89,7 @@ async function handleDelete(task: MigrationTask): Promise<void> {
   })
   await deleteMigrationTask({ migration_key: task.migration_key })
   ElMessage.success('删除成功')
-  await loadTableData()
+  await Promise.all([loadTableData(), taskStore.fetchTaskOptions(true)])
 }
 
 async function handlePageChange(page: number): Promise<void> {
@@ -184,7 +186,7 @@ onMounted(async () => {
       v-model:visible="dialogVisible"
       :mode="dialogMode"
       :task="editingTask"
-      @success="loadTableData"
+      @success="() => { loadTableData(); taskStore.fetchTaskOptions(true); }"
     />
 
     <el-drawer v-model="detailVisible" title="迁移任务详情" size="540px" destroy-on-close>

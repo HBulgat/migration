@@ -3,14 +3,12 @@ import { ref, reactive, onMounted } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getDiffRuleList, deleteDiffRule, updateDiffRuleEnable, type DiffRule } from '@/api/diffRule'
-import { getMigrationTaskList } from '@/api/migrationTask'
-import { getMigrationTaskStatusMeta } from '@/constants'
-import type { MigrationTask } from '@/types'
+import { useMigrationTaskStore } from '@/store'
 import EditDialog from './EditDialog.vue'
 
+const taskStore = useMigrationTaskStore()
 const tableData = ref<DiffRule[]>([])
 const loading = ref(false)
-const tasks = ref<MigrationTask[]>([])
 
 const queryParams = reactive({
   migrationKey: '',
@@ -31,10 +29,9 @@ function tableRowClassName({ row }: { row: DiffRule }) {
 
 async function loadTasks() {
   try {
-    const res = await getMigrationTaskList({ page: 1, pageSize: 100 })
-    tasks.value = res.list
-    if (tasks.value.length > 0 && !queryParams.migrationKey) {
-      queryParams.migrationKey = tasks.value[0]!.migration_key
+    const options = await taskStore.fetchTaskOptions()
+    if (options.length > 0 && !queryParams.migrationKey) {
+      queryParams.migrationKey = options[0]!.value
     }
   } catch (error: any) {
     ElMessage.error(error.message || '加载迁移任务列表异常')
@@ -139,10 +136,10 @@ onMounted(async () => {
             @change="() => fetchData(true)"
           >
             <el-option
-              v-for="task in tasks"
-              :key="task.migration_key"
-              :label="`${task.migration_key}（${getMigrationTaskStatusMeta(task.status).label}）`"
-              :value="task.migration_key"
+              v-for="task in taskStore.taskOptions"
+              :key="task.value"
+              :label="task.label"
+              :value="task.value"
             />
           </el-select>
         </el-form-item>

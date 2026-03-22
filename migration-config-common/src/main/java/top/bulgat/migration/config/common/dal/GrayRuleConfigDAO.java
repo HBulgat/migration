@@ -1,13 +1,9 @@
 package top.bulgat.migration.config.common.dal;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import top.bulgat.common.base.util.JsonUtils;
 import top.bulgat.migration.config.common.configcenter.ConfigCenterGateway;
 import top.bulgat.migration.config.common.model.dataobject.GrayRuleConfig;
 
@@ -19,16 +15,13 @@ import top.bulgat.migration.config.common.model.dataobject.GrayRuleConfig;
 @Mapper
 public class GrayRuleConfigDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(GrayRuleConfigDAO.class);
     private static final String DATA_ID_PREFIX = "gray_rule_";
     private static final String GROUP = ConfigCenterGateway.DEFAULT_GROUP;
 
     private final ConfigCenterGateway configCenterGateway;
-    private final ObjectMapper objectMapper;
 
-    public GrayRuleConfigDAO(ConfigCenterGateway configCenterGateway, ObjectMapper objectMapper) {
+    public GrayRuleConfigDAO(ConfigCenterGateway configCenterGateway) {
         this.configCenterGateway = configCenterGateway;
-        this.objectMapper = objectMapper;
     }
 
     /**
@@ -38,17 +31,12 @@ public class GrayRuleConfigDAO {
      * @return 规则 DO 列表，异常时抛出 IllegalStateException
      */
     public List<GrayRuleConfig> findByMigrationKey(String migrationKey) {
-        try {
-            var content = configCenterGateway.getConfig(DATA_ID_PREFIX + migrationKey, GROUP);
-            if (content.isEmpty() || content.get().isBlank()) {
-                return new ArrayList<>();
-            }
-            List<GrayRuleConfig> configs = objectMapper.readValue(content.get(), new TypeReference<>() {});
-            return configs != null ? new ArrayList<>(configs) : new ArrayList<>();
-        } catch (Exception ex) {
-            throw new IllegalStateException(
-                    "failed to load gray rules for migrationKey: " + migrationKey, ex);
+        var content = configCenterGateway.getConfig(DATA_ID_PREFIX + migrationKey, GROUP);
+        if (content.isEmpty() || content.get().isBlank()) {
+            return new ArrayList<>();
         }
+        List<GrayRuleConfig> configs = JsonUtils.toList(content.get(), GrayRuleConfig.class);
+        return configs != null ? new ArrayList<>(configs) : new ArrayList<>();
     }
 
     /**
@@ -58,13 +46,8 @@ public class GrayRuleConfigDAO {
      * @param configs      规则 DO 列表
      */
     public void save(String migrationKey, List<GrayRuleConfig> configs) {
-        try {
-            String content = objectMapper.writeValueAsString(configs);
-            configCenterGateway.publish(DATA_ID_PREFIX + migrationKey, GROUP, content);
-        } catch (Exception ex) {
-            throw new IllegalStateException(
-                    "failed to publish gray rules for migrationKey: " + migrationKey, ex);
-        }
+        String content = JsonUtils.toJson(configs);
+        configCenterGateway.publish(DATA_ID_PREFIX + migrationKey, GROUP, content);
     }
 
     /**

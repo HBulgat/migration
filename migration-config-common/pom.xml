@@ -36,6 +36,10 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>top.bulgat</groupId>
+            <artifactId>common-base</artifactId>
+        </dependency>
 
     </dependencies>
 </project>

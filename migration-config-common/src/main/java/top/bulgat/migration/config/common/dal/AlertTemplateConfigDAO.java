@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.bulgat.common.base.util.JsonUtils;
+import top.bulgat.common.base.util.StringUtils;
 import top.bulgat.migration.config.common.configcenter.ConfigCenterGateway;
 import top.bulgat.migration.config.common.model.dataobject.AlertTemplateConfig;
 
@@ -14,16 +16,13 @@ import java.util.Map;
 @Mapper
 public class AlertTemplateConfigDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(AlertTemplateConfigDAO.class);
     private static final String DATA_ID = "alert_template";
     private static final String GROUP = ConfigCenterGateway.DEFAULT_GROUP;
 
     private final ConfigCenterGateway configCenterGateway;
-    private final ObjectMapper objectMapper;
 
-    public AlertTemplateConfigDAO(ConfigCenterGateway configCenterGateway, ObjectMapper objectMapper) {
+    public AlertTemplateConfigDAO(ConfigCenterGateway configCenterGateway) {
         this.configCenterGateway = configCenterGateway;
-        this.objectMapper = objectMapper;
     }
 
     /**
@@ -32,18 +31,12 @@ public class AlertTemplateConfigDAO {
      * @return 规则 DO map，若不存在则返回空 map
      */
     public Map<String, AlertTemplateConfig> findAll() {
-        try {
-            var content = configCenterGateway.getConfig(DATA_ID, GROUP);
-            if (content.isEmpty() || content.get().isBlank()) {
-                return new HashMap<>();
-            }
-            Map<String,AlertTemplateConfig> configMap = objectMapper.readValue(content.get(), new TypeReference<>() {});
-            return configMap == null ? new HashMap<>() : configMap;
-        } catch (Exception ex) {
-            log.warn("failed to load alert templates from config center, reason={}", sanitizeReason(ex));
-            log.debug("failed to load alert template detail", ex);
+        var content = configCenterGateway.getConfig(DATA_ID, GROUP);
+        if (content.isEmpty() || StringUtils.isBlank(content.get())) {
             return new HashMap<>();
         }
+        Map<String,AlertTemplateConfig> configMap = JsonUtils.toMap(content.get(),AlertTemplateConfig.class);
+        return configMap == null ? new HashMap<>() : configMap;
     }
 
     /**
@@ -53,17 +46,10 @@ public class AlertTemplateConfigDAO {
      */
     public void save(Map<String,AlertTemplateConfig> configs) {
         try {
-            String content = objectMapper.writeValueAsString(configs);
+            String content = JsonUtils.toJson(configs);
             configCenterGateway.publish(DATA_ID, GROUP, content);
         } catch (Exception ex) {
             throw new IllegalStateException("failed to publish alert templates", ex);
         }
-    }
-
-    private String sanitizeReason(Exception ex) {
-        if (ex == null || ex.getMessage() == null) {
-            return "unknown";
-        }
-        return ex.getMessage().replaceAll("\\s+", " ").trim();
     }
 }

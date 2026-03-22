@@ -1,5 +1,6 @@
 package top.bulgat.migration.admin.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import top.bulgat.migration.config.common.model.enums.DiffRuleType;
 

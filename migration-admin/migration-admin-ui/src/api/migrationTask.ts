@@ -59,3 +59,6 @@ export const deleteMigrationTask = (data: DeleteMigrationTaskPayload): Promise<v
 
 export const updateMigrationTaskStatus = (data: UpdateMigrationTaskStatusPayload): Promise<void> =>
   post<void>(`${TASK_BASE_PATH}/update_status`, data)
+
+export const getMigrationTaskAll = (): Promise<MigrationTask[]> =>
+  get<MigrationTask[]>(`${TASK_BASE_PATH}/list_all`)
